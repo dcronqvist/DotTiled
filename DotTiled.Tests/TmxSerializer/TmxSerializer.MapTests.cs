@@ -24,16 +24,33 @@ public partial class TmxSerializerMapTests
     Assert.Equal(expected.NextLayerID, actual.NextLayerID);
     Assert.Equal(expected.NextObjectID, actual.NextObjectID);
     Assert.Equal(expected.Infinite, actual.Infinite);
+
+    TmxSerializerPropertiesTests.AssertProperties(actual.Properties, expected.Properties);
+
+    Assert.NotNull(actual.Tilesets);
+    Assert.Equal(expected.Tilesets.Count, actual.Tilesets.Count);
+    for (var i = 0; i < expected.Tilesets.Count; i++)
+      TmxSerializerTilesetTests.AssertTileset(actual.Tilesets[i], expected.Tilesets[i]);
+
+    Assert.NotNull(actual.Layers);
+    Assert.Equal(expected.Layers.Count, actual.Layers.Count);
+    for (var i = 0; i < expected.Layers.Count; i++)
+      TmxSerializerLayerTests.AssertLayer(actual.Layers[i], expected.Layers[i]);
   }
 
   public static IEnumerable<object[]> DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapWithoutThrowing_Data =>
     [
-      ["TmxSerializer.TestData.Map.empty-map.tmx", EmptyMap]
+      ["TmxSerializer.TestData.Map.empty-map-csv.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Csv, null)],
+      ["TmxSerializer.TestData.Map.empty-map-base64.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Base64, null)],
+      ["TmxSerializer.TestData.Map.empty-map-base64-gzip.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.GZip)],
+      ["TmxSerializer.TestData.Map.empty-map-base64-zlib.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.ZLib)],
+      ["TmxSerializer.TestData.Map.simple-tileset-embed.tmx", SimpleMapWithEmbeddedTileset()],
+      ["TmxSerializer.TestData.Map.empty-map-properties.tmx", EmptyMapWithProperties()],
     ];
 
   [Theory]
   [MemberData(nameof(DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapWithoutThrowing_Data))]
-  public void DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapWithoutThrowing(string testDataFile, Map expectedMap)
+  public void DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
     using var reader = TmxSerializerTestData.GetReaderFor(testDataFile);

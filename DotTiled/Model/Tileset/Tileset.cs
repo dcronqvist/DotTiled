@@ -36,7 +36,7 @@ public class Tileset
   public uint? FirstGID { get; set; }
   public string? Source { get; set; }
   public string? Name { get; set; }
-  public string? Class { get; set; } = "";
+  public string Class { get; set; } = "";
   public uint? TileWidth { get; set; }
   public uint? TileHeight { get; set; }
   public float? Spacing { get; set; }

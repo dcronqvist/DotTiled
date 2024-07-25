@@ -18,6 +18,6 @@ public abstract class BaseLayer
   public float ParallaxX { get; set; } = 1.0f;
   public float ParallaxY { get; set; } = 1.0f;
 
-  // Elements
+  // At most one of
   public Dictionary<string, IProperty>? Properties { get; set; }
 }

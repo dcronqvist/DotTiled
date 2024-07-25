@@ -44,7 +44,7 @@ public class Data
   public DataEncoding? Encoding { get; set; }
   public DataCompression? Compression { get; set; }
 
-  // Elements
+  // Data
   public uint[]? GlobalTileIDs { get; set; }
   public FlippingFlags[]? FlippingFlags { get; set; }
   public Chunk[]? Chunks { get; set; }

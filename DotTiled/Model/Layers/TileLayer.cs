@@ -6,6 +6,6 @@ public class TileLayer : BaseLayer
   public required uint Width { get; set; }
   public required uint Height { get; set; }
 
-  // Elements
+  // At most one of
   public Data? Data { get; set; }
 }
