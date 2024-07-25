@@ -24,4 +24,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- TmxSerializer test data -->
+    <EmbeddedResource Include="TmxSerializer/TestData/**/*.tmx" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,21 @@
+using System.Collections.Generic;
+
+namespace DotTiled;
+
+public enum DrawOrder
+{
+  TopDown,
+  Index
+}
+
+public class ObjectLayer : BaseLayer
+{
+  // Attributes
+  public uint? Width { get; set; }
+  public uint? Height { get; set; }
+  public required Color? Color { get; set; }
+  public required DrawOrder DrawOrder { get; set; } = DrawOrder.TopDown;
+
+  // Elements
+  public required List<Object> Objects { get; set; }
+}
