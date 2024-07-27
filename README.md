@@ -8,7 +8,7 @@ Other similar libraries exist, and you may want to consider them for your projec
 | Library | Active | Formats | Feature coverage | Docs | License | Benchmark Rank* |
 | --- | --- | --- | --- | --- | --- | --- |
 | **DotTiled** | ✅ | `.tmx` `.tsx` <br> `.tmj` `.tsj` | | Usage, API, XML docs | | |
-| [TiledLib](https://github.com/Ragath/TiledLib.Net) | ✅ | | | | |
+| [TiledLib](https://github.com/Ragath/TiledLib.Net) | ✅ | | | | | |
 | [TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus) | ✅ | | | | | |
 | [TiledSharp](https://github.com/marshallward/TiledSharp) | ❌ | | | | | |
 | [TiledCS](https://github.com/TheBoneJarmer/TiledCS) | ❌ | | | | | |
