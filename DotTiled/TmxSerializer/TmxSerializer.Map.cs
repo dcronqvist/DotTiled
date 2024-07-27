@@ -69,6 +69,7 @@ public partial class TmxSerializer
       "layer" => () => layers.Add(ReadTileLayer(r, dataUsesChunks: infinite)),
       "objectgroup" => () => layers.Add(ReadObjectLayer(r)),
       "imagelayer" => () => layers.Add(ReadImageLayer(r)),
+      "group" => () => layers.Add(ReadGroup(r)),
       _ => r.Skip
     });
 

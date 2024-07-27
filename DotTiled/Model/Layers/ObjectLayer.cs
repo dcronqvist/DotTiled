@@ -11,6 +11,8 @@ public enum DrawOrder
 public class ObjectLayer : BaseLayer
 {
   // Attributes
+  public uint X { get; set; } = 0;
+  public uint Y { get; set; } = 0;
   public uint? Width { get; set; }
   public uint? Height { get; set; }
   public required Color? Color { get; set; }

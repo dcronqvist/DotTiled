@@ -102,4 +102,47 @@ public partial class TmxSerializer
       RepeatY = repeatY
     };
   }
+
+  private Group ReadGroup(XmlReader reader)
+  {
+    var id = reader.GetRequiredAttributeParseable<uint>("id");
+    var name = reader.GetOptionalAttribute("name") ?? "";
+    var @class = reader.GetOptionalAttribute("class") ?? "";
+    var opacity = reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
+    var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
+    var tintColor = reader.GetOptionalAttributeClass<Color>("tintcolor");
+    var offsetX = reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
+    var offsetY = reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
+    var parallaxX = reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
+    var parallaxY = reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
+
+    Dictionary<string, IProperty>? properties = null;
+    List<BaseLayer> layers = [];
+
+    reader.ProcessChildren("group", (r, elementName) => elementName switch
+    {
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
+      "layer" => () => layers.Add(ReadTileLayer(r, dataUsesChunks: false)),
+      "objectgroup" => () => layers.Add(ReadObjectLayer(r)),
+      "imagelayer" => () => layers.Add(ReadImageLayer(r)),
+      "group" => () => layers.Add(ReadGroup(r)),
+      _ => r.Skip
+    });
+
+    return new Group
+    {
+      ID = id,
+      Name = name,
+      Class = @class,
+      Opacity = opacity,
+      Visible = visible,
+      TintColor = tintColor,
+      OffsetX = offsetX,
+      OffsetY = offsetY,
+      ParallaxX = parallaxX,
+      ParallaxY = parallaxY,
+      Properties = properties,
+      Layers = layers
+    };
+  }
 }
