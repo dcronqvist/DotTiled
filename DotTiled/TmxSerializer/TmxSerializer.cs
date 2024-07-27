@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Xml;
 
 namespace DotTiled;
@@ -16,5 +17,12 @@ public partial class TmxSerializer
   {
     reader.ReadToFollowing("map");
     return ReadMap(reader);
+  }
+
+  public Map DeserializeMap(string xml)
+  {
+    using var stringReader = new StringReader(xml);
+    using var reader = XmlReader.Create(stringReader);
+    return DeserializeMap(reader);
   }
 }

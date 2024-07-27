@@ -54,14 +54,19 @@ public partial class TmxSerializerMapTests
   {
     // Arrange
     using var reader = TmxSerializerTestData.GetReaderFor(testDataFile);
+    var testDataFileText = TmxSerializerTestData.GetRawStringFor(testDataFile);
     Func<string, Tileset> externalTilesetResolver = (string s) => throw new NotSupportedException("External tilesets are not supported in this test");
     var tmxSerializer = new TmxSerializer(externalTilesetResolver);
 
     // Act
     var map = tmxSerializer.DeserializeMap(reader);
+    var raw = tmxSerializer.DeserializeMap(testDataFileText);
 
     // Assert
     Assert.NotNull(map);
     AssertMap(map, expectedMap);
+
+    Assert.NotNull(raw);
+    AssertMap(raw, expectedMap);
   }
 }
