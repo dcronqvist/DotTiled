@@ -15,8 +15,6 @@ public partial class TmxSerializerLayerTests
     Assert.Equal(expected.ID, actual.ID);
     Assert.Equal(expected.Name, actual.Name);
     Assert.Equal(expected.Class, actual.Class);
-    Assert.Equal(expected.X, actual.X);
-    Assert.Equal(expected.Y, actual.Y);
     Assert.Equal(expected.Opacity, actual.Opacity);
     Assert.Equal(expected.Visible, actual.Visible);
     Assert.Equal(expected.TintColor, actual.TintColor);
@@ -34,6 +32,8 @@ public partial class TmxSerializerLayerTests
     // Attributes
     Assert.Equal(expected.Width, actual.Width);
     Assert.Equal(expected.Height, actual.Height);
+    Assert.Equal(expected.X, actual.X);
+    Assert.Equal(expected.Y, actual.Y);
 
     Assert.NotNull(actual.Data);
     TmxSerializerDataTests.AssertData(actual.Data, expected.Data);
@@ -43,6 +43,8 @@ public partial class TmxSerializerLayerTests
   {
     // Attributes
     Assert.Equal(expected.DrawOrder, actual.DrawOrder);
+    Assert.Equal(expected.X, actual.X);
+    Assert.Equal(expected.Y, actual.Y);
 
     Assert.NotNull(actual.Objects);
     Assert.Equal(expected.Objects.Count, actual.Objects.Count);
@@ -55,8 +57,19 @@ public partial class TmxSerializerLayerTests
     // Attributes
     Assert.Equal(expected.RepeatX, actual.RepeatX);
     Assert.Equal(expected.RepeatY, actual.RepeatY);
+    Assert.Equal(expected.X, actual.X);
+    Assert.Equal(expected.Y, actual.Y);
 
     Assert.NotNull(actual.Image);
     TmxSerializerImageTests.AssertImage(actual.Image, expected.Image);
+  }
+
+  private static void AssertLayer(Group actual, Group expected)
+  {
+    // Attributes
+    Assert.NotNull(actual.Layers);
+    Assert.Equal(expected.Layers.Count, actual.Layers.Count);
+    for (var i = 0; i < expected.Layers.Count; i++)
+      AssertLayer(actual.Layers[i], expected.Layers[i]);
   }
 }

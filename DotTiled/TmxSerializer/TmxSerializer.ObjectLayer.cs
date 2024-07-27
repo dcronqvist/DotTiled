@@ -71,30 +71,63 @@ public partial class TmxSerializer
   private Object ReadObject(XmlReader reader)
   {
     // Attributes
-    var id = reader.GetRequiredAttributeParseable<uint>("id");
-    var name = reader.GetOptionalAttribute("name") ?? "";
-    var type = reader.GetOptionalAttribute("type") ?? "";
-    var x = reader.GetOptionalAttributeParseable<float>("x") ?? 0f;
-    var y = reader.GetOptionalAttributeParseable<float>("y") ?? 0f;
-    var width = reader.GetOptionalAttributeParseable<float>("width") ?? 0f;
-    var height = reader.GetOptionalAttributeParseable<float>("height") ?? 0f;
-    var rotation = reader.GetOptionalAttributeParseable<float>("rotation") ?? 0f;
-    var gid = reader.GetOptionalAttributeParseable<uint>("gid");
-    var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
     var template = reader.GetOptionalAttribute("template");
+
+    uint? idDefault = null;
+    string nameDefault = "";
+    string typeDefault = "";
+    float xDefault = 0f;
+    float yDefault = 0f;
+    float widthDefault = 0f;
+    float heightDefault = 0f;
+    float rotationDefault = 0f;
+    uint? gidDefault = null;
+    bool visibleDefault = true;
+    Dictionary<string, IProperty>? propertiesDefault = null;
+
+    // Perform template copy first
+    if (template is not null)
+    {
+      var resolvedTemplate = _externalTemplateResolver(this, template);
+      var templObj = resolvedTemplate.Object;
+
+      idDefault = templObj.ID;
+      nameDefault = templObj.Name;
+      typeDefault = templObj.Type;
+      xDefault = templObj.X;
+      yDefault = templObj.Y;
+      widthDefault = templObj.Width;
+      heightDefault = templObj.Height;
+      rotationDefault = templObj.Rotation;
+      gidDefault = templObj.GID;
+      visibleDefault = templObj.Visible;
+      propertiesDefault = templObj.Properties;
+    }
+
+    var id = reader.GetOptionalAttributeParseable<uint>("id") ?? idDefault;
+    var name = reader.GetOptionalAttribute("name") ?? nameDefault;
+    var type = reader.GetOptionalAttribute("type") ?? typeDefault;
+    var x = reader.GetOptionalAttributeParseable<float>("x") ?? xDefault;
+    var y = reader.GetOptionalAttributeParseable<float>("y") ?? yDefault;
+    var width = reader.GetOptionalAttributeParseable<float>("width") ?? widthDefault;
+    var height = reader.GetOptionalAttributeParseable<float>("height") ?? heightDefault;
+    var rotation = reader.GetOptionalAttributeParseable<float>("rotation") ?? rotationDefault;
+    var gid = reader.GetOptionalAttributeParseable<uint>("gid") ?? gidDefault;
+    var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
 
     // Elements
     Object? obj = null;
-    Dictionary<string, IProperty>? properties = null;
+    int propertiesCounter = 0;
+    Dictionary<string, IProperty>? properties = propertiesDefault;
 
     reader.ProcessChildren("object", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
-      "ellipse" => () => Helpers.SetAtMostOnce(ref obj, ReadEllipseObject(r, id), "Object marker"),
-      "point" => () => Helpers.SetAtMostOnce(ref obj, ReadPointObject(r, id), "Object marker"),
-      "polygon" => () => Helpers.SetAtMostOnce(ref obj, ReadPolygonObject(r, id), "Object marker"),
-      "polyline" => () => Helpers.SetAtMostOnce(ref obj, ReadPolylineObject(r, id), "Object marker"),
-      "text" => () => Helpers.SetAtMostOnce(ref obj, ReadTextObject(r, id), "Object marker"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, MergeProperties(properties, ReadProperties(r)), "Properties", ref propertiesCounter),
+      "ellipse" => () => Helpers.SetAtMostOnce(ref obj, ReadEllipseObject(r), "Object marker"),
+      "point" => () => Helpers.SetAtMostOnce(ref obj, ReadPointObject(r), "Object marker"),
+      "polygon" => () => Helpers.SetAtMostOnce(ref obj, ReadPolygonObject(r), "Object marker"),
+      "polyline" => () => Helpers.SetAtMostOnce(ref obj, ReadPolylineObject(r), "Object marker"),
+      "text" => () => Helpers.SetAtMostOnce(ref obj, ReadTextObject(r), "Object marker"),
       _ => throw new Exception($"Unknown object marker '{elementName}'")
     });
 
@@ -119,19 +152,51 @@ public partial class TmxSerializer
     return obj;
   }
 
-  private EllipseObject ReadEllipseObject(XmlReader reader, uint id)
+  private Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty> overrideProperties)
   {
-    reader.Skip();
-    return new EllipseObject { ID = id };
+    if (baseProperties is null)
+      return overrideProperties ?? new Dictionary<string, IProperty>();
+
+    if (overrideProperties is null)
+      return baseProperties;
+
+    var result = new Dictionary<string, IProperty>(baseProperties);
+    foreach (var (key, value) in overrideProperties)
+    {
+      if (!result.TryGetValue(key, out var baseProp))
+      {
+        result[key] = value;
+        continue;
+      }
+      else
+      {
+        if (value is ClassProperty classProp)
+        {
+          ((ClassProperty)baseProp).Properties = MergeProperties(((ClassProperty)baseProp).Properties, classProp.Properties);
+        }
+        else
+        {
+          result[key] = value;
+        }
+      }
+    }
+
+    return result;
   }
 
-  private PointObject ReadPointObject(XmlReader reader, uint id)
+  private EllipseObject ReadEllipseObject(XmlReader reader)
   {
     reader.Skip();
-    return new PointObject { ID = id };
+    return new EllipseObject { };
   }
 
-  private PolygonObject ReadPolygonObject(XmlReader reader, uint id)
+  private PointObject ReadPointObject(XmlReader reader)
+  {
+    reader.Skip();
+    return new PointObject { };
+  }
+
+  private PolygonObject ReadPolygonObject(XmlReader reader)
   {
     // Attributes
     var points = reader.GetRequiredAttributeParseable<List<Vector2>>("points", s =>
@@ -146,10 +211,10 @@ public partial class TmxSerializer
     });
 
     reader.ReadStartElement("polygon");
-    return new PolygonObject { ID = id, Points = points };
+    return new PolygonObject { Points = points };
   }
 
-  private PolylineObject ReadPolylineObject(XmlReader reader, uint id)
+  private PolylineObject ReadPolylineObject(XmlReader reader)
   {
     // Attributes
     var points = reader.GetRequiredAttributeParseable<List<Vector2>>("points", s =>
@@ -164,10 +229,10 @@ public partial class TmxSerializer
     });
 
     reader.ReadStartElement("polyline");
-    return new PolylineObject { ID = id, Points = points };
+    return new PolylineObject { Points = points };
   }
 
-  private TextObject ReadTextObject(XmlReader reader, uint id)
+  private TextObject ReadTextObject(XmlReader reader)
   {
     // Attributes
     var fontFamily = reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
@@ -200,7 +265,6 @@ public partial class TmxSerializer
 
     return new TextObject
     {
-      ID = id,
       FontFamily = fontFamily,
       PixelSize = pixelSize,
       Wrap = wrap,
@@ -213,6 +277,33 @@ public partial class TmxSerializer
       HorizontalAlignment = hAlign,
       VerticalAlignment = vAlign,
       Text = text
+    };
+  }
+
+  private Template ReadTemplate(XmlReader reader)
+  {
+    // No attributes
+
+    // At most one of
+    Tileset? tileset = null;
+
+    // Should contain exactly one of
+    Object? obj = null;
+
+    reader.ProcessChildren("template", (r, elementName) => elementName switch
+    {
+      "tileset" => () => Helpers.SetAtMostOnce(ref tileset, ReadTileset(r), "Tileset"),
+      "object" => () => Helpers.SetAtMostOnce(ref obj, ReadObject(r), "Object"),
+      _ => r.Skip
+    });
+
+    if (obj is null)
+      throw new NotSupportedException("Template must contain exactly one object");
+
+    return new Template
+    {
+      Tileset = tileset,
+      Object = obj
     };
   }
 }

@@ -50,13 +50,18 @@ public partial class TmxSerializerMapTests
 
   [Theory]
   [MemberData(nameof(DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapWithoutThrowing_Data))]
-  public void DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
+  public void DeserializeMapFromXmlReader_ValidXmlNoExternalTilesets_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
     using var reader = TmxSerializerTestData.GetReaderFor(testDataFile);
     var testDataFileText = TmxSerializerTestData.GetRawStringFor(testDataFile);
-    Func<string, Tileset> externalTilesetResolver = (string s) => throw new NotSupportedException("External tilesets are not supported in this test");
-    var tmxSerializer = new TmxSerializer(externalTilesetResolver);
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = (TmxSerializer serializer, string s) =>
+      throw new NotSupportedException("External tilesets are not supported in this test");
+    Func<TmxSerializer, string, Template> externalTemplateResolver = (TmxSerializer serializer, string s) =>
+      throw new NotSupportedException("External templates are not supported in this test");
+    var tmxSerializer = new TmxSerializer(
+      externalTilesetResolver,
+      externalTemplateResolver);
 
     // Act
     var map = tmxSerializer.DeserializeMap(reader);
@@ -67,6 +72,154 @@ public partial class TmxSerializerMapTests
     AssertMap(map, expectedMap);
 
     Assert.NotNull(raw);
+    AssertMap(raw, expectedMap);
+
+    AssertMap(map, raw);
+  }
+
+  [Theory]
+  [MemberData(nameof(DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapWithoutThrowing_Data))]
+  public void DeserializeMapFromString_ValidXmlNoExternalTilesets_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
+  {
+    // Arrange
+    var testDataFileText = TmxSerializerTestData.GetRawStringFor(testDataFile);
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = (TmxSerializer serializer, string s) =>
+      throw new NotSupportedException("External tilesets are not supported in this test");
+    Func<TmxSerializer, string, Template> externalTemplateResolver = (TmxSerializer serializer, string s) =>
+      throw new NotSupportedException("External templates are not supported in this test");
+    var tmxSerializer = new TmxSerializer(
+      externalTilesetResolver,
+      externalTemplateResolver);
+
+    // Act
+    var raw = tmxSerializer.DeserializeMap(testDataFileText);
+
+    // Assert
+    Assert.NotNull(raw);
+    AssertMap(raw, expectedMap);
+  }
+
+  [Theory]
+  [MemberData(nameof(DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapWithoutThrowing_Data))]
+  public void DeserializeMapFromStringFromXmlReader_ValidXmlNoExternalTilesets_Equal(string testDataFile, Map expectedMap)
+  {
+    // Arrange
+    using var reader = TmxSerializerTestData.GetReaderFor(testDataFile);
+    var testDataFileText = TmxSerializerTestData.GetRawStringFor(testDataFile);
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = (TmxSerializer serializer, string s) =>
+      throw new NotSupportedException("External tilesets are not supported in this test");
+    Func<TmxSerializer, string, Template> externalTemplateResolver = (TmxSerializer serializer, string s) =>
+      throw new NotSupportedException("External templates are not supported in this test");
+    var tmxSerializer = new TmxSerializer(
+      externalTilesetResolver,
+      externalTemplateResolver);
+
+    // Act
+    var map = tmxSerializer.DeserializeMap(reader);
+    var raw = tmxSerializer.DeserializeMap(testDataFileText);
+
+    // Assert
+    Assert.NotNull(map);
+    Assert.NotNull(raw);
+
+    AssertMap(map, raw);
+    AssertMap(map, expectedMap);
+    AssertMap(raw, expectedMap);
+  }
+
+  public static IEnumerable<object[]> DeserializeMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data =>
+    [
+      ["TmxSerializer.TestData.Map.map-with-object-template.tmx", MapWithObjectTemplate()],
+      ["TmxSerializer.TestData.Map.map-with-group.tmx", MapWithGroup()],
+    ];
+
+  [Theory]
+  [MemberData(nameof(DeserializeMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data))]
+  public void DeserializeMapFromXmlReader_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
+  {
+    // Arrange
+    using var reader = TmxSerializerTestData.GetReaderFor(testDataFile);
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = (TmxSerializer serializer, string s) =>
+    {
+      using var tilesetReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Tileset.{s}");
+      return serializer.DeserializeTileset(tilesetReader);
+    };
+    Func<TmxSerializer, string, Template> externalTemplateResolver = (TmxSerializer serializer, string s) =>
+    {
+      using var templateReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Template.{s}");
+      return serializer.DeserializeTemplate(templateReader);
+    };
+    var tmxSerializer = new TmxSerializer(
+      externalTilesetResolver,
+      externalTemplateResolver);
+
+    // Act
+    var map = tmxSerializer.DeserializeMap(reader);
+
+    // Assert
+    Assert.NotNull(map);
+    AssertMap(map, expectedMap);
+  }
+
+  [Theory]
+  [MemberData(nameof(DeserializeMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data))]
+  public void DeserializeMapFromString_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
+  {
+    // Arrange
+    var testDataFileText = TmxSerializerTestData.GetRawStringFor(testDataFile);
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = (TmxSerializer serializer, string s) =>
+    {
+      using var tilesetReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Tileset.{s}");
+      return serializer.DeserializeTileset(tilesetReader);
+    };
+    Func<TmxSerializer, string, Template> externalTemplateResolver = (TmxSerializer serializer, string s) =>
+    {
+      using var templateReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Template.{s}");
+      return serializer.DeserializeTemplate(templateReader);
+    };
+    var tmxSerializer = new TmxSerializer(
+      externalTilesetResolver,
+      externalTemplateResolver);
+
+    // Act
+    var map = tmxSerializer.DeserializeMap(testDataFileText);
+
+    // Assert
+    Assert.NotNull(map);
+    AssertMap(map, expectedMap);
+  }
+
+  [Theory]
+  [MemberData(nameof(DeserializeMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data))]
+  public void DeserializeMapFromStringFromXmlReader_ValidXmlExternalTilesetsAndTemplates_Equal(string testDataFile, Map expectedMap)
+  {
+    // Arrange
+    using var reader = TmxSerializerTestData.GetReaderFor(testDataFile);
+    var testDataFileText = TmxSerializerTestData.GetRawStringFor(testDataFile);
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = (TmxSerializer serializer, string s) =>
+    {
+      using var tilesetReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Tileset.{s}");
+      return serializer.DeserializeTileset(tilesetReader);
+    };
+    Func<TmxSerializer, string, Template> externalTemplateResolver = (TmxSerializer serializer, string s) =>
+    {
+      using var templateReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Template.{s}");
+      return serializer.DeserializeTemplate(templateReader);
+    };
+    var tmxSerializer = new TmxSerializer(
+      externalTilesetResolver,
+      externalTemplateResolver);
+
+    // Act
+    var map = tmxSerializer.DeserializeMap(reader);
+    var raw = tmxSerializer.DeserializeMap(testDataFileText);
+
+    // Assert
+    Assert.NotNull(map);
+    Assert.NotNull(raw);
+
+    AssertMap(map, raw);
+    AssertMap(map, expectedMap);
     AssertMap(raw, expectedMap);
   }
 }

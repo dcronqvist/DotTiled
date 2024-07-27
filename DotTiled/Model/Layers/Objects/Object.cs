@@ -5,7 +5,7 @@ namespace DotTiled;
 public abstract class Object
 {
   // Attributes
-  public required uint ID { get; set; }
+  public uint? ID { get; set; }
   public string Name { get; set; } = "";
   public string Type { get; set; } = "";
   public float X { get; set; } = 0f;

@@ -73,7 +73,7 @@ public partial class TmxSerializer
     // Check if tileset is referring to external file
     if (source is not null)
     {
-      var resolvedTileset = _externalTilesetResolver(source);
+      var resolvedTileset = _externalTilesetResolver(this, source);
       resolvedTileset.FirstGID = firstGID;
       resolvedTileset.Source = null;
       return resolvedTileset;

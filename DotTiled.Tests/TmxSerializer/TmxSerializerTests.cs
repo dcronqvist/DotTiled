@@ -6,10 +6,11 @@ public class TmxSerializerTests
   public void TmxSerializerConstructor_ExternalTilesetResolverIsNull_ThrowsArgumentNullException()
   {
     // Arrange
-    Func<string, Tileset> externalTilesetResolver = null!;
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = null!;
+    Func<TmxSerializer, string, Template> externalTemplateResolver = null!;
 
     // Act
-    Action act = () => _ = new TmxSerializer(externalTilesetResolver);
+    Action act = () => _ = new TmxSerializer(externalTilesetResolver, externalTemplateResolver);
 
     // Assert
     Assert.Throws<ArgumentNullException>(act);
@@ -19,10 +20,11 @@ public class TmxSerializerTests
   public void TmxSerializerConstructor_ExternalTilesetResolverIsNotNull_DoesNotThrow()
   {
     // Arrange
-    Func<string, Tileset> externalTilesetResolver = _ => new Tileset();
+    Func<TmxSerializer, string, Tileset> externalTilesetResolver = (_, _) => new Tileset();
+    Func<TmxSerializer, string, Template> externalTemplateResolver = (_, _) => new Template { Object = new RectangleObject { } };
 
     // Act
-    var tmxSerializer = new TmxSerializer(externalTilesetResolver);
+    var tmxSerializer = new TmxSerializer(externalTilesetResolver, externalTemplateResolver);
 
     // Assert
     Assert.NotNull(tmxSerializer);
