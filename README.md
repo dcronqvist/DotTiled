@@ -4,10 +4,24 @@
 
 DotTiled is a simple and easy-to-use library for loading, saving, and managing [Tiled maps and tilesets](https://mapeditor.org) in your .NET projects. After [TiledCS](https://github.com/TheBoneJarmer/TiledCS) unfortunately became unmaintained (since 2022), I aimed to create a new library that could fill its shoes. DotTiled is the result of that effort.
 
+- [Feature coverage](#feature-coverage)
+- [Alternative libraries and comparison](#alternative-libraries-and-comparison)
+- [Quickstart](#quickstart)
+  - [Constructing your `TmxSerializer`](#constructing-your-tmxserializer)
+  - [Loading a `.tmx` map](#loading-a-tmx-map)
+  - [Loading a `.tsx` tileset](#loading-a-tsx-tileset)
+
+# Feature coverage
+
+**TBD**: Add a table displaying the features that DotTiled supports, and which features are not yet supported, and perhaps why they are not supported (yet or ever).
+
+# Alternative libraries and comparison
+
 Other similar libraries exist, and you may want to consider them for your project as well:
+
 | Library | Active | Formats | Feature coverage | Docs | License | Benchmark Rank* |
 | --- | --- | --- | --- | --- | --- | --- |
-| **DotTiled** | ✅ | `.tmx` `.tsx` <br> `.tmj` `.tsj` | | Usage, API, XML docs | | |
+| **DotTiled** | ✅ | `.tmx` `.tsx` `.tmj` `.tsj` `.tx` | | Usage, API, XML docs | | |
 | [TiledLib](https://github.com/Ragath/TiledLib.Net) | ✅ | | | | | |
 | [TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus) | ✅ | | | | | |
 | [TiledSharp](https://github.com/marshallward/TiledSharp) | ❌ | | | | | |
@@ -30,7 +44,7 @@ Comparison and benchmark details
 
 [MonoGame](https://www.monogame.net) users may also want to consider using [MonoGame.Extended](https://github.com/craftworkgames/MonoGame.Extended) for loading Tiled maps and tilesets. Like MonoGame.Extended, DotTiled also provides a way to properly import Tiled maps and tilesets with the MonoGame content pipeline. However, unlike MonoGame.Extended, DotTiled does *not* include any kind of rendering capabilities, and it is up to you as a developer to implement any kind of rendering for your maps when using DotTiled.
 
-## Quickstart
+# Quickstart
 
 Here are a few short examples to get you started with DotTiled.
 
