@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled", "DotTiled\DotTil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Tests", "DotTiled.Tests\DotTiled.Tests.csproj", "{C1311A5A-5206-467C-B323-B131CA11FDB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Benchmark", "DotTiled.Benchmark\DotTiled.Benchmark.csproj", "{510F3077-8EA4-47D1-8D01-E2D538F1B899}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C1311A5A-5206-467C-B323-B131CA11FDB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1311A5A-5206-467C-B323-B131CA11FDB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1311A5A-5206-467C-B323-B131CA11FDB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
