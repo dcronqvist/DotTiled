@@ -64,7 +64,24 @@ public partial class TmxSerializerMapTests
       externalTemplateResolver);
 
     // Act
-    var map = tmxSerializer.DeserializeMap(reader);
+
+    static Template ResolveTemplate(string source)
+    {
+      using var xmlTemplateReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Template.{source}");
+      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate);
+      return templateReader.ReadTemplate();
+    }
+
+    static Tileset ResolveTileset(string source)
+    {
+      using var xmlTilesetReader = TmxSerializerTestData.GetReaderFor($"TmxSerializer.TestData.Tileset.{source}");
+      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate);
+      return tilesetReader.ReadTileset();
+    }
+
+    var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate);
+
+    var map = mapReader.ReadMap();
     var raw = tmxSerializer.DeserializeMap(testDataFileText);
 
     // Assert
