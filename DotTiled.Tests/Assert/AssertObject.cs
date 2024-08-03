@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerObjectTests
+public static partial class DotTiledAssert
 {
-  public static void AssertObject(Object actual, Object expected)
+  internal static void AssertObject(Object expected, Object actual)
   {
     // Attributes
     Assert.Equal(expected.ID, actual.ID);
@@ -17,36 +17,36 @@ public partial class TmxSerializerObjectTests
     Assert.Equal(expected.Visible, actual.Visible);
     Assert.Equal(expected.Template, actual.Template);
 
-    TmxSerializerPropertiesTests.AssertProperties(actual.Properties, expected.Properties);
-    AssertObject((dynamic)actual, (dynamic)expected);
+    AssertProperties(actual.Properties, expected.Properties);
+    AssertObject((dynamic)expected, (dynamic)actual);
   }
 
-  private static void AssertObject(RectangleObject actual, RectangleObject expected)
+  private static void AssertObject(RectangleObject expected, RectangleObject actual)
   {
     Assert.True(true); // A rectangle object is the same as the abstract Object
   }
 
-  private static void AssertObject(EllipseObject actual, EllipseObject expected)
+  private static void AssertObject(EllipseObject expected, EllipseObject actual)
   {
     Assert.True(true); // An ellipse object is the same as the abstract Object
   }
 
-  private static void AssertObject(PointObject actual, PointObject expected)
+  private static void AssertObject(PointObject expected, PointObject actual)
   {
     Assert.True(true); // A point object is the same as the abstract Object
   }
 
-  private static void AssertObject(PolygonObject actual, PolygonObject expected)
+  private static void AssertObject(PolygonObject expected, PolygonObject actual)
   {
     Assert.Equal(expected.Points, actual.Points);
   }
 
-  private static void AssertObject(PolylineObject actual, PolylineObject expected)
+  private static void AssertObject(PolylineObject expected, PolylineObject actual)
   {
     Assert.Equal(expected.Points, actual.Points);
   }
 
-  private static void AssertObject(TextObject actual, TextObject expected)
+  private static void AssertObject(TextObject expected, TextObject actual)
   {
     // Attributes
     Assert.Equal(expected.FontFamily, actual.FontFamily);

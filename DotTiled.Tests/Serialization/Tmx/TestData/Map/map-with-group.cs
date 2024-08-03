@@ -1,6 +1,6 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerMapTests
+public partial class TmxMapReaderTests
 {
   private static Map MapWithGroup() => new Map
   {
