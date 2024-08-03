@@ -21,15 +21,27 @@ DotTiled is a simple and easy-to-use library for loading, saving, and managing [
 
 Other similar libraries exist, and you may want to consider them for your project as well:
 
-| **Comparison**                 |       **DotTiled**      | [TiledLib](https://github.com/Ragath/TiledLib.Net) | [TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus) | [TiledSharp](https://github.com/marshallward/TiledSharp) | [TiledCS](https://github.com/TheBoneJarmer/TiledCS) | [TiledNet](https://github.com/napen123/Tiled.Net) |
-|--------------------------------|:-----------------------:|:--------:|:-----------:|:----------:|:-------:|:------:|
-| Actively maintained            |            ✅          |     ✅   |     ✅      |      ❌   |    ❌  |   ❌   |
-| Docs                           | Usage,<br>XML Docs      |  Usage   | Usage, API,<br>XML Docs  | Usage, API | Usage, XML Docs | Usage, XML Docs |
-| License                        |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
-| Benchmark (time)*              |           1.00          |   1.81   |     2.12    |      -     |    -    |    -   |
-| Benchmark (memory)*            |           1.00          |   1.42   |     2.03    |      -     |    -    |    -   |
-| *Feature coverage<br>comparison*  |                         |          |             |            |         |        |
-| `.tmx` (XML format)            |           ✅           |   ✅     |    ✅       |      ✅   |    ✅  |    ✅  |
+| **Comparison**                  |       **DotTiled**      | [TiledLib](https://github.com/Ragath/TiledLib.Net) | [TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus) | [TiledSharp](https://github.com/marshallward/TiledSharp) | [TiledCS](https://github.com/TheBoneJarmer/TiledCS) | [TiledNet](https://github.com/napen123/Tiled.Net) |
+|---------------------------------|:-----------------------:|:--------:|:-----------:|:----------:|:-------:|:------:|
+| Actively maintained             |            ✅          |     ✅   |     ✅      |      ❌   |    ❌  |   ❌   |
+| Docs                            | Usage,<br>XML Docs      |  Usage   | Usage, API,<br>XML Docs  | Usage, API | Usage, XML Docs | Usage, XML Docs |
+| License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
+| Benchmark (time)*               |           1.00          |   1.81   |     2.12    |      -     |    -    |    -   |
+| Benchmark (memory)*             |           1.00          |   1.42   |     2.03    |      -     |    -    |    -   |
+| *Feature coverage<br>comparison*|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| `.tmx` (Map XML format)         |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| `.tsx` (Tileset XML format)     |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| `.tx` (Template XML format)     |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| `.tmj` (Map JSON format)        |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| `.tsj` (Tileset JSON format)    |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| `.tj` (Template JSON format)    |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Load from string (implies file) |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Load from file                  |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| External tilesets               |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Template files                  |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Property custom types           |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Hierarchical layers (groups)    |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Infinite maps                   |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 
 > [!NOTE]
 > *Both benchmark time and memory ratios are relative to DotTiled. Lower is better. Benchmark (time) refers to the execution time of loading the same map from an in-memory string that contains XML data in the `.tmx` format. Benchmark (memory) refers to the memory allocated during that loading process. For further details on the benchmark results, see the collapsible section below.
