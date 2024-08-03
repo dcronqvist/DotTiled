@@ -17,32 +17,48 @@ DotTiled is a simple and easy-to-use library for loading, saving, and managing [
 
 # Feature coverage
 
-**TBD**: Add a table displaying the features that DotTiled supports, and which features are not yet supported, and perhaps why they are not supported (yet or ever).
-
 # Alternative libraries and comparison
 
 Other similar libraries exist, and you may want to consider them for your project as well:
 
-| Library | Actively maintained | Supported formats | Feature coverage | Tiled version compatibility | Docs | License | Benchmark rank* |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **DotTiled** | ✅ | `.tmx` `.tsx` `.tmj` `.tsj` `.tx` | | | Usage, API, XML docs | | |
-| [TiledLib](https://github.com/Ragath/TiledLib.Net) |✅| | | | | | |
-| [TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus) |✅| | | | | | |
-| [TiledSharp](https://github.com/marshallward/TiledSharp) |❌| | | | | | |
-| [TiledCS](https://github.com/TheBoneJarmer/TiledCS) |❌| | | | | | |
-| [TiledNet](https://github.com/napen123/Tiled.Net) |❌| | | | | | |
+| **Comparison**                 |       **DotTiled**      | [TiledLib](https://github.com/Ragath/TiledLib.Net) | [TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus) | [TiledSharp](https://github.com/marshallward/TiledSharp) | [TiledCS](https://github.com/TheBoneJarmer/TiledCS) | [TiledNet](https://github.com/napen123/Tiled.Net) |
+|--------------------------------|:-----------------------:|:--------:|:-----------:|:----------:|:-------:|:------:|
+| Actively maintained            |            ✅          |     ✅   |     ✅      |      ❌   |    ❌  |   ❌   |
+| Docs                           | Usage,<br>XML Docs      |  Usage   | Usage, API,<br>XML Docs  | Usage, API | Usage, XML Docs | Usage, XML Docs |
+| License                        |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
+| Benchmark (time)*              |           1.00          |   1.81   |     2.12    |      -     |    -    |    -   |
+| Benchmark (memory)*            |           1.00          |   1.42   |     2.03    |      -     |    -    |    -   |
+| *Feature coverage<br>comparison*  |                         |          |             |            |         |        |
+| `.tmx` (XML format)            |           ✅           |   ✅     |    ✅       |      ✅   |    ✅  |    ✅  |
 
 > [!NOTE]
-> *Benchmark rank is based on the libraries' speed and memory usage when loading different types of maps and tilesets. Further explanations and details can be found in the below collapsible section.
+> *Both benchmark time and memory ratios are relative to DotTiled. Lower is better. Benchmark (time) refers to the execution time of loading the same map from an in-memory string that contains XML data in the `.tmx` format. Benchmark (memory) refers to the memory allocated during that loading process. For further details on the benchmark results, see the collapsible section below.
 
 <details>
 <summary>
-Comparison and benchmark details
+Benchmark details
 </summary>
 
-**TODO: Add table displaying feature availability**
+#### Benchmark results
 
-**TODO: Add table displaying benchmark results**
+The following benchmark results were gathered using the `DotTiled.Benchmark` project which uses [BenchmarkDotNet](https://benchmarkdotnet.org/) to compare the performance of DotTiled with other similar libraries. The benchmark results are grouped by category and show the mean execution time, memory consumption metrics, and ratio to DotTiled.
+
+```
+BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.4651/22H2/2022Update)
+12th Gen Intel Core i7-12700K, 1 CPU, 20 logical and 12 physical cores
+.NET SDK 8.0.202
+  [Host]     : .NET 8.0.3 (8.0.324.11423), X64 RyuJIT AVX2
+  DefaultJob : .NET 8.0.3 (8.0.324.11423), X64 RyuJIT AVX2
+```
+| Method      | Categories               | Mean      | Error     | StdDev    | Ratio | RatioSD | Gen0   | Gen1   | Allocated | Alloc Ratio |
+|------------ |------------------------- |----------:|----------:|----------:|------:|--------:|-------:|-------:|----------:|------------:|
+| DotTiled    | MapFromInMemoryTmxString |  2.991 μs | 0.0266 μs | 0.0236 μs |  1.00 |    0.00 | 1.2817 | 0.0610 |  16.37 KB |        1.00 |
+| TiledLib    | MapFromInMemoryTmxString |  5.405 μs | 0.0466 μs | 0.0413 μs |  1.81 |    0.02 | 1.8158 | 0.1068 |  23.32 KB |        1.42 |
+| TiledCSPlus | MapFromInMemoryTmxString |  6.354 μs | 0.0703 μs | 0.0587 μs |  2.12 |    0.03 | 2.5940 | 0.1831 |  33.23 KB |        2.03 |
+|             |                          |           |           |           |       |         |        |        |           |             |
+| DotTiled    | MapFromTmxFile           | 28.570 μs | 0.1216 μs | 0.1137 μs |  1.00 |    0.00 | 1.0376 |      - |  13.88 KB |        1.00 |
+| TiledCSPlus | MapFromTmxFile           | 33.377 μs | 0.1086 μs | 0.1016 μs |  1.17 |    0.01 | 2.8076 | 0.1221 |  36.93 KB |        2.66 |
+| TiledLib    | MapFromTmxFile           | 36.077 μs | 0.1900 μs | 0.1777 μs |  1.26 |    0.01 | 2.0752 | 0.1221 |   27.1 KB |        1.95 |
 
 </details>
 
@@ -56,56 +72,4 @@ DotTiled is available as a NuGet package. You can install it by using the NuGet 
 
 ```pwsh
 dotnet add package DotTiled
-```
-
-
-### Constructing a `TmxSerializer`
-
-There are few details to be aware of for your `TmxSerializer`:
-
-```csharp
-// A map may or may not contain tilesets that are stored in external
-// files. To deserialize a map, you must provide a way to resolve such
-// tilesets.
-Func<TmxSerializer, string, Tileset> tilesetResolver = 
-  (TmxSerializer serializer, string path) => 
-  {
-    string tilesetXml = fileSystem.ReadAllText(path);
-    return serializer.DeserializeTileset(tilesetXml);
-  };
-
-// A map may or may not contain objects that reference template files.
-// To deserialize a map, you must provide a way to resolve such templates.
-Func<TmxSerializer, string, Template> templateResolver = 
-  (TmxSerializer serializer, string path) => 
-  {
-    string templateXml = fileSystem.ReadAllText(path);
-    return serializer.DeserializeTemplate(templateXml);
-  };
-
-var tmxSerializer = new TmxSerializer(tilesetResolver, templateResolver);
-```
-
-### Loading a `.tmx` map 
-
-The `TmxSerializer` has several overloads for `DeserializeMap` that allow you to load a map from a number of different sources.
-
-```csharp
-string mapXml = fileSystem.ReadAllText("path/to/map.tmx");
-Map mapFromRaw = tmxSerializer.DeserializeMap(mapXml); // From raw XML string in memory
-
-using var reader = fileSystem.OpenXmlReader("path/to/map.tmx");
-Map mapFromReader = tmxSerializer.DeserializeMap(reader); // From XML reader
-```
-
-### Loading a `.tsx` tileset
-
-Similar to maps, the `TmxSerializer` has several overloads for `DeserializeTileset` that allow you to load a tileset from a number of different sources.
-
-```csharp
-string tilesetXml = fileSystem.ReadAllText("path/to/tileset.tsx");
-Tileset tileset = tmxSerializer.DeserializeTileset(tilesetXml); // From raw XML string in memory
-
-using var reader = fileSystem.OpenXmlReader("path/to/tileset.tsx");
-Tileset tileset = tmxSerializer.DeserializeTileset(reader); // From XML reader
 ```
