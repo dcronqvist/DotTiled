@@ -4,37 +4,35 @@
 
 DotTiled is a simple and easy-to-use library for loading, saving, and managing [Tiled maps and tilesets](https://mapeditor.org) in your .NET projects. After [TiledCS](https://github.com/TheBoneJarmer/TiledCS) unfortunately became unmaintained (since 2022), I aimed to create a new library that could fill its shoes. DotTiled is the result of that effort.
 
-- [Feature coverage](#feature-coverage)
 - [Alternative libraries and comparison + benchmarks](#alternative-libraries-and-comparison)
 - [Quickstart](#quickstart)
   - [Installing DotTiled](#installing-dottiled)
-  - [Constructing a `TmxSerializer`](#constructing-a-tmxserializer)
-  - [Loading a `.tmx` map](#loading-a-tmx-map)
-  - [Loading a `.tsx` tileset](#loading-a-tsx-tileset)
-  - [Constructing a `TmjSerializer`](#constructing-a-tmjserializer)
-  - [Loading a `.tmj` map](#loading-a-tmj-map)
-  - [Loading a `.tsj` tileset](#loading-a-tsj-tileset)
-
-# Feature coverage
 
 # Alternative libraries and comparison
 
 Other similar libraries exist, and you may want to consider them for your project as well:
 
-| **Comparison**                  |       **DotTiled**      | [TiledLib](https://github.com/Ragath/TiledLib.Net) | [TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus) | [TiledSharp](https://github.com/marshallward/TiledSharp) | [TiledCS](https://github.com/TheBoneJarmer/TiledCS) | [TiledNet](https://github.com/napen123/Tiled.Net) |
+|**Comparison**|**DotTiled**|[TiledLib](https://github.com/Ragath/TiledLib.Net)|[TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus)|[TiledSharp](https://github.com/marshallward/TiledSharp)|[TiledCS](https://github.com/TheBoneJarmer/TiledCS)|[TiledNet](https://github.com/napen123/Tiled.Net)|
 |---------------------------------|:-----------------------:|:--------:|:-----------:|:----------:|:-------:|:------:|
 | Actively maintained             |            ✅          |     ✅   |     ✅      |      ❌   |    ❌  |   ❌   |
-| Docs                            | Usage,<br>XML Docs      |  Usage   | Usage, API,<br>XML Docs  | Usage, API | Usage, XML Docs | Usage, XML Docs |
 | License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
 | Benchmark (time)*               |           1.00          |   1.81   |     2.12    |      -     |    -    |    -   |
 | Benchmark (memory)*             |           1.00          |   1.42   |     2.03    |      -     |    -    |    -   |
-| *Feature coverage<br>comparison*|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| `.tmx` (Map XML format)         |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| `.tsx` (Tileset XML format)     |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| `.tx` (Template XML format)     |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| `.tmj` (Map JSON format)        |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| `.tsj` (Tileset JSON format)    |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| `.tj` (Template JSON format)    |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Docs                            |Usage,<br>XML Docs|Usage|Usage, API,<br>XML Docs|Usage, API|Usage, XML Docs|Usage, XML Docs|
+| *Feature coverage<br>comparison below*|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+
+> [!NOTE]
+> *Both benchmark time and memory ratios are relative to DotTiled. Lower is better. Benchmark (time) refers to the execution time of loading the same map from an in-memory string that contains XML data in the `.tmx` format. Benchmark (memory) refers to the memory allocated during that loading process. For further details on the benchmark results, see the collapsible section below.
+
+<details>
+<summary>
+Feature coverage comparison
+</summary>
+
+| **Comparison**|**DotTiled**|[TiledLib](https://github.com/Ragath/TiledLib.Net)|[TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus)|[TiledSharp](https://github.com/marshallward/TiledSharp)|[TiledCS](https://github.com/TheBoneJarmer/TiledCS)|[TiledNet](https://github.com/napen123/Tiled.Net)|
+|---------------------------------|:-:|:-:|:-:|:-:|:-:|:-:|
+| Full XML support `.tmx`         |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
+| Full JSON support `.tmj`        |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 | Load from string (implies file) |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 | Load from file                  |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 | External tilesets               |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
@@ -43,15 +41,12 @@ Other similar libraries exist, and you may want to consider them for your projec
 | Hierarchical layers (groups)    |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 | Infinite maps                   |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 
-> [!NOTE]
-> *Both benchmark time and memory ratios are relative to DotTiled. Lower is better. Benchmark (time) refers to the execution time of loading the same map from an in-memory string that contains XML data in the `.tmx` format. Benchmark (memory) refers to the memory allocated during that loading process. For further details on the benchmark results, see the collapsible section below.
+</details>
 
 <details>
 <summary>
 Benchmark details
 </summary>
-
-#### Benchmark results
 
 The following benchmark results were gathered using the `DotTiled.Benchmark` project which uses [BenchmarkDotNet](https://benchmarkdotnet.org/) to compare the performance of DotTiled with other similar libraries. The benchmark results are grouped by category and show the mean execution time, memory consumption metrics, and ratio to DotTiled.
 
