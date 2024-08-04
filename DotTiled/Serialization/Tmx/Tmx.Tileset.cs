@@ -5,9 +5,9 @@ using System.Xml;
 
 namespace DotTiled;
 
-public partial class TmxSerializer
+internal partial class Tmx
 {
-  private Tileset ReadTileset(XmlReader reader)
+  internal static Tileset ReadTileset(XmlReader reader, Func<string, Tileset>? externalTilesetResolver, Func<string, Template> externalTemplateResolver)
   {
     // Attributes
     var version = reader.GetOptionalAttribute("version");
@@ -66,14 +66,17 @@ public partial class TmxSerializer
       "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
       "wangsets" => () => Helpers.SetAtMostOnce(ref wangsets, ReadWangsets(r), "Wangsets"),
       "transformations" => () => Helpers.SetAtMostOnce(ref transformations, ReadTransformations(r), "Transformations"),
-      "tile" => () => tiles.Add(ReadTile(r)),
+      "tile" => () => tiles.Add(ReadTile(r, externalTemplateResolver)),
       _ => r.Skip
     });
 
     // Check if tileset is referring to external file
     if (source is not null)
     {
-      var resolvedTileset = _externalTilesetResolver(this, source);
+      if (externalTilesetResolver is null)
+        throw new InvalidOperationException("External tileset resolver is required to resolve external tilesets.");
+
+      var resolvedTileset = externalTilesetResolver(source);
       resolvedTileset.FirstGID = firstGID;
       resolvedTileset.Source = null;
       return resolvedTileset;
@@ -106,7 +109,7 @@ public partial class TmxSerializer
     };
   }
 
-  private Image ReadImage(XmlReader reader)
+  internal static Image ReadImage(XmlReader reader)
   {
     // Attributes
     var format = reader.GetOptionalAttributeEnum<ImageFormat>("format", s => s switch
@@ -138,7 +141,7 @@ public partial class TmxSerializer
     };
   }
 
-  private TileOffset ReadTileOffset(XmlReader reader)
+  internal static TileOffset ReadTileOffset(XmlReader reader)
   {
     // Attributes
     var x = reader.GetOptionalAttributeParseable<float>("x") ?? 0f;
@@ -148,7 +151,7 @@ public partial class TmxSerializer
     return new TileOffset { X = x, Y = y };
   }
 
-  private Grid ReadGrid(XmlReader reader)
+  internal static Grid ReadGrid(XmlReader reader)
   {
     // Attributes
     var orientation = reader.GetOptionalAttributeEnum<GridOrientation>("orientation", s => s switch
@@ -164,7 +167,7 @@ public partial class TmxSerializer
     return new Grid { Orientation = orientation, Width = width, Height = height };
   }
 
-  private Transformations ReadTransformations(XmlReader reader)
+  internal static Transformations ReadTransformations(XmlReader reader)
   {
     // Attributes
     var hFlip = reader.GetOptionalAttributeParseable<bool>("hflip") ?? false;
@@ -176,7 +179,7 @@ public partial class TmxSerializer
     return new Transformations { HFlip = hFlip, VFlip = vFlip, Rotate = rotate, PreferUntransformed = preferUntransformed };
   }
 
-  private Tile ReadTile(XmlReader reader)
+  internal static Tile ReadTile(XmlReader reader, Func<string, Template> externalTemplateResolver)
   {
     // Attributes
     var id = reader.GetRequiredAttributeParseable<uint>("id");
@@ -197,7 +200,7 @@ public partial class TmxSerializer
     {
       "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(r), "Image"),
-      "objectgroup" => () => Helpers.SetAtMostOnce(ref objectLayer, ReadObjectLayer(r), "ObjectLayer"),
+      "objectgroup" => () => Helpers.SetAtMostOnce(ref objectLayer, ReadObjectLayer(r, externalTemplateResolver), "ObjectLayer"),
       "animation" => () => Helpers.SetAtMostOnce(ref animation, r.ReadList<Frame>("animation", "frame", (ar) =>
       {
         var tileID = ar.GetRequiredAttributeParseable<uint>("tileid");
@@ -223,12 +226,12 @@ public partial class TmxSerializer
     };
   }
 
-  private List<Wangset> ReadWangsets(XmlReader reader)
+  internal static List<Wangset> ReadWangsets(XmlReader reader)
   {
     return reader.ReadList<Wangset>("wangsets", "wangset", ReadWangset);
   }
 
-  private Wangset ReadWangset(XmlReader reader)
+  internal static Wangset ReadWangset(XmlReader reader)
   {
     // Attributes
     var name = reader.GetRequiredAttribute("name");
@@ -262,7 +265,7 @@ public partial class TmxSerializer
     };
   }
 
-  private WangColor ReadWangColor(XmlReader reader)
+  internal static WangColor ReadWangColor(XmlReader reader)
   {
     // Attributes
     var name = reader.GetRequiredAttribute("name");
@@ -291,7 +294,7 @@ public partial class TmxSerializer
     };
   }
 
-  private WangTile ReadWangTile(XmlReader reader)
+  internal static WangTile ReadWangTile(XmlReader reader)
   {
     // Attributes
     var tileID = reader.GetRequiredAttributeParseable<uint>("tileid");

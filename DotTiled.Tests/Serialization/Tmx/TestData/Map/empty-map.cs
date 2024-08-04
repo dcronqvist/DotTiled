@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerMapTests
+public partial class TmxMapReaderTests
 {
-  private static Map SimpleMapWithEmbeddedTileset() => new Map
+  private static Map EmptyMapWithEncodingAndCompression(DataEncoding dataEncoding, DataCompression? compression) => new Map
   {
     Version = "1.10",
     TiledVersion = "1.11.0",
@@ -15,23 +15,6 @@ public partial class TmxSerializerMapTests
     Infinite = false,
     NextLayerID = 2,
     NextObjectID = 1,
-    Tilesets = [
-      new Tileset
-      {
-        FirstGID = 1,
-        Name = "Tileset 1",
-        TileWidth = 32,
-        TileHeight = 32,
-        TileCount = 8,
-        Columns = 4,
-        Image = new Image
-        {
-          Source = "tiles.png",
-          Width = 128,
-          Height = 64
-        }
-      }
-    ],
     Layers = [
       new TileLayer
       {
@@ -41,14 +24,14 @@ public partial class TmxSerializerMapTests
         Height = 5,
         Data = new Data
         {
-          Encoding = DataEncoding.Csv,
-          Compression = null,
+          Encoding = dataEncoding,
+          Compression = compression,
           GlobalTileIDs = [
-            1,1,1,1,1,
-            1,1,1,1,1,
-            1,1,1,1,1,
-            2,2,2,2,2,
-            2,2,2,2,2
+            0,0,0,0,0,
+            0,0,0,0,0,
+            0,0,0,0,0,
+            0,0,0,0,0,
+            0,0,0,0,0
           ],
           FlippingFlags = [
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None,
@@ -57,7 +40,7 @@ public partial class TmxSerializerMapTests
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None
           ]
-        },
+        }
       }
     ]
   };

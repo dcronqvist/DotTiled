@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerPropertiesTests
+public static partial class DotTiledAssert
 {
-  public static void AssertProperties(Dictionary<string, IProperty>? actual, Dictionary<string, IProperty>? expected)
+  internal static void AssertProperties(Dictionary<string, IProperty>? expected, Dictionary<string, IProperty>? actual)
   {
     if (expected is null)
     {

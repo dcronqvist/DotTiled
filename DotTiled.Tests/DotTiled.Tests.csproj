@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <!-- TmxSerializer test data -->
-    <EmbeddedResource Include="TmxSerializer/TestData/**/*" />
+    <EmbeddedResource Include="Serialization/Tmx/TestData/**/*" />
   </ItemGroup>
 
 </Project>

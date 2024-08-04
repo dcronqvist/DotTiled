@@ -2,9 +2,9 @@ using System.Xml;
 
 namespace DotTiled;
 
-public partial class TmxSerializer
+internal partial class Tmx
 {
-  private Chunk ReadChunk(XmlReader reader, DataEncoding? encoding, DataCompression? compression)
+  internal static Chunk ReadChunk(XmlReader reader, DataEncoding? encoding, DataCompression? compression)
   {
     var x = reader.GetRequiredAttributeParseable<int>("x");
     var y = reader.GetRequiredAttributeParseable<int>("y");

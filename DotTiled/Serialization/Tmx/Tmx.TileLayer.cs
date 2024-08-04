@@ -5,9 +5,9 @@ using System.Xml;
 
 namespace DotTiled;
 
-public partial class TmxSerializer
+internal partial class Tmx
 {
-  private TileLayer ReadTileLayer(XmlReader reader, bool dataUsesChunks)
+  internal static TileLayer ReadTileLayer(XmlReader reader, bool dataUsesChunks)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -55,7 +55,7 @@ public partial class TmxSerializer
     };
   }
 
-  private ImageLayer ReadImageLayer(XmlReader reader)
+  internal static ImageLayer ReadImageLayer(XmlReader reader)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -103,7 +103,7 @@ public partial class TmxSerializer
     };
   }
 
-  private Group ReadGroup(XmlReader reader)
+  internal static Group ReadGroup(XmlReader reader, Func<string, Template> externalTemplateResolver)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -123,9 +123,9 @@ public partial class TmxSerializer
     {
       "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
       "layer" => () => layers.Add(ReadTileLayer(r, dataUsesChunks: false)),
-      "objectgroup" => () => layers.Add(ReadObjectLayer(r)),
+      "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver)),
       "imagelayer" => () => layers.Add(ReadImageLayer(r)),
-      "group" => () => layers.Add(ReadGroup(r)),
+      "group" => () => layers.Add(ReadGroup(r, externalTemplateResolver)),
       _ => r.Skip
     });
 

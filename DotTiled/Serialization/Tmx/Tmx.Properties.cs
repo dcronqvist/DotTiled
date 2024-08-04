@@ -4,9 +4,9 @@ using System.Xml;
 
 namespace DotTiled;
 
-public partial class TmxSerializer
+internal partial class Tmx
 {
-  private Dictionary<string, IProperty> ReadProperties(XmlReader reader)
+  internal static Dictionary<string, IProperty> ReadProperties(XmlReader reader)
   {
     return reader.ReadList("properties", "property", (r) =>
     {
@@ -40,7 +40,7 @@ public partial class TmxSerializer
     }).ToDictionary(x => x.name, x => x.property);
   }
 
-  private ClassProperty ReadClassProperty(XmlReader reader)
+  internal static ClassProperty ReadClassProperty(XmlReader reader)
   {
     var name = reader.GetRequiredAttribute("name");
     var propertyType = reader.GetRequiredAttribute("propertytype");

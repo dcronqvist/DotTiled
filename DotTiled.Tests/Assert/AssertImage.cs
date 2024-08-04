@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerImageTests
+public static partial class DotTiledAssert
 {
-  public static void AssertImage(Image? actual, Image? expected)
+  internal static void AssertImage(Image? expected, Image? actual)
   {
     if (expected is null)
     {

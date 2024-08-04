@@ -2,7 +2,7 @@ using System;
 
 namespace DotTiled;
 
-public partial class TmxSerializer
+internal partial class Tmx
 {
   private static class Helpers
   {

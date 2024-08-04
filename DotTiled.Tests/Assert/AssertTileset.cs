@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerTilesetTests
+public static partial class DotTiledAssert
 {
-  public static void AssertTileset(Tileset actual, Tileset expected)
+  internal static void AssertTileset(Tileset expected, Tileset actual)
   {
     // Attributes
     Assert.Equal(expected.Version, actual.Version);
@@ -22,28 +22,28 @@ public partial class TmxSerializerTilesetTests
     Assert.Equal(expected.FillMode, actual.FillMode);
 
     // At most one of
-    TmxSerializerImageTests.AssertImage(actual.Image, expected.Image);
-    AssertTileOffset(actual.TileOffset, expected.TileOffset);
-    AssertGrid(actual.Grid, expected.Grid);
-    TmxSerializerPropertiesTests.AssertProperties(actual.Properties, expected.Properties);
+    AssertImage(expected.Image, actual.Image);
+    AssertTileOffset(expected.TileOffset, actual.TileOffset);
+    AssertGrid(expected.Grid, actual.Grid);
+    AssertProperties(expected.Properties, actual.Properties);
     // TODO: AssertTerrainTypes(actual.TerrainTypes, expected.TerrainTypes);
     if (expected.Wangsets is not null)
     {
       Assert.NotNull(actual.Wangsets);
       Assert.Equal(expected.Wangsets.Count, actual.Wangsets.Count);
       for (var i = 0; i < expected.Wangsets.Count; i++)
-        AssertWangset(actual.Wangsets[i], expected.Wangsets[i]);
+        AssertWangset(expected.Wangsets[i], actual.Wangsets[i]);
     }
-    AssertTransformations(actual.Transformations, expected.Transformations);
+    AssertTransformations(expected.Transformations, actual.Transformations);
 
     // Any number of
     Assert.NotNull(actual.Tiles);
     Assert.Equal(expected.Tiles.Count, actual.Tiles.Count);
     for (var i = 0; i < expected.Tiles.Count; i++)
-      AssertTile(actual.Tiles[i], expected.Tiles[i]);
+      AssertTile(expected.Tiles[i], actual.Tiles[i]);
   }
 
-  private static void AssertTileOffset(TileOffset? actual, TileOffset? expected)
+  private static void AssertTileOffset(TileOffset? expected, TileOffset? actual)
   {
     if (expected is null)
     {
@@ -57,7 +57,7 @@ public partial class TmxSerializerTilesetTests
     Assert.Equal(expected.Y, actual.Y);
   }
 
-  private static void AssertGrid(Grid? actual, Grid? expected)
+  private static void AssertGrid(Grid? expected, Grid? actual)
   {
     if (expected is null)
     {
@@ -72,7 +72,7 @@ public partial class TmxSerializerTilesetTests
     Assert.Equal(expected.Height, actual.Height);
   }
 
-  private static void AssertWangset(Wangset actual, Wangset expected)
+  private static void AssertWangset(Wangset expected, Wangset actual)
   {
     // Attributes
     Assert.Equal(expected.Name, actual.Name);
@@ -80,19 +80,19 @@ public partial class TmxSerializerTilesetTests
     Assert.Equal(expected.Tile, actual.Tile);
 
     // At most one of
-    TmxSerializerPropertiesTests.AssertProperties(actual.Properties, expected.Properties);
+    AssertProperties(expected.Properties, actual.Properties);
     if (expected.WangColors is not null)
     {
       Assert.NotNull(actual.WangColors);
       Assert.Equal(expected.WangColors.Count, actual.WangColors.Count);
       for (var i = 0; i < expected.WangColors.Count; i++)
-        AssertWangColor(actual.WangColors[i], expected.WangColors[i]);
+        AssertWangColor(expected.WangColors[i], actual.WangColors[i]);
     }
     for (var i = 0; i < expected.WangTiles.Count; i++)
-      AssertWangTile(actual.WangTiles[i], expected.WangTiles[i]);
+      AssertWangTile(expected.WangTiles[i], actual.WangTiles[i]);
   }
 
-  private static void AssertWangColor(WangColor actual, WangColor expected)
+  private static void AssertWangColor(WangColor expected, WangColor actual)
   {
     // Attributes
     Assert.Equal(expected.Name, actual.Name);
@@ -101,17 +101,17 @@ public partial class TmxSerializerTilesetTests
     Assert.Equal(expected.Tile, actual.Tile);
     Assert.Equal(expected.Probability, actual.Probability);
 
-    TmxSerializerPropertiesTests.AssertProperties(actual.Properties, expected.Properties);
+    AssertProperties(expected.Properties, actual.Properties);
   }
 
-  private static void AssertWangTile(WangTile actual, WangTile expected)
+  private static void AssertWangTile(WangTile expected, WangTile actual)
   {
     // Attributes
     Assert.Equal(expected.TileID, actual.TileID);
     Assert.Equal(expected.WangID, actual.WangID);
   }
 
-  private static void AssertTransformations(Transformations? actual, Transformations? expected)
+  private static void AssertTransformations(Transformations? expected, Transformations? actual)
   {
     if (expected is null)
     {
@@ -127,7 +127,7 @@ public partial class TmxSerializerTilesetTests
     Assert.Equal(expected.PreferUntransformed, actual.PreferUntransformed);
   }
 
-  private static void AssertTile(Tile actual, Tile expected)
+  private static void AssertTile(Tile expected, Tile actual)
   {
     // Attributes
     Assert.Equal(expected.ID, actual.ID);
@@ -139,19 +139,19 @@ public partial class TmxSerializerTilesetTests
     Assert.Equal(expected.Height, actual.Height);
 
     // Elements
-    TmxSerializerPropertiesTests.AssertProperties(actual.Properties, expected.Properties);
-    TmxSerializerImageTests.AssertImage(actual.Image, expected.Image);
-    TmxSerializerLayerTests.AssertLayer(actual.ObjectLayer, expected.ObjectLayer);
+    AssertProperties(actual.Properties, expected.Properties);
+    AssertImage(actual.Image, expected.Image);
+    AssertLayer((BaseLayer?)actual.ObjectLayer, (BaseLayer?)expected.ObjectLayer);
     if (expected.Animation is not null)
     {
       Assert.NotNull(actual.Animation);
       Assert.Equal(expected.Animation.Count, actual.Animation.Count);
       for (var i = 0; i < expected.Animation.Count; i++)
-        AssertFrame(actual.Animation[i], expected.Animation[i]);
+        AssertFrame(expected.Animation[i], actual.Animation[i]);
     }
   }
 
-  private static void AssertFrame(Frame actual, Frame expected)
+  private static void AssertFrame(Frame expected, Frame actual)
   {
     // Attributes
     Assert.Equal(expected.TileID, actual.TileID);

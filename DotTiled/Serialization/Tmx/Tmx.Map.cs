@@ -6,9 +6,9 @@ using System.Xml;
 
 namespace DotTiled;
 
-public partial class TmxSerializer
+internal partial class Tmx
 {
-  private Map ReadMap(XmlReader reader)
+  internal static Map ReadMap(XmlReader reader, Func<string, Tileset> externalTilesetResolver, Func<string, Template> externalTemplateResolver)
   {
     // Attributes
     var version = reader.GetRequiredAttribute("version");
@@ -65,11 +65,11 @@ public partial class TmxSerializer
     reader.ProcessChildren("map", (r, elementName) => elementName switch
     {
       "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
-      "tileset" => () => tilesets.Add(ReadTileset(r)),
+      "tileset" => () => tilesets.Add(ReadTileset(r, externalTilesetResolver, externalTemplateResolver)),
       "layer" => () => layers.Add(ReadTileLayer(r, dataUsesChunks: infinite)),
-      "objectgroup" => () => layers.Add(ReadObjectLayer(r)),
+      "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver)),
       "imagelayer" => () => layers.Add(ReadImageLayer(r)),
-      "group" => () => layers.Add(ReadGroup(r)),
+      "group" => () => layers.Add(ReadGroup(r, externalTemplateResolver)),
       _ => r.Skip
     });
 

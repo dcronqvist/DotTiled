@@ -7,9 +7,9 @@ using System.Xml;
 
 namespace DotTiled;
 
-public partial class TmxSerializer
+internal partial class Tmx
 {
-  private Data ReadData(XmlReader reader, bool usesChunks)
+  internal static Data ReadData(XmlReader reader, bool usesChunks)
   {
     var encoding = reader.GetOptionalAttributeEnum<DataEncoding>("encoding", e => e switch
     {
@@ -46,7 +46,7 @@ public partial class TmxSerializer
     return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = rawDataGlobalTileIDs, FlippingFlags = rawDataFlippingFlags, Chunks = null };
   }
 
-  private (uint[] GlobalTileIDs, FlippingFlags[] FlippingFlags) ReadAndClearFlippingFlagsFromGIDs(uint[] globalTileIDs)
+  internal static (uint[] GlobalTileIDs, FlippingFlags[] FlippingFlags) ReadAndClearFlippingFlagsFromGIDs(uint[] globalTileIDs)
   {
     var clearedGlobalTileIDs = new uint[globalTileIDs.Length];
     var flippingFlags = new FlippingFlags[globalTileIDs.Length];
@@ -61,12 +61,12 @@ public partial class TmxSerializer
     return (clearedGlobalTileIDs, flippingFlags);
   }
 
-  private uint[] ReadTileChildrenInWrapper(string wrapper, XmlReader reader)
+  internal static uint[] ReadTileChildrenInWrapper(string wrapper, XmlReader reader)
   {
     return reader.ReadList(wrapper, "tile", (r) => r.GetOptionalAttributeParseable<uint>("gid") ?? 0).ToArray();
   }
 
-  private uint[] ReadRawData(XmlReader reader, DataEncoding encoding, DataCompression? compression)
+  internal static uint[] ReadRawData(XmlReader reader, DataEncoding encoding, DataCompression? compression)
   {
     var data = reader.ReadElementContentAsString();
     if (encoding == DataEncoding.Csv)
@@ -87,7 +87,7 @@ public partial class TmxSerializer
     return decompressed;
   }
 
-  private uint[] ParseCsvData(string data)
+  internal static uint[] ParseCsvData(string data)
   {
     var values = data
       .Split((char[])['\n', '\r', ','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
@@ -96,7 +96,7 @@ public partial class TmxSerializer
     return values;
   }
 
-  private uint[] ReadMemoryStreamAsInt32Array(Stream stream)
+  internal static uint[] ReadMemoryStreamAsInt32Array(Stream stream)
   {
     var finalValues = new List<uint>();
     var int32Bytes = new byte[4];
@@ -108,13 +108,13 @@ public partial class TmxSerializer
     return finalValues.ToArray();
   }
 
-  private uint[] DecompressGZip(MemoryStream stream)
+  internal static uint[] DecompressGZip(MemoryStream stream)
   {
     using var decompressedStream = new GZipStream(stream, CompressionMode.Decompress);
     return ReadMemoryStreamAsInt32Array(decompressedStream);
   }
 
-  private uint[] DecompressZLib(MemoryStream stream)
+  internal static uint[] DecompressZLib(MemoryStream stream)
   {
     using var decompressedStream = new ZLibStream(stream, CompressionMode.Decompress);
     return ReadMemoryStreamAsInt32Array(decompressedStream);

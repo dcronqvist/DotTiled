@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerLayerTests
+public static partial class DotTiledAssert
 {
-  public static void AssertLayer(BaseLayer? actual, BaseLayer? expected)
+  internal static void AssertLayer(BaseLayer? expected, BaseLayer? actual)
   {
     if (expected is null)
     {
@@ -23,11 +23,11 @@ public partial class TmxSerializerLayerTests
     Assert.Equal(expected.ParallaxX, actual.ParallaxX);
     Assert.Equal(expected.ParallaxY, actual.ParallaxY);
 
-    TmxSerializerPropertiesTests.AssertProperties(actual.Properties, expected.Properties);
-    AssertLayer((dynamic)actual, (dynamic)expected);
+    AssertProperties(expected.Properties, actual.Properties);
+    AssertLayer((dynamic)expected, (dynamic)actual);
   }
 
-  private static void AssertLayer(TileLayer actual, TileLayer expected)
+  private static void AssertLayer(TileLayer expected, TileLayer actual)
   {
     // Attributes
     Assert.Equal(expected.Width, actual.Width);
@@ -36,10 +36,10 @@ public partial class TmxSerializerLayerTests
     Assert.Equal(expected.Y, actual.Y);
 
     Assert.NotNull(actual.Data);
-    TmxSerializerDataTests.AssertData(actual.Data, expected.Data);
+    AssertData(expected.Data, actual.Data);
   }
 
-  private static void AssertLayer(ObjectLayer actual, ObjectLayer expected)
+  private static void AssertLayer(ObjectLayer expected, ObjectLayer actual)
   {
     // Attributes
     Assert.Equal(expected.DrawOrder, actual.DrawOrder);
@@ -49,10 +49,10 @@ public partial class TmxSerializerLayerTests
     Assert.NotNull(actual.Objects);
     Assert.Equal(expected.Objects.Count, actual.Objects.Count);
     for (var i = 0; i < expected.Objects.Count; i++)
-      TmxSerializerObjectTests.AssertObject(actual.Objects[i], expected.Objects[i]);
+      AssertObject(expected.Objects[i], actual.Objects[i]);
   }
 
-  private static void AssertLayer(ImageLayer actual, ImageLayer expected)
+  private static void AssertLayer(ImageLayer expected, ImageLayer actual)
   {
     // Attributes
     Assert.Equal(expected.RepeatX, actual.RepeatX);
@@ -61,15 +61,15 @@ public partial class TmxSerializerLayerTests
     Assert.Equal(expected.Y, actual.Y);
 
     Assert.NotNull(actual.Image);
-    TmxSerializerImageTests.AssertImage(actual.Image, expected.Image);
+    AssertImage(expected.Image, actual.Image);
   }
 
-  private static void AssertLayer(Group actual, Group expected)
+  private static void AssertLayer(Group expected, Group actual)
   {
     // Attributes
     Assert.NotNull(actual.Layers);
     Assert.Equal(expected.Layers.Count, actual.Layers.Count);
     for (var i = 0; i < expected.Layers.Count; i++)
-      AssertLayer(actual.Layers[i], expected.Layers[i]);
+      AssertLayer(expected.Layers[i], actual.Layers[i]);
   }
 }

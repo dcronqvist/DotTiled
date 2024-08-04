@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxSerializerDataTests
+public static partial class DotTiledAssert
 {
-  public static void AssertData(Data? actual, Data? expected)
+  internal static void AssertData(Data? expected, Data? actual)
   {
     if (expected is null)
     {
@@ -24,11 +24,11 @@ public partial class TmxSerializerDataTests
       Assert.NotNull(actual.Chunks);
       Assert.Equal(expected.Chunks.Length, actual.Chunks.Length);
       for (var i = 0; i < expected.Chunks.Length; i++)
-        AssertChunk(actual.Chunks[i], expected.Chunks[i]);
+        AssertChunk(expected.Chunks[i], actual.Chunks[i]);
     }
   }
 
-  private static void AssertChunk(Chunk actual, Chunk expected)
+  private static void AssertChunk(Chunk expected, Chunk actual)
   {
     // Attributes
     Assert.Equal(expected.X, actual.X);
