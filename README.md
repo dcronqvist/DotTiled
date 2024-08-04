@@ -4,6 +4,8 @@
 
 DotTiled is a simple and easy-to-use library for loading, saving, and managing [Tiled maps and tilesets](https://mapeditor.org) in your .NET projects. After [TiledCS](https://github.com/TheBoneJarmer/TiledCS) unfortunately became unmaintained (since 2022), I aimed to create a new library that could fill its shoes. DotTiled is the result of that effort.
 
+DotTiled is designed to be a lightweight and efficient library that provides a simple API for loading and managing Tiled maps and tilesets. It is built with performance in mind and aims to be as fast and memory-efficient as possible. Targeting `netstandard2.0` and `net8.0` allows DotTiled to be used in popular game engines like Unity and Godot, as well as in popular game development frameworks like MonoGame.
+
 - [Alternative libraries and comparison + benchmarks](#alternative-libraries-and-comparison)
 - [Quickstart](#quickstart)
   - [Installing DotTiled](#installing-dottiled)
@@ -15,10 +17,11 @@ Other similar libraries exist, and you may want to consider them for your projec
 |**Comparison**|**DotTiled**|[TiledLib](https://github.com/Ragath/TiledLib.Net)|[TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus)|[TiledSharp](https://github.com/marshallward/TiledSharp)|[TiledCS](https://github.com/TheBoneJarmer/TiledCS)|[TiledNet](https://github.com/napen123/Tiled.Net)|
 |---------------------------------|:-----------------------:|:--------:|:-----------:|:----------:|:-------:|:------:|
 | Actively maintained             |            ✅          |     ✅   |     ✅      |      ❌   |    ❌  |   ❌   |
-| License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
 | Benchmark (time)*               |           1.00          |   1.81   |     2.12    |      -     |    -    |    -   |
 | Benchmark (memory)*             |           1.00          |   1.42   |     2.03    |      -     |    -    |    -   |
+| .NET Targets                    | `net8.0`<br>`netstandard2.0` |`net6.0`<br>`net7.0`|`netstandard2.1`|`netstandard2.0`|`netstandard2.0`|`net45`|
 | Docs                            |Usage,<br>XML Docs|Usage|Usage, API,<br>XML Docs|Usage, API|Usage, XML Docs|Usage, XML Docs|
+| License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
 | *Feature coverage<br>comparison below*|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 
 > [!NOTE]
