@@ -17,16 +17,9 @@ public class TmjMapReader : IMapReader
 
   public Map ReadMap()
   {
-    var bytes = Encoding.UTF8.GetBytes(_jsonString);
-    var options = new JsonReaderOptions
-    {
-      AllowTrailingCommas = true,
-      CommentHandling = JsonCommentHandling.Skip,
-    };
-    var reader = new Utf8JsonReader(bytes, options);
-    reader.MoveToContent();
-
-    return Tmj.ReadMap(ref reader);
+    var jsonDoc = JsonDocument.Parse(_jsonString);
+    var rootElement = jsonDoc.RootElement;
+    return Tmj.ReadMap(rootElement);
   }
 
   protected virtual void Dispose(bool disposing)
