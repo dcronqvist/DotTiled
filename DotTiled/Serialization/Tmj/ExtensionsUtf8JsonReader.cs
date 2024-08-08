@@ -14,40 +14,26 @@ internal partial class Tmj
     internal string PropertyName { get; } = propertyName;
   }
 
-  internal class RequiredProperty<T>(string propertyName, Action<T> withValue) : JsonProperty(propertyName)
+  internal delegate void UseReader(ref Utf8JsonReader reader);
+
+  internal class RequiredProperty(string propertyName, UseReader useReader) : JsonProperty(propertyName)
   {
-    internal Action<T> WithValue { get; } = withValue;
+    internal UseReader UseReader { get; } = useReader;
   }
 
-  internal class OptionalProperty<T>(string propertyName, Action<T?> withValue, bool allowNull = false) : JsonProperty(propertyName)
+  internal class OptionalProperty(string propertyName, UseReader useReader, bool allowNull = true) : JsonProperty(propertyName)
   {
-    internal Action<T?> WithValue { get; } = withValue;
+    internal UseReader UseReader { get; } = useReader;
     internal bool AllowNull { get; } = allowNull;
   }
 }
 
 internal static class ExtensionsUtf8JsonReader
 {
-  private static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
+  internal static T Progress<T>(ref this Utf8JsonReader reader, T value)
   {
-    while (toCheck != typeof(object))
-    {
-      var cur = toCheck!.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
-      if (generic == cur)
-        return true;
-
-      toCheck = toCheck.BaseType!;
-    }
-
-    return false;
-  }
-
-  internal static void Require<T>(this ref Utf8JsonReader reader, ProcessProperty process)
-  {
-    if (reader.TokenType == JsonTokenType.Null)
-      throw new JsonException("Value is required.");
-
-    process(ref reader);
+    reader.Read();
+    return value;
   }
 
   internal static void MoveToContent(this ref Utf8JsonReader reader)
@@ -59,16 +45,15 @@ internal static class ExtensionsUtf8JsonReader
 
   internal delegate void ProcessProperty(ref Utf8JsonReader reader);
 
-  internal static void ProcessJsonObject(this Utf8JsonReader reader, (string PropertyName, ProcessProperty Processor)[] processors)
+  private static void ProcessJsonObject(this ref Utf8JsonReader reader, (string PropertyName, ProcessProperty Processor)[] processors)
   {
     if (reader.TokenType != JsonTokenType.StartObject)
       throw new JsonException("Expected start of object.");
 
-    while (reader.Read())
-    {
-      if (reader.TokenType == JsonTokenType.EndObject)
-        return;
+    reader.Read();
 
+    while (reader.TokenType != JsonTokenType.EndObject)
+    {
       if (reader.TokenType != JsonTokenType.PropertyName)
         throw new JsonException("Expected property name.");
 
@@ -77,7 +62,11 @@ internal static class ExtensionsUtf8JsonReader
 
       if (!processors.Any(x => x.PropertyName == propertyName))
       {
-        reader.Skip();
+        var depthBefore = reader.CurrentDepth;
+
+        while (reader.TokenType != JsonTokenType.PropertyName || reader.CurrentDepth > depthBefore)
+          reader.Read();
+
         continue;
       }
 
@@ -85,74 +74,66 @@ internal static class ExtensionsUtf8JsonReader
       processor(ref reader);
     }
 
-    throw new JsonException("Expected end of object.");
+    if (reader.TokenType != JsonTokenType.EndObject)
+      throw new JsonException("Expected end of object.");
+
+    reader.Read();
   }
 
-  delegate T UseReader<T>(ref Utf8JsonReader reader);
-
-  internal static void ProcessJsonObject(this Utf8JsonReader reader, Tmj.JsonProperty[] properties)
+  internal static void ProcessJsonObject(this ref Utf8JsonReader reader, Tmj.JsonProperty[] properties, string objectTypeName)
   {
     List<string> processedProperties = [];
 
-    bool CheckType<T>(ref Utf8JsonReader reader, Tmj.JsonProperty prop, UseReader<T?> useReader)
+    ProcessJsonObject(ref reader, properties.Select<Tmj.JsonProperty, (string, ProcessProperty)>(x => (x.PropertyName, (ref Utf8JsonReader reader) =>
     {
-      return CheckRequire<T>(ref reader, prop, (ref Utf8JsonReader r) => useReader(ref r)!) || CheckOptional<T>(ref reader, prop, useReader);
-    }
+      if (processedProperties.Contains(x.PropertyName))
+        throw new JsonException($"Property '{x.PropertyName}' was already processed.");
 
-    bool CheckRequire<T>(ref Utf8JsonReader reader, Tmj.JsonProperty prop, UseReader<T> useReader)
-    {
-      if (prop is Tmj.RequiredProperty<T> requiredProp)
+      processedProperties.Add(x.PropertyName);
+
+      if (x is Tmj.RequiredProperty req)
       {
-        reader.Require<string>((ref Utf8JsonReader r) =>
-        {
-          requiredProp.WithValue(useReader(ref r));
-        });
-        return true;
-      }
-      return false;
-    }
+        if (reader.TokenType == JsonTokenType.Null)
+          throw new JsonException($"Required property '{req.PropertyName}' cannot be null when reading {objectTypeName}.");
 
-    bool CheckOptional<T>(ref Utf8JsonReader reader, Tmj.JsonProperty prop, UseReader<T?> useReader)
-    {
-      if (prop is Tmj.OptionalProperty<T> optionalProp)
+        req.UseReader(ref reader);
+      }
+      else if (x is Tmj.OptionalProperty opt)
       {
-        if (reader.TokenType == JsonTokenType.Null && !optionalProp.AllowNull)
-          throw new JsonException("Value cannot be null for optional property.");
-        else if (reader.TokenType == JsonTokenType.Null && optionalProp.AllowNull)
-          optionalProp.WithValue(default);
-        else
-          optionalProp.WithValue(useReader(ref reader));
-        return true;
+        if (reader.TokenType == JsonTokenType.Null && !opt.AllowNull)
+          throw new JsonException($"Value cannot be null for optional property '{opt.PropertyName}' when reading {objectTypeName}.");
+        else if (reader.TokenType == JsonTokenType.Null && opt.AllowNull)
+          return;
+
+        opt.UseReader(ref reader);
       }
-      return false;
-    }
-
-    ProcessJsonObject(reader, properties.Select<Tmj.JsonProperty, (string, ProcessProperty)>(x => (x.PropertyName.ToLowerInvariant(), (ref Utf8JsonReader reader) =>
-    {
-      var lowerInvariant = x.PropertyName.ToLowerInvariant();
-
-      if (processedProperties.Contains(lowerInvariant))
-        throw new JsonException($"Property '{lowerInvariant}' was already processed.");
-
-      processedProperties.Add(lowerInvariant);
-
-      if (CheckType<string>(ref reader, x, (ref Utf8JsonReader r) => r.GetString()!))
-        return;
-      if (CheckType<int>(ref reader, x, (ref Utf8JsonReader r) => r.GetInt32()))
-        return;
-      if (CheckType<uint>(ref reader, x, (ref Utf8JsonReader r) => r.GetUInt32()))
-        return;
-      if (CheckType<float>(ref reader, x, (ref Utf8JsonReader r) => r.GetSingle()))
-        return;
-
-      throw new NotSupportedException($"Unsupported property type '{x.GetType().GenericTypeArguments.First()}'.");
     }
     )).ToArray());
 
     foreach (var property in properties)
     {
-      if (IsSubclassOfRawGeneric(typeof(Tmj.RequiredProperty<>), property.GetType()) && !processedProperties.Contains(property.PropertyName.ToLowerInvariant()))
-        throw new JsonException($"Required property '{property.PropertyName}' was not found.");
+      if (property is Tmj.RequiredProperty && !processedProperties.Contains(property.PropertyName))
+        throw new JsonException($"Required property '{property.PropertyName}' was not found when reading {objectTypeName}.");
     }
+  }
+
+  internal delegate void UseReader(ref Utf8JsonReader reader);
+
+  internal static void ProcessJsonArray(this ref Utf8JsonReader reader, UseReader useReader)
+  {
+    if (reader.TokenType != JsonTokenType.StartArray)
+      throw new JsonException("Expected start of array.");
+
+    reader.Read();
+
+    while (reader.TokenType != JsonTokenType.EndArray)
+    {
+      useReader(ref reader);
+    }
+
+    if (reader.TokenType != JsonTokenType.EndArray)
+      throw new JsonException("Expected end of array.");
+
+    reader.Read();
   }
 }
