@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxMapReaderTests
+public partial class TestData
 {
-  private static Map MapWithGroup() => new Map
+  public static Map MapWithGroup() => new Map
   {
     Version = "1.10",
     TiledVersion = "1.11.0",

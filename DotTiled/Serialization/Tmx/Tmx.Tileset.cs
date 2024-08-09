@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -18,8 +19,8 @@ internal partial class Tmx
     var @class = reader.GetOptionalAttribute("class") ?? "";
     var tileWidth = reader.GetOptionalAttributeParseable<uint>("tilewidth");
     var tileHeight = reader.GetOptionalAttributeParseable<uint>("tileheight");
-    var spacing = reader.GetOptionalAttributeParseable<uint>("spacing");
-    var margin = reader.GetOptionalAttributeParseable<uint>("margin");
+    var spacing = reader.GetOptionalAttributeParseable<uint>("spacing") ?? 0;
+    var margin = reader.GetOptionalAttributeParseable<uint>("margin") ?? 0;
     var tileCount = reader.GetOptionalAttributeParseable<uint>("tilecount");
     var columns = reader.GetOptionalAttributeParseable<uint>("columns");
     var objectAlignment = reader.GetOptionalAttributeEnum<ObjectAlignment>("objectalignment", s => s switch
@@ -131,6 +132,9 @@ internal partial class Tmx
       _ => r.Skip
     });
 
+    if (format is null && source is not null)
+      format = ParseImageFormatFromSource(source);
+
     return new Image
     {
       Format = format,
@@ -138,6 +142,21 @@ internal partial class Tmx
       TransparentColor = transparentColor,
       Width = width,
       Height = height,
+    };
+  }
+
+
+  private static ImageFormat ParseImageFormatFromSource(string source)
+  {
+    var extension = Path.GetExtension(source).ToLowerInvariant();
+    return extension switch
+    {
+      ".png" => ImageFormat.Png,
+      ".gif" => ImageFormat.Gif,
+      ".jpg" => ImageFormat.Jpg,
+      ".jpeg" => ImageFormat.Jpg,
+      ".bmp" => ImageFormat.Bmp,
+      _ => throw new XmlException($"Unsupported image format '{extension}'")
     };
   }
 

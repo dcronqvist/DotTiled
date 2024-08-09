@@ -2,64 +2,75 @@ namespace DotTiled.Tests;
 
 public partial class TmjMapReaderTests
 {
-  [Fact]
-  public void Test1()
+  public static IEnumerable<object[]> DeserializeMap_ValidTmjNoExternalTilesets_ReturnsMapWithoutThrowing_Data =>
+  [
+    ["Serialization.TestData.Map.empty-map-csv.tmj", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Csv, null)],
+    ["Serialization.TestData.Map.empty-map-base64.tmj", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Base64, null)],
+    ["Serialization.TestData.Map.empty-map-base64-gzip.tmj", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.GZip)],
+    ["Serialization.TestData.Map.empty-map-base64-zlib.tmj", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.ZLib)],
+    ["Serialization.TestData.Map.simple-tileset-embed.tmj", TestData.SimpleMapWithEmbeddedTileset()],
+    ["Serialization.TestData.Map.empty-map-properties.tmj", TestData.EmptyMapWithProperties()],
+  ];
+
+  [Theory]
+  [MemberData(nameof(DeserializeMap_ValidTmjNoExternalTilesets_ReturnsMapWithoutThrowing_Data))]
+  public void TmxMapReaderReadMap_ValidTmjNoExternalTilesets_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
-    var jsonString =
-    """
+    var json = TestData.GetRawStringFor(testDataFile);
+    static Template ResolveTemplate(string source)
     {
-      "backgroundcolor":"#656667",
-      "height":4,
-      "nextobjectid":1,
-      "nextlayerid":1,
-      "orientation":"orthogonal",
-      "properties": [
-        {
-          "name":"mapProperty1",
-          "type":"string",
-          "value":"one"
-        },
-        {
-          "name":"mapProperty3",
-          "type":"string",
-          "value":"twoeee"
-        }
-      ],
-      "renderorder":"right-down",
-      "tileheight":32,
-      "tilewidth":32,
-      "version":"1",
-      "tiledversion":"1.0.3",
-      "width":4,
-      "tilesets": [
-        {
-          "columns":19,
-          "firstgid":1,
-          "image":"image/fishbaddie_parts.png",
-          "imageheight":480,
-          "imagewidth":640,
-          "margin":3,
-          "name":"",
-          "properties":[
-            {
-              "name":"myProperty1",
-              "type":"string",
-              "value":"myProperty1_value"
-            }],
-          "spacing":1,
-          "tilecount":266,
-          "tileheight":32,
-          "tilewidth":32
-        }
-      ]
+      var templateJson = TestData.GetRawStringFor($"Serialization.TestData.Template.{source}");
+      //var templateReader = new TmjTemplateReader(templateJson, ResolveTemplate);
+      return null;
     }
-    """;
+    static Tileset ResolveTileset(string source)
+    {
+      var tilesetJson = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
+      //var tilesetReader = new TmjTilesetReader(tilesetJson, ResolveTileset, ResolveTemplate);
+      return null;
+    }
+    using var mapReader = new TmjMapReader(json, ResolveTileset, ResolveTemplate);
 
     // Act
-    using var tmjMapReader = new TmjMapReader(jsonString);
+    var map = mapReader.ReadMap();
 
     // Assert
-    var map = tmjMapReader.ReadMap();
+    Assert.NotNull(map);
+    DotTiledAssert.AssertMap(expectedMap, map);
+  }
+
+  public static IEnumerable<object[]> DeserializeMap_ValidTmjExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data =>
+  [
+    ["Serialization.TestData.Map.map-with-object-template.tmj", TestData.MapWithObjectTemplate()],
+    ["Serialization.TestData.Map.map-with-group.tmj", TestData.MapWithGroup()],
+  ];
+
+  [Theory]
+  [MemberData(nameof(DeserializeMap_ValidTmjExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data))]
+  public void TmxMapReaderReadMap_ValidTmjExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
+  {
+    // Arrange
+    var json = TestData.GetRawStringFor(testDataFile);
+    static Template ResolveTemplate(string source)
+    {
+      var templateJson = TestData.GetRawStringFor($"Serialization.TestData.Template.{source}");
+      //var templateReader = new TmjTemplateReader(templateJson, ResolveTemplate);
+      return null;
+    }
+    static Tileset ResolveTileset(string source)
+    {
+      var tilesetJson = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
+      //var tilesetReader = new TmjTilesetReader(tilesetJson, ResolveTileset, ResolveTemplate);
+      return null;
+    }
+    using var mapReader = new TmjMapReader(json, ResolveTileset, ResolveTemplate);
+
+    // Act
+    var map = mapReader.ReadMap();
+
+    // Assert
+    Assert.NotNull(map);
+    DotTiledAssert.AssertMap(expectedMap, map);
   }
 }

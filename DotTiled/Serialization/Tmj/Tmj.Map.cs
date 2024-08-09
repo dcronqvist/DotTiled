@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace DotTiled;
 
 internal partial class Tmj
 {
-  internal static Map ReadMap(JsonElement element)
+  internal static Map ReadMap(JsonElement element, Func<string, Tileset>? externalTilesetResolver, Func<string, Template> externalTemplateResolver)
   {
     var version = element.GetRequiredProperty<string>("version");
     var tiledVersion = element.GetRequiredProperty<string>("tiledversion");
@@ -51,14 +53,12 @@ internal partial class Tmj
     var backgroundColor = element.GetOptionalPropertyParseable<Color>("backgroundcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), Color.Parse("#00000000", CultureInfo.InvariantCulture));
     var nextLayerID = element.GetRequiredProperty<uint>("nextlayerid");
     var nextObjectID = element.GetRequiredProperty<uint>("nextobjectid");
-    var infinite = element.GetOptionalProperty<int>("infinite", 0) == 1;
+    var infinite = element.GetOptionalProperty<bool>("infinite", false);
 
-    // At most one of
-    Dictionary<string, IProperty>? properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>>("properties", ReadProperties, null);
+    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", ReadProperties, null);
 
-    // Any number of
-    List<BaseLayer> layers = [];
-    List<Tileset> tilesets = [];
+    List<BaseLayer> layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(ReadLayer), []);
+    List<Tileset> tilesets = element.GetOptionalPropertyCustom<List<Tileset>>("tilesets", e => e.GetValueAsList<Tileset>(el => ReadTileset(el, externalTilesetResolver, externalTemplateResolver)), []);
 
     return new Map
     {
@@ -86,176 +86,4 @@ internal partial class Tmj
       Layers = layers
     };
   }
-
-  internal static Dictionary<string, IProperty> ReadProperties(JsonElement element)
-  {
-    var properties = new Dictionary<string, IProperty>();
-
-    element.GetValueAsList<IProperty>(e =>
-    {
-      var name = e.GetRequiredProperty<string>("name");
-      var type = e.GetOptionalPropertyParseable<PropertyType>("type", s => s switch
-      {
-        "string" => PropertyType.String,
-        "int" => PropertyType.Int,
-        "float" => PropertyType.Float,
-        "bool" => PropertyType.Bool,
-        "color" => PropertyType.Color,
-        "file" => PropertyType.File,
-        "object" => PropertyType.Object,
-        "class" => PropertyType.Class,
-        _ => throw new JsonException("Invalid property type")
-      }, PropertyType.String);
-
-      IProperty property = type switch
-      {
-        PropertyType.String => new StringProperty { Name = name, Value = e.GetRequiredProperty<string>("value") },
-        PropertyType.Int => new IntProperty { Name = name, Value = e.GetRequiredProperty<int>("value") },
-        PropertyType.Float => new FloatProperty { Name = name, Value = e.GetRequiredProperty<float>("value") },
-        PropertyType.Bool => new BoolProperty { Name = name, Value = e.GetRequiredProperty<bool>("value") },
-        PropertyType.Color => new ColorProperty { Name = name, Value = e.GetRequiredPropertyParseable<Color>("value") },
-        PropertyType.File => new FileProperty { Name = name, Value = e.GetRequiredProperty<string>("value") },
-        PropertyType.Object => new ObjectProperty { Name = name, Value = e.GetRequiredProperty<uint>("value") },
-        PropertyType.Class => ReadClassProperty(e),
-        _ => throw new JsonException("Invalid property type")
-      };
-
-      return property!;
-    }).ForEach(p => properties.Add(p.Name, p));
-
-    return properties;
-  }
-
-  internal static ClassProperty ReadClassProperty(JsonElement element)
-  {
-    var name = element.GetRequiredProperty<string>("name");
-    var propertyType = element.GetRequiredProperty<string>("propertytype");
-
-    var properties = element.GetRequiredPropertyCustom<Dictionary<string, IProperty>>("properties", ReadProperties);
-
-    return new ClassProperty { Name = name, PropertyType = propertyType, Properties = properties };
-  }
-
-  // internal static List<Tileset> ReadTilesets(ref Utf8JsonReader reader)
-  // {
-  //   var tilesets = new List<Tileset>();
-
-  //   reader.ProcessJsonArray((ref Utf8JsonReader reader) =>
-  //   {
-  //     var tileset = ReadTileset(ref reader);
-  //     tilesets.Add(tileset);
-  //   });
-
-  //   return tilesets;
-  // }
-
-  // internal static Tileset ReadTileset(ref Utf8JsonReader reader)
-  // {
-  //   string? version = null;
-  //   string? tiledVersion = null;
-  //   uint? firstGID = null;
-  //   string? source = null;
-  //   string? name = null;
-  //   string @class = "";
-  //   uint? tileWidth = null;
-  //   uint? tileHeight = null;
-  //   uint? spacing = null;
-  //   uint? margin = null;
-  //   uint? tileCount = null;
-  //   uint? columns = null;
-  //   ObjectAlignment objectAlignment = ObjectAlignment.Unspecified;
-  //   FillMode fillMode = FillMode.Stretch;
-
-  //   string? image = null;
-  //   uint? imageWidth = null;
-  //   uint? imageHeight = null;
-
-  //   Dictionary<string, IProperty>? properties = null;
-
-  //   reader.ProcessJsonObject([
-  //     new OptionalProperty("version", (ref Utf8JsonReader reader) => version = reader.Progress(reader.GetString())),
-  //     new OptionalProperty("tiledversion", (ref Utf8JsonReader reader) => tiledVersion = reader.Progress(reader.GetString())),
-  //     new OptionalProperty("firstgid", (ref Utf8JsonReader reader) => firstGID = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("source", (ref Utf8JsonReader reader) => source = reader.Progress(reader.GetString())),
-  //     new OptionalProperty("name", (ref Utf8JsonReader reader) => name = reader.Progress(reader.GetString())),
-  //     new OptionalProperty("class", (ref Utf8JsonReader reader) => @class = reader.Progress(reader.GetString() ?? ""), allowNull: true),
-  //     new OptionalProperty("tilewidth", (ref Utf8JsonReader reader) => tileWidth = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("tileheight", (ref Utf8JsonReader reader) => tileHeight = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("spacing", (ref Utf8JsonReader reader) => spacing = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("margin", (ref Utf8JsonReader reader) => margin = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("tilecount", (ref Utf8JsonReader reader) => tileCount = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("columns", (ref Utf8JsonReader reader) => columns = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("objectalignment", (ref Utf8JsonReader reader) => objectAlignment = reader.Progress(reader.GetString()) switch
-  //     {
-  //       "unspecified" => ObjectAlignment.Unspecified,
-  //       "topleft" => ObjectAlignment.TopLeft,
-  //       "top" => ObjectAlignment.Top,
-  //       "topright" => ObjectAlignment.TopRight,
-  //       "left" => ObjectAlignment.Left,
-  //       "center" => ObjectAlignment.Center,
-  //       "right" => ObjectAlignment.Right,
-  //       "bottomleft" => ObjectAlignment.BottomLeft,
-  //       "bottom" => ObjectAlignment.Bottom,
-  //       "bottomright" => ObjectAlignment.BottomRight,
-  //       _ => throw new JsonException("Invalid object alignment.")
-  //     }),
-  //     new OptionalProperty("fillmode", (ref Utf8JsonReader reader) => fillMode = reader.Progress(reader.GetString()) switch
-  //     {
-  //       "stretch" => FillMode.Stretch,
-  //       "preserve-aspect-fit" => FillMode.PreserveAspectFit,
-  //       _ => throw new JsonException("Invalid fill mode.")
-  //     }),
-
-  //     new OptionalProperty("image", (ref Utf8JsonReader reader) => image = reader.Progress(reader.GetString())),
-  //     new OptionalProperty("imagewidth", (ref Utf8JsonReader reader) => imageWidth = reader.Progress(reader.GetUInt32())),
-  //     new OptionalProperty("imageheight", (ref Utf8JsonReader reader) => imageHeight = reader.Progress(reader.GetUInt32())),
-
-  //     new OptionalProperty("properties", (ref Utf8JsonReader reader) => properties = ReadProperties(ref reader))
-  //   ], "tileset");
-
-  //   Image? imageInstance = image is not null ? new Image
-  //   {
-  //     Format = ParseImageFormatFromSource(image),
-  //     Width = imageWidth,
-  //     Height = imageHeight,
-  //     Source = image
-  //   } : null;
-
-  //   return new Tileset
-  //   {
-  //     Version = version,
-  //     TiledVersion = tiledVersion,
-  //     FirstGID = firstGID,
-  //     Source = source,
-  //     Name = name,
-  //     Class = @class,
-  //     TileWidth = tileWidth,
-  //     TileHeight = tileHeight,
-  //     Spacing = spacing,
-  //     Margin = margin,
-  //     TileCount = tileCount,
-  //     Columns = columns,
-  //     ObjectAlignment = objectAlignment,
-  //     FillMode = fillMode,
-  //     Image = imageInstance,
-  //     Properties = properties
-  //   };
-  // }
-
-  // private static ImageFormat ParseImageFormatFromSource(string? source)
-  // {
-  //   if (source is null)
-  //     throw new JsonException("Image source is required to determine image format.");
-
-  //   var extension = Path.GetExtension(source);
-  //   return extension switch
-  //   {
-  //     ".png" => ImageFormat.Png,
-  //     ".jpg" => ImageFormat.Jpg,
-  //     ".jpeg" => ImageFormat.Jpg,
-  //     ".gif" => ImageFormat.Gif,
-  //     ".bmp" => ImageFormat.Bmp,
-  //     _ => throw new JsonException("Invalid image format.")
-  //   };
-  // }
 }

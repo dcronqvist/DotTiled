@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxMapReaderTests
+public partial class TestData
 {
-  private static Map EmptyMapWithProperties() => new Map
+  public static Map EmptyMapWithEncodingAndCompression(DataEncoding dataEncoding, DataCompression? compression) => new Map
   {
     Version = "1.10",
     TiledVersion = "1.11.0",
@@ -24,7 +24,8 @@ public partial class TmxMapReaderTests
         Height = 5,
         Data = new Data
         {
-          Encoding = DataEncoding.Csv,
+          Encoding = dataEncoding,
+          Compression = compression,
           GlobalTileIDs = [
             0,0,0,0,0,
             0,0,0,0,0,
@@ -41,16 +42,6 @@ public partial class TmxMapReaderTests
           ]
         }
       }
-    ],
-    Properties = new Dictionary<string, IProperty>
-    {
-      ["MapBool"] = new BoolProperty { Name = "MapBool", Value = true },
-      ["MapColor"] = new ColorProperty { Name = "MapColor", Value = new Color { R = 255, G = 0, B = 0, A = 255 } },
-      ["MapFile"] = new FileProperty { Name = "MapFile", Value = "file.png" },
-      ["MapFloat"] = new FloatProperty { Name = "MapFloat", Value = 5.2f },
-      ["MapInt"] = new IntProperty { Name = "MapInt", Value = 42 },
-      ["MapObject"] = new ObjectProperty { Name = "MapObject", Value = 5 },
-      ["MapString"] = new StringProperty { Name = "MapString", Value = "string in map" }
-    }
+    ]
   };
 }

@@ -20,21 +20,32 @@ internal static class ExtensionsJsonElement
     if (!element.TryGetProperty(propertyName, out var property))
       return defaultValue;
 
+    if (property.ValueKind == JsonValueKind.Null)
+      return defaultValue;
+
     return property.GetValueAs<T>();
   }
 
   internal static T GetValueAs<T>(this JsonElement element)
   {
-    string val = typeof(T) switch
+    bool isNullable = Nullable.GetUnderlyingType(typeof(T)) != null;
+
+    if (isNullable && element.ValueKind == JsonValueKind.Null)
+      return default!;
+
+    var realType = isNullable ? Nullable.GetUnderlyingType(typeof(T))! : typeof(T);
+
+    string val = realType switch
     {
       Type t when t == typeof(string) => element.GetString()!,
       Type t when t == typeof(int) => element.GetInt32().ToString(CultureInfo.InvariantCulture),
       Type t when t == typeof(uint) => element.GetUInt32().ToString(CultureInfo.InvariantCulture),
       Type t when t == typeof(float) => element.GetSingle().ToString(CultureInfo.InvariantCulture),
+      Type t when t == typeof(bool) => element.GetBoolean().ToString(CultureInfo.InvariantCulture),
       _ => throw new JsonException($"Unsupported type '{typeof(T)}'.")
     };
 
-    return (T)Convert.ChangeType(val, typeof(T), CultureInfo.InvariantCulture);
+    return (T)Convert.ChangeType(val, realType, CultureInfo.InvariantCulture);
   }
 
   internal static T GetRequiredPropertyParseable<T>(this JsonElement element, string propertyName) where T : IParsable<T>

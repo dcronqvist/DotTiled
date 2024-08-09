@@ -1,0 +1,104 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0],
+         "height":5,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "height":37.0156,
+                 "id":1,
+                 "template":"map-with-object-template.tj",
+                 "name":"Thingy 2",
+                 "properties":[
+                        {
+                         "name":"Bool",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"TestClassInTemplate",
+                         "propertytype":"TestClass",
+                         "type":"class",
+                         "value":
+                            {
+                             "Amount":37,
+                             "Name":"I am here"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":37.0156,
+                 "x":94.5749,
+                 "y":33.6842
+                }, 
+                {
+                 "id":2,
+                 "template":"map-with-object-template.tj",
+                 "x":29.7976,
+                 "y":33.8693
+                }, 
+                {
+                 "height":37.0156,
+                 "id":3,
+                 "template":"map-with-object-template.tj",
+                 "name":"Thingy 3",
+                 "properties":[
+                        {
+                         "name":"Bool",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"TestClassInTemplate",
+                         "propertytype":"TestClass",
+                         "type":"class",
+                         "value":
+                            {
+                             "Name":"I am here 3"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":37.0156,
+                 "x":5,
+                 "y":5
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":3,
+ "nextobjectid":3,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.0",
+ "tileheight":32,
+ "tilesets":[],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":5
+}
