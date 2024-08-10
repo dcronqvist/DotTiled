@@ -235,7 +235,7 @@ internal partial class Tmj
     var polyline = element.GetOptionalPropertyCustom<List<Vector2>?>("polyline", e => ReadPoints(e), polylineDefault);
     var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), propertiesDefault);
     var rotation = element.GetOptionalProperty<float>("rotation", rotationDefault);
-    // var text
+    var text = element.GetOptionalPropertyCustom<TextObject?>("text", ReadText, null);
     var type = element.GetOptionalProperty<string>("type", typeDefault);
     var visible = element.GetOptionalProperty<bool>("visible", visibleDefault);
     var width = element.GetOptionalProperty<float>("width", widthDefault);
@@ -320,7 +320,22 @@ internal partial class Tmj
       };
     }
 
-    // Text
+    if (text is not null)
+    {
+      text.ID = id;
+      text.Name = name;
+      text.Type = type;
+      text.X = x;
+      text.Y = y;
+      text.Width = width;
+      text.Height = height;
+      text.Rotation = rotation;
+      text.GID = gid;
+      text.Visible = visible;
+      text.Template = template;
+      text.Properties = properties;
+      return text;
+    }
 
     return new RectangleObject
     {
@@ -361,6 +376,50 @@ internal partial class Tmj
     {
       Tileset = tileset,
       Object = @object
+    };
+  }
+
+  internal static TextObject ReadText(JsonElement element)
+  {
+    var bold = element.GetOptionalProperty<bool>("bold", false);
+    var color = element.GetOptionalPropertyParseable<Color>("color", s => Color.Parse(s, CultureInfo.InvariantCulture), Color.Parse("#00000000", CultureInfo.InvariantCulture));
+    var fontfamily = element.GetOptionalProperty<string>("fontfamily", "sans-serif");
+    var halign = element.GetOptionalPropertyParseable<TextHorizontalAlignment>("halign", s => s switch
+    {
+      "left" => TextHorizontalAlignment.Left,
+      "center" => TextHorizontalAlignment.Center,
+      "right" => TextHorizontalAlignment.Right,
+      _ => throw new JsonException($"Unknown horizontal alignment '{s}'.")
+    }, TextHorizontalAlignment.Left);
+    var italic = element.GetOptionalProperty<bool>("italic", false);
+    var kerning = element.GetOptionalProperty<bool>("kerning", true);
+    var pixelsize = element.GetOptionalProperty<int>("pixelsize", 16);
+    var strikeout = element.GetOptionalProperty<bool>("strikeout", false);
+    var text = element.GetRequiredProperty<string>("text");
+    var underline = element.GetOptionalProperty<bool>("underline", false);
+    var valign = element.GetOptionalPropertyParseable<TextVerticalAlignment>("valign", s => s switch
+    {
+      "top" => TextVerticalAlignment.Top,
+      "center" => TextVerticalAlignment.Center,
+      "bottom" => TextVerticalAlignment.Bottom,
+      _ => throw new JsonException($"Unknown vertical alignment '{s}'.")
+    }, TextVerticalAlignment.Top);
+    var wrap = element.GetOptionalProperty<bool>("wrap", false);
+
+    return new TextObject
+    {
+      Bold = bold,
+      Color = color,
+      FontFamily = fontfamily,
+      HorizontalAlignment = halign,
+      Italic = italic,
+      Kerning = kerning,
+      PixelSize = pixelsize,
+      Strikeout = strikeout,
+      Text = text,
+      Underline = underline,
+      VerticalAlignment = valign,
+      Wrap = wrap
     };
   }
 }
