@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace DotTiled;
@@ -11,13 +12,22 @@ public class TsxTilesetReader : ITilesetReader
   private readonly XmlReader _reader;
   private bool disposedValue;
 
-  public TsxTilesetReader(XmlReader reader, Func<string, Template> externalTemplateResolver)
+  private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
+
+  public TsxTilesetReader(
+    XmlReader reader,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     _reader = reader ?? throw new ArgumentNullException(nameof(reader));
     _externalTemplateResolver = externalTemplateResolver ?? throw new ArgumentNullException(nameof(externalTemplateResolver));
+    _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
+
+    // Prepare reader
+    _reader.MoveToContent();
   }
 
-  public Tileset ReadTileset() => Tmx.ReadTileset(_reader, null, _externalTemplateResolver);
+  public Tileset ReadTileset() => Tmx.ReadTileset(_reader, null, _externalTemplateResolver, _customTypeDefinitions);
 
   protected virtual void Dispose(bool disposing)
   {

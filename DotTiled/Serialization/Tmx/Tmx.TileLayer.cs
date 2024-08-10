@@ -7,7 +7,10 @@ namespace DotTiled;
 
 internal partial class Tmx
 {
-  internal static TileLayer ReadTileLayer(XmlReader reader, bool dataUsesChunks)
+  internal static TileLayer ReadTileLayer(
+    XmlReader reader,
+    bool dataUsesChunks,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -30,7 +33,7 @@ internal partial class Tmx
     reader.ProcessChildren("layer", (r, elementName) => elementName switch
     {
       "data" => () => Helpers.SetAtMostOnce(ref data, ReadData(r, dataUsesChunks), "Data"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
       _ => r.Skip
     });
 
@@ -55,7 +58,9 @@ internal partial class Tmx
     };
   }
 
-  internal static ImageLayer ReadImageLayer(XmlReader reader)
+  internal static ImageLayer ReadImageLayer(
+    XmlReader reader,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -78,7 +83,7 @@ internal partial class Tmx
     reader.ProcessChildren("imagelayer", (r, elementName) => elementName switch
     {
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(r), "Image"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
       _ => r.Skip
     });
 
@@ -103,7 +108,10 @@ internal partial class Tmx
     };
   }
 
-  internal static Group ReadGroup(XmlReader reader, Func<string, Template> externalTemplateResolver)
+  internal static Group ReadGroup(
+    XmlReader reader,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -121,11 +129,11 @@ internal partial class Tmx
 
     reader.ProcessChildren("group", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
-      "layer" => () => layers.Add(ReadTileLayer(r, dataUsesChunks: false)),
-      "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver)),
-      "imagelayer" => () => layers.Add(ReadImageLayer(r)),
-      "group" => () => layers.Add(ReadGroup(r, externalTemplateResolver)),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
+      "layer" => () => layers.Add(ReadTileLayer(r, false, customTypeDefinitions)),
+      "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver, customTypeDefinitions)),
+      "imagelayer" => () => layers.Add(ReadImageLayer(r, customTypeDefinitions)),
+      "group" => () => layers.Add(ReadGroup(r, externalTemplateResolver, customTypeDefinitions)),
       _ => r.Skip
     });
 

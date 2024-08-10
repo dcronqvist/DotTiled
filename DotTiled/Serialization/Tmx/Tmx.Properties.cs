@@ -6,7 +6,9 @@ namespace DotTiled;
 
 internal partial class Tmx
 {
-  internal static Dictionary<string, IProperty> ReadProperties(XmlReader reader)
+  internal static Dictionary<string, IProperty> ReadProperties(
+    XmlReader reader,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     return reader.ReadList("properties", "property", (r) =>
     {
@@ -33,22 +35,38 @@ internal partial class Tmx
         PropertyType.Color => new ColorProperty { Name = name, Value = r.GetRequiredAttributeParseable<Color>("value") },
         PropertyType.File => new FileProperty { Name = name, Value = r.GetRequiredAttribute("value") },
         PropertyType.Object => new ObjectProperty { Name = name, Value = r.GetRequiredAttributeParseable<uint>("value") },
-        PropertyType.Class => ReadClassProperty(r),
+        PropertyType.Class => ReadClassProperty(r, customTypeDefinitions),
         _ => throw new XmlException("Invalid property type")
       };
       return (name, property);
     }).ToDictionary(x => x.name, x => x.property);
   }
 
-  internal static ClassProperty ReadClassProperty(XmlReader reader)
+  internal static ClassProperty ReadClassProperty(
+    XmlReader reader,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     var name = reader.GetRequiredAttribute("name");
     var propertyType = reader.GetRequiredAttribute("propertytype");
 
-    reader.ReadStartElement("property");
-    var properties = ReadProperties(reader);
-    reader.ReadEndElement();
+    var customTypeDef = customTypeDefinitions.FirstOrDefault(ctd => ctd.Name == propertyType);
+    if (customTypeDef is CustomClassDefinition ccd)
+    {
+      reader.ReadStartElement("property");
+      var propsInType = CreateInstanceOfCustomClass(ccd);
+      var props = ReadProperties(reader, customTypeDefinitions);
 
-    return new ClassProperty { Name = name, PropertyType = propertyType, Properties = properties };
+      var mergedProps = MergeProperties(propsInType, props);
+
+      reader.ReadEndElement();
+      return new ClassProperty { Name = name, PropertyType = propertyType, Properties = mergedProps };
+    }
+
+    throw new XmlException($"Unkonwn custom class definition: {propertyType}");
+  }
+
+  internal static Dictionary<string, IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition)
+  {
+    return customClassDefinition.Members.ToDictionary(m => m.Name, m => m.Clone());
   }
 }

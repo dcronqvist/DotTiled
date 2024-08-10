@@ -8,7 +8,11 @@ namespace DotTiled;
 
 internal partial class Tmx
 {
-  internal static Tileset ReadTileset(XmlReader reader, Func<string, Tileset>? externalTilesetResolver, Func<string, Template> externalTemplateResolver)
+  internal static Tileset ReadTileset(
+    XmlReader reader,
+    Func<string, Tileset>? externalTilesetResolver,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var version = reader.GetOptionalAttribute("version");
@@ -64,10 +68,10 @@ internal partial class Tmx
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(r), "Image"),
       "tileoffset" => () => Helpers.SetAtMostOnce(ref tileOffset, ReadTileOffset(r), "TileOffset"),
       "grid" => () => Helpers.SetAtMostOnce(ref grid, ReadGrid(r), "Grid"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
-      "wangsets" => () => Helpers.SetAtMostOnce(ref wangsets, ReadWangsets(r), "Wangsets"),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
+      "wangsets" => () => Helpers.SetAtMostOnce(ref wangsets, ReadWangsets(r, customTypeDefinitions), "Wangsets"),
       "transformations" => () => Helpers.SetAtMostOnce(ref transformations, ReadTransformations(r), "Transformations"),
-      "tile" => () => tiles.Add(ReadTile(r, externalTemplateResolver)),
+      "tile" => () => tiles.Add(ReadTile(r, externalTemplateResolver, customTypeDefinitions)),
       _ => r.Skip
     });
 
@@ -198,7 +202,10 @@ internal partial class Tmx
     return new Transformations { HFlip = hFlip, VFlip = vFlip, Rotate = rotate, PreferUntransformed = preferUntransformed };
   }
 
-  internal static Tile ReadTile(XmlReader reader, Func<string, Template> externalTemplateResolver)
+  internal static Tile ReadTile(
+    XmlReader reader,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var id = reader.GetRequiredAttributeParseable<uint>("id");
@@ -217,9 +224,9 @@ internal partial class Tmx
 
     reader.ProcessChildren("tile", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(r), "Image"),
-      "objectgroup" => () => Helpers.SetAtMostOnce(ref objectLayer, ReadObjectLayer(r, externalTemplateResolver), "ObjectLayer"),
+      "objectgroup" => () => Helpers.SetAtMostOnce(ref objectLayer, ReadObjectLayer(r, externalTemplateResolver, customTypeDefinitions), "ObjectLayer"),
       "animation" => () => Helpers.SetAtMostOnce(ref animation, r.ReadList<Frame>("animation", "frame", (ar) =>
       {
         var tileID = ar.GetRequiredAttributeParseable<uint>("tileid");
@@ -245,12 +252,16 @@ internal partial class Tmx
     };
   }
 
-  internal static List<Wangset> ReadWangsets(XmlReader reader)
+  internal static List<Wangset> ReadWangsets(
+    XmlReader reader,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
-    return reader.ReadList<Wangset>("wangsets", "wangset", ReadWangset);
+    return reader.ReadList<Wangset>("wangsets", "wangset", r => ReadWangset(r, customTypeDefinitions));
   }
 
-  internal static Wangset ReadWangset(XmlReader reader)
+  internal static Wangset ReadWangset(
+    XmlReader reader,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var name = reader.GetRequiredAttribute("name");
@@ -264,8 +275,8 @@ internal partial class Tmx
 
     reader.ProcessChildren("wangset", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
-      "wangcolor" => () => wangColors.Add(ReadWangColor(r)),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
+      "wangcolor" => () => wangColors.Add(ReadWangColor(r, customTypeDefinitions)),
       "wangtile" => () => wangTiles.Add(ReadWangTile(r)),
       _ => r.Skip
     });
@@ -284,7 +295,9 @@ internal partial class Tmx
     };
   }
 
-  internal static WangColor ReadWangColor(XmlReader reader)
+  internal static WangColor ReadWangColor(
+    XmlReader reader,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var name = reader.GetRequiredAttribute("name");
@@ -298,7 +311,7 @@ internal partial class Tmx
 
     reader.ProcessChildren("wangcolor", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
       _ => r.Skip
     });
 

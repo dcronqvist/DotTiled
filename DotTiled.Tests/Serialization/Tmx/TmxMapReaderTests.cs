@@ -15,7 +15,7 @@ public partial class TmxMapReaderTests
     // Act
     Action act = () =>
     {
-      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
     };
 
     // Assert
@@ -34,7 +34,7 @@ public partial class TmxMapReaderTests
     // Act
     Action act = () =>
     {
-      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
     };
 
     // Assert
@@ -53,7 +53,7 @@ public partial class TmxMapReaderTests
     // Act
     Action act = () =>
     {
-      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
     };
 
     // Assert
@@ -70,7 +70,7 @@ public partial class TmxMapReaderTests
     Func<string, Template> externalTemplateResolver = (_) => new Template { Object = new RectangleObject { } };
 
     // Act
-    using var tmxMapReader = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+    using var tmxMapReader = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
 
     // Assert
     Assert.NotNull(tmxMapReader);
@@ -91,20 +91,55 @@ public partial class TmxMapReaderTests
   public void TmxMapReaderReadMap_ValidXmlNoExternalTilesets_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
+    CustomTypeDefinition[] customTypeDefinitions = [
+      new CustomClassDefinition
+      {
+        Name = "TestClass",
+        ID = 1,
+        UseAs = CustomClassUseAs.Property,
+        Members = [
+          new StringProperty
+          {
+            Name = "Name",
+            Value = ""
+          },
+          new FloatProperty
+          {
+            Name = "Amount",
+            Value = 0f
+          }
+        ]
+      },
+      new CustomClassDefinition
+      {
+        Name = "Test",
+        ID = 2,
+        UseAs = CustomClassUseAs.All,
+        Members = [
+          new ClassProperty
+          {
+            Name = "Yep",
+            PropertyType = "TestClass",
+            Properties = []
+          }
+        ]
+      }
+    ];
+
     using var reader = TestData.GetXmlReaderFor(testDataFile);
-    static Template ResolveTemplate(string source)
+    Template ResolveTemplate(string source)
     {
       using var xmlTemplateReader = TestData.GetXmlReaderFor($"Serialization.TestData.Template.{source}");
-      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate);
+      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
       return templateReader.ReadTemplate();
     }
-    static Tileset ResolveTileset(string source)
+    Tileset ResolveTileset(string source)
     {
       using var xmlTilesetReader = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
-      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate);
+      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate, customTypeDefinitions);
       return tilesetReader.ReadTileset();
     }
-    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate);
+    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
 
     // Act
     var map = mapReader.ReadMap();
@@ -125,20 +160,54 @@ public partial class TmxMapReaderTests
   public void TmxMapReaderReadMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
+    CustomTypeDefinition[] customTypeDefinitions = [
+      new CustomClassDefinition
+      {
+        Name = "TestClass",
+        ID = 1,
+        UseAs = CustomClassUseAs.Property,
+        Members = [
+          new StringProperty
+          {
+            Name = "Name",
+            Value = ""
+          },
+          new FloatProperty
+          {
+            Name = "Amount",
+            Value = 0f
+          }
+        ]
+      },
+      new CustomClassDefinition
+      {
+        Name = "Test",
+        ID = 2,
+        UseAs = CustomClassUseAs.All,
+        Members = [
+          new ClassProperty
+          {
+            Name = "Yep",
+            PropertyType = "TestClass",
+            Properties = []
+          }
+        ]
+      }
+    ];
     using var reader = TestData.GetXmlReaderFor(testDataFile);
-    static Template ResolveTemplate(string source)
+    Template ResolveTemplate(string source)
     {
       using var xmlTemplateReader = TestData.GetXmlReaderFor($"Serialization.TestData.Template.{source}");
-      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate);
+      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
       return templateReader.ReadTemplate();
     }
-    static Tileset ResolveTileset(string source)
+    Tileset ResolveTileset(string source)
     {
       using var xmlTilesetReader = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
-      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate);
+      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate, customTypeDefinitions);
       return tilesetReader.ReadTileset();
     }
-    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate);
+    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
 
     // Act
     var map = mapReader.ReadMap();
