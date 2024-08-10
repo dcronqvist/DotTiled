@@ -9,7 +9,11 @@ namespace DotTiled;
 
 internal partial class Tmj
 {
-  internal static Map ReadMap(JsonElement element, Func<string, Tileset>? externalTilesetResolver, Func<string, Template> externalTemplateResolver)
+  internal static Map ReadMap(
+    JsonElement element,
+    Func<string, Tileset>? externalTilesetResolver,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     var version = element.GetRequiredProperty<string>("version");
     var tiledVersion = element.GetRequiredProperty<string>("tiledversion");
@@ -55,10 +59,10 @@ internal partial class Tmj
     var nextObjectID = element.GetRequiredProperty<uint>("nextobjectid");
     var infinite = element.GetOptionalProperty<bool>("infinite", false);
 
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", ReadProperties, null);
+    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", el => ReadProperties(el, customTypeDefinitions), null);
 
-    List<BaseLayer> layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(ReadLayer), []);
-    List<Tileset> tilesets = element.GetOptionalPropertyCustom<List<Tileset>>("tilesets", e => e.GetValueAsList<Tileset>(el => ReadTileset(el, externalTilesetResolver, externalTemplateResolver)), []);
+    List<BaseLayer> layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(el => ReadLayer(el, externalTemplateResolver, customTypeDefinitions)), []);
+    List<Tileset> tilesets = element.GetOptionalPropertyCustom<List<Tileset>>("tilesets", e => e.GetValueAsList<Tileset>(el => ReadTileset(el, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions)), []);
 
     return new Map
     {

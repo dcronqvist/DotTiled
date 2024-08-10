@@ -20,17 +20,13 @@ public partial class TmjMapReaderTests
     var json = TestData.GetRawStringFor(testDataFile);
     static Template ResolveTemplate(string source)
     {
-      var templateJson = TestData.GetRawStringFor($"Serialization.TestData.Template.{source}");
-      //var templateReader = new TmjTemplateReader(templateJson, ResolveTemplate);
-      return null;
+      throw new NotSupportedException("External templates are not supported in this test.");
     }
     static Tileset ResolveTileset(string source)
     {
-      var tilesetJson = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
-      //var tilesetReader = new TmjTilesetReader(tilesetJson, ResolveTileset, ResolveTemplate);
-      return null;
+      throw new NotSupportedException("External tilesets are not supported in this test.");
     }
-    using var mapReader = new TmjMapReader(json, ResolveTileset, ResolveTemplate);
+    using var mapReader = new TmjMapReader(json, ResolveTileset, ResolveTemplate, []);
 
     // Act
     var map = mapReader.ReadMap();
@@ -42,7 +38,7 @@ public partial class TmjMapReaderTests
 
   public static IEnumerable<object[]> DeserializeMap_ValidTmjExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data =>
   [
-    ["Serialization.TestData.Map.map-with-object-template.tmj", TestData.MapWithObjectTemplate()],
+    ["Serialization.TestData.Map.map-with-object-template.tmj", TestData.MapWithObjectTemplate("tj")],
     ["Serialization.TestData.Map.map-with-group.tmj", TestData.MapWithGroup()],
   ];
 
@@ -51,20 +47,55 @@ public partial class TmjMapReaderTests
   public void TmxMapReaderReadMap_ValidTmjExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
+    CustomTypeDefinition[] customTypeDefinitions = [
+      new CustomClassDefinition
+      {
+        Name = "TestClass",
+        ID = 1,
+        UseAs = CustomClassUseAs.Property,
+        Members = [
+          new StringProperty
+          {
+            Name = "Name",
+            Value = ""
+          },
+          new FloatProperty
+          {
+            Name = "Amount",
+            Value = 0f
+          }
+        ]
+      },
+      new CustomClassDefinition
+      {
+        Name = "Test",
+        ID = 2,
+        UseAs = CustomClassUseAs.All,
+        Members = [
+          new ClassProperty
+          {
+            Name = "Yep",
+            PropertyType = "TestClass",
+            Properties = []
+          }
+        ]
+      }
+    ];
+
     var json = TestData.GetRawStringFor(testDataFile);
-    static Template ResolveTemplate(string source)
+    Template ResolveTemplate(string source)
     {
       var templateJson = TestData.GetRawStringFor($"Serialization.TestData.Template.{source}");
-      //var templateReader = new TmjTemplateReader(templateJson, ResolveTemplate);
-      return null;
+      using var templateReader = new TjTemplateReader(templateJson, ResolveTileset, ResolveTemplate, customTypeDefinitions);
+      return templateReader.ReadTemplate();
     }
-    static Tileset ResolveTileset(string source)
+    Tileset ResolveTileset(string source)
     {
-      var tilesetJson = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
-      //var tilesetReader = new TmjTilesetReader(tilesetJson, ResolveTileset, ResolveTemplate);
-      return null;
+      var tilesetJson = TestData.GetRawStringFor($"Serialization.TestData.Tileset.{source}");
+      using var tilesetReader = new TsjTilesetReader(tilesetJson, ResolveTemplate, customTypeDefinitions);
+      return tilesetReader.ReadTileset();
     }
-    using var mapReader = new TmjMapReader(json, ResolveTileset, ResolveTemplate);
+    using var mapReader = new TmjMapReader(json, ResolveTileset, ResolveTemplate, customTypeDefinitions);
 
     // Act
     var map = mapReader.ReadMap();

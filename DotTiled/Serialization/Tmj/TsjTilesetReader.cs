@@ -1,39 +1,37 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Text.Json;
 
 namespace DotTiled;
 
-public class TmjMapReader : IMapReader
+public class TsjTilesetReader : ITilesetReader
 {
   // External resolvers
-  private readonly Func<string, Tileset> _externalTilesetResolver;
   private readonly Func<string, Template> _externalTemplateResolver;
 
-  private string _jsonString;
+  private readonly string _jsonString;
   private bool disposedValue;
 
   private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
 
-  public TmjMapReader(
+  public TsjTilesetReader(
     string jsonString,
-    Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
     IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     _jsonString = jsonString ?? throw new ArgumentNullException(nameof(jsonString));
-    _externalTilesetResolver = externalTilesetResolver ?? throw new ArgumentNullException(nameof(externalTilesetResolver));
     _externalTemplateResolver = externalTemplateResolver ?? throw new ArgumentNullException(nameof(externalTemplateResolver));
     _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
   }
 
-  public Map ReadMap()
+  public Tileset ReadTileset()
   {
-    var jsonDoc = JsonDocument.Parse(_jsonString);
+    var jsonDoc = System.Text.Json.JsonDocument.Parse(_jsonString);
     var rootElement = jsonDoc.RootElement;
-    return Tmj.ReadMap(rootElement, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
+    return Tmj.ReadTileset(
+      rootElement,
+      _ => throw new NotSupportedException("External tilesets cannot refer to other external tilesets."),
+      _externalTemplateResolver,
+      _customTypeDefinitions);
   }
 
   protected virtual void Dispose(bool disposing)
@@ -52,7 +50,7 @@ public class TmjMapReader : IMapReader
   }
 
   // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-  // ~TmjMapReader()
+  // ~TsjTilesetReader()
   // {
   //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
   //     Dispose(disposing: false);

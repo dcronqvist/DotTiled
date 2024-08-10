@@ -8,7 +8,9 @@ namespace DotTiled;
 
 internal partial class Tmj
 {
-  internal static Dictionary<string, IProperty> ReadProperties(JsonElement element) =>
+  internal static Dictionary<string, IProperty> ReadProperties(
+    JsonElement element,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
     element.GetValueAsList<IProperty>(e =>
     {
       var name = e.GetRequiredProperty<string>("name");
@@ -34,20 +36,105 @@ internal partial class Tmj
         PropertyType.Color => new ColorProperty { Name = name, Value = e.GetRequiredPropertyParseable<Color>("value") },
         PropertyType.File => new FileProperty { Name = name, Value = e.GetRequiredProperty<string>("value") },
         PropertyType.Object => new ObjectProperty { Name = name, Value = e.GetRequiredProperty<uint>("value") },
-        PropertyType.Class => ReadClassProperty(e),
+        PropertyType.Class => ReadClassProperty(e, customTypeDefinitions),
         _ => throw new JsonException("Invalid property type")
       };
 
       return property!;
     }).ToDictionary(p => p.Name);
 
-  internal static ClassProperty ReadClassProperty(JsonElement element)
+  internal static ClassProperty ReadClassProperty(
+    JsonElement element,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     var name = element.GetRequiredProperty<string>("name");
     var propertyType = element.GetRequiredProperty<string>("propertytype");
 
-    var properties = element.GetRequiredPropertyCustom<Dictionary<string, IProperty>>("properties", ReadProperties);
+    var customTypeDef = customTypeDefinitions.FirstOrDefault(ctd => ctd.Name == propertyType);
 
-    return new ClassProperty { Name = name, PropertyType = propertyType, Properties = properties };
+    if (customTypeDef is CustomClassDefinition ccd)
+    {
+      var propsInType = CreateInstanceOfCustomClass(ccd);
+      var props = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>>("value", el => ReadCustomClassProperties(el, ccd, customTypeDefinitions), []);
+
+      var mergedProps = MergeProperties(propsInType, props);
+
+      return new ClassProperty
+      {
+        Name = name,
+        PropertyType = propertyType,
+        Properties = mergedProps
+      };
+    }
+
+    throw new JsonException($"Unknown custom class '{propertyType}'.");
+  }
+
+  internal static Dictionary<string, IProperty> ReadCustomClassProperties(
+    JsonElement element,
+    CustomClassDefinition customClassDefinition,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  {
+    Dictionary<string, IProperty> resultingProps = [];
+
+    foreach (var prop in customClassDefinition.Members)
+    {
+      if (!element.TryGetProperty(prop.Name, out var propElement))
+        continue; // Property not present in element, therefore will use default value
+
+      IProperty property = prop.Type switch
+      {
+        PropertyType.String => new StringProperty { Name = prop.Name, Value = propElement.GetValueAs<string>() },
+        PropertyType.Int => new IntProperty { Name = prop.Name, Value = propElement.GetValueAs<int>() },
+        PropertyType.Float => new FloatProperty { Name = prop.Name, Value = propElement.GetValueAs<float>() },
+        PropertyType.Bool => new BoolProperty { Name = prop.Name, Value = propElement.GetValueAs<bool>() },
+        PropertyType.Color => new ColorProperty { Name = prop.Name, Value = Color.Parse(propElement.GetValueAs<string>(), CultureInfo.InvariantCulture) },
+        PropertyType.File => new FileProperty { Name = prop.Name, Value = propElement.GetValueAs<string>() },
+        PropertyType.Object => new ObjectProperty { Name = prop.Name, Value = propElement.GetValueAs<uint>() },
+        PropertyType.Class => ReadClassProperty(propElement, customTypeDefinitions),
+        _ => throw new JsonException("Invalid property type")
+      };
+
+      resultingProps[prop.Name] = property;
+    }
+
+    return resultingProps;
+  }
+
+  internal static Dictionary<string, IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition)
+  {
+    return customClassDefinition.Members.ToDictionary(m => m.Name, m => m.Clone());
+  }
+
+  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty> overrideProperties)
+  {
+    if (baseProperties is null)
+      return overrideProperties ?? new Dictionary<string, IProperty>();
+
+    if (overrideProperties is null)
+      return baseProperties;
+
+    var result = baseProperties.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Clone());
+    foreach (var (key, value) in overrideProperties)
+    {
+      if (!result.TryGetValue(key, out var baseProp))
+      {
+        result[key] = value;
+        continue;
+      }
+      else
+      {
+        if (value is ClassProperty classProp)
+        {
+          ((ClassProperty)baseProp).Properties = MergeProperties(((ClassProperty)baseProp).Properties, classProp.Properties);
+        }
+        else
+        {
+          result[key] = value;
+        }
+      }
+    }
+
+    return result;
   }
 }

@@ -116,7 +116,7 @@ public partial class TmxMapReaderTests
 
   public static IEnumerable<object[]> DeserializeMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data =>
   [
-    ["Serialization.TestData.Map.map-with-object-template.tmx", TestData.MapWithObjectTemplate()],
+    ["Serialization.TestData.Map.map-with-object-template.tmx", TestData.MapWithObjectTemplate("tx")],
     ["Serialization.TestData.Map.map-with-group.tmx", TestData.MapWithGroup()],
   ];
 

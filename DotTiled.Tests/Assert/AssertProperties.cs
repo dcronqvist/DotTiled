@@ -19,51 +19,51 @@ public static partial class DotTiledAssert
     }
   }
 
-  private static void AssertProperty(IProperty actual, IProperty expected)
+  private static void AssertProperty(IProperty expected, IProperty actual)
   {
     Assert.Equal(expected.Type, actual.Type);
     Assert.Equal(expected.Name, actual.Name);
     AssertProperties((dynamic)actual, (dynamic)expected);
   }
 
-  private static void AssertProperty(StringProperty actual, StringProperty expected)
+  private static void AssertProperty(StringProperty expected, StringProperty actual)
   {
     Assert.Equal(expected.Value, actual.Value);
   }
 
-  private static void AssertProperty(IntProperty actual, IntProperty expected)
+  private static void AssertProperty(IntProperty expected, IntProperty actual)
   {
     Assert.Equal(expected.Value, actual.Value);
   }
 
-  private static void AssertProperty(FloatProperty actual, FloatProperty expected)
+  private static void AssertProperty(FloatProperty expected, FloatProperty actual)
   {
     Assert.Equal(expected.Value, actual.Value);
   }
 
-  private static void AssertProperty(BoolProperty actual, BoolProperty expected)
+  private static void AssertProperty(BoolProperty expected, BoolProperty actual)
   {
     Assert.Equal(expected.Value, actual.Value);
   }
 
-  private static void AssertProperty(ColorProperty actual, ColorProperty expected)
+  private static void AssertProperty(ColorProperty expected, ColorProperty actual)
   {
     Assert.Equal(expected.Value, actual.Value);
   }
 
-  private static void AssertProperty(FileProperty actual, FileProperty expected)
+  private static void AssertProperty(FileProperty expected, FileProperty actual)
   {
     Assert.Equal(expected.Value, actual.Value);
   }
 
-  private static void AssertProperty(ObjectProperty actual, ObjectProperty expected)
+  private static void AssertProperty(ObjectProperty expected, ObjectProperty actual)
   {
     Assert.Equal(expected.Value, actual.Value);
   }
 
-  private static void AssertProperty(ClassProperty actual, ClassProperty expected)
+  private static void AssertProperty(ClassProperty expected, ClassProperty actual)
   {
     Assert.Equal(expected.PropertyType, actual.PropertyType);
-    AssertProperties(actual.Properties, expected.Properties);
+    AssertProperties(expected.Properties, actual.Properties);
   }
 }

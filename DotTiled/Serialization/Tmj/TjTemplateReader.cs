@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Text.Json;
 
 namespace DotTiled;
 
-public class TmjMapReader : IMapReader
+public class TjTemplateReader : ITemplateReader
 {
   // External resolvers
   private readonly Func<string, Tileset> _externalTilesetResolver;
   private readonly Func<string, Template> _externalTemplateResolver;
 
-  private string _jsonString;
+  private readonly string _jsonString;
   private bool disposedValue;
 
   private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
 
-  public TmjMapReader(
+  public TjTemplateReader(
     string jsonString,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
@@ -29,11 +26,11 @@ public class TmjMapReader : IMapReader
     _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
   }
 
-  public Map ReadMap()
+  public Template ReadTemplate()
   {
-    var jsonDoc = JsonDocument.Parse(_jsonString);
+    var jsonDoc = System.Text.Json.JsonDocument.Parse(_jsonString);
     var rootElement = jsonDoc.RootElement;
-    return Tmj.ReadMap(rootElement, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
+    return Tmj.ReadTemplate(rootElement, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
   }
 
   protected virtual void Dispose(bool disposing)
@@ -52,7 +49,7 @@ public class TmjMapReader : IMapReader
   }
 
   // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-  // ~TmjMapReader()
+  // ~TjTemplateReader()
   // {
   //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
   //     Dispose(disposing: false);
@@ -62,6 +59,6 @@ public class TmjMapReader : IMapReader
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
     Dispose(disposing: true);
-    System.GC.SuppressFinalize(this);
+    GC.SuppressFinalize(this);
   }
 }

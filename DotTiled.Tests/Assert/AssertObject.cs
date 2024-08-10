@@ -17,7 +17,7 @@ public static partial class DotTiledAssert
     Assert.Equal(expected.Visible, actual.Visible);
     Assert.Equal(expected.Template, actual.Template);
 
-    AssertProperties(actual.Properties, expected.Properties);
+    AssertProperties(expected.Properties, actual.Properties);
     AssertObject((dynamic)expected, (dynamic)actual);
   }
 

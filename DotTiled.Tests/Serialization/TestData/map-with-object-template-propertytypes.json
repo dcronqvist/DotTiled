@@ -1,0 +1,24 @@
+[
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 1,
+        "members": [
+            {
+                "name": "Amount",
+                "type": "float",
+                "value": 0
+            },
+            {
+                "name": "Name",
+                "type": "string",
+                "value": ""
+            }
+        ],
+        "name": "TestClass",
+        "type": "class",
+        "useAs": [
+            "property"
+        ]
+    }
+]

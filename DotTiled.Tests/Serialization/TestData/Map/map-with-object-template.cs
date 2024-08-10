@@ -2,7 +2,7 @@ namespace DotTiled.Tests;
 
 public partial class TestData
 {
-  public static Map MapWithObjectTemplate() => new Map
+  public static Map MapWithObjectTemplate(string templateExtension) => new Map
   {
     Version = "1.10",
     TiledVersion = "1.11.0",
@@ -49,7 +49,7 @@ public partial class TestData
           new RectangleObject
           {
             ID = 1,
-            Template = "map-with-object-template.tx",
+            Template = $"map-with-object-template.{templateExtension}",
             Name = "Thingy 2",
             X = 94.5749f,
             Y = 33.6842f,
@@ -73,7 +73,7 @@ public partial class TestData
           new RectangleObject
           {
             ID = 2,
-            Template = "map-with-object-template.tx",
+            Template = $"map-with-object-template.{templateExtension}",
             Name = "Thingy",
             X = 29.7976f,
             Y = 33.8693f,
@@ -97,7 +97,7 @@ public partial class TestData
           new RectangleObject
           {
             ID = 3,
-            Template = "map-with-object-template.tx",
+            Template = $"map-with-object-template.{templateExtension}",
             Name = "Thingy 3",
             X = 5,
             Y = 5,
@@ -112,7 +112,7 @@ public partial class TestData
                 PropertyType = "TestClass",
                 Properties = new Dictionary<string, IProperty>
                 {
-                  ["Amount"] = new FloatProperty { Name = "Amount", Value = 4.2f },
+                  ["Amount"] = new FloatProperty { Name = "Amount", Value = 0.0f },
                   ["Name"] = new StringProperty { Name = "Name", Value = "I am here 3" }
                 }
               }
