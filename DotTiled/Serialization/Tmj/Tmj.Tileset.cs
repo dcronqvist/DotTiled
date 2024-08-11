@@ -79,7 +79,7 @@ internal partial class Tmj
 
     var imageModel = new Image
     {
-      Format = ParseImageFormatFromSource(image!),
+      Format = Helpers.ParseImageFormatFromSource(image!),
       Source = image,
       Height = imageHeight,
       Width = imageWidth,
@@ -109,20 +109,6 @@ internal partial class Tmj
       TileWidth = tileWidth,
       Version = version,
       //Wangsets = wangsets
-    };
-  }
-
-  private static ImageFormat ParseImageFormatFromSource(string source)
-  {
-    var extension = Path.GetExtension(source).ToLowerInvariant();
-    return extension switch
-    {
-      ".png" => ImageFormat.Png,
-      ".gif" => ImageFormat.Gif,
-      ".jpg" => ImageFormat.Jpg,
-      ".jpeg" => ImageFormat.Jpg,
-      ".bmp" => ImageFormat.Bmp,
-      _ => throw new JsonException($"Unsupported image format '{extension}'")
     };
   }
 
@@ -163,7 +149,7 @@ internal partial class Tmj
     IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
     element.GetValueAsList<Tile>(e =>
     {
-      var animation = e.GetOptionalPropertyCustom<List<Frame>>("animation", e => e.GetValueAsList<Frame>(ReadFrame), null);
+      var animation = e.GetOptionalPropertyCustom<List<Frame>?>("animation", e => e.GetValueAsList<Frame>(ReadFrame), null);
       var id = e.GetRequiredProperty<uint>("id");
       var image = e.GetOptionalProperty<string?>("image", null);
       var imageHeight = e.GetOptionalProperty<uint?>("imageheight", null);
@@ -180,7 +166,7 @@ internal partial class Tmj
 
       var imageModel = image != null ? new Image
       {
-        Format = ParseImageFormatFromSource(image),
+        Format = Helpers.ParseImageFormatFromSource(image),
         Source = image,
         Height = imageHeight ?? 0,
         Width = imageWidth ?? 0
@@ -211,6 +197,63 @@ internal partial class Tmj
     {
       Duration = duration,
       TileID = tileID
+    };
+  }
+
+  internal static Wangset ReadWangset(
+    JsonElement element,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  {
+    var @clalss = element.GetOptionalProperty<string>("class", "");
+    var colors = element.GetOptionalPropertyCustom<List<WangColor>>("colors", e => e.GetValueAsList<WangColor>(el => ReadWangColor(el, customTypeDefinitions)), []);
+    var name = element.GetRequiredProperty<string>("name");
+    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var tile = element.GetOptionalProperty<uint>("tile", 0);
+    var type = element.GetOptionalProperty<string>("type", "");
+    var wangTiles = element.GetOptionalPropertyCustom<List<WangTile>>("wangtiles", e => e.GetValueAsList<WangTile>(ReadWangTile), []);
+
+    return new Wangset
+    {
+      Class = @clalss,
+      WangColors = colors,
+      Name = name,
+      Properties = properties,
+      Tile = tile,
+      WangTiles = wangTiles
+    };
+  }
+
+  internal static WangColor ReadWangColor(
+    JsonElement element,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  {
+    var @class = element.GetOptionalProperty<string>("class", "");
+    var color = element.GetRequiredPropertyParseable<Color>("color", s => Color.Parse(s, CultureInfo.InvariantCulture));
+    var name = element.GetRequiredProperty<string>("name");
+    var probability = element.GetOptionalProperty<float>("probability", 1.0f);
+    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var tile = element.GetOptionalProperty<uint>("tile", 0);
+
+    return new WangColor
+    {
+      Class = @class,
+      Color = color,
+      Name = name,
+      Probability = probability,
+      Properties = properties,
+      Tile = tile
+    };
+  }
+
+  internal static WangTile ReadWangTile(JsonElement element)
+  {
+    var tileID = element.GetRequiredProperty<uint>("tileid");
+    var wangID = element.GetOptionalPropertyCustom<List<byte>>("wangid", e => e.GetValueAsList<byte>(el => (byte)el.GetUInt32()), []);
+
+    return new WangTile
+    {
+      TileID = tileID,
+      WangID = [.. wangID]
     };
   }
 }

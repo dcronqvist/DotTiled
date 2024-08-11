@@ -128,7 +128,7 @@ internal partial class Tmx
 
     reader.ProcessChildren("object", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, MergeProperties(properties, ReadProperties(r, customTypeDefinitions)), "Properties", ref propertiesCounter),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties(r, customTypeDefinitions)), "Properties", ref propertiesCounter),
       "ellipse" => () => Helpers.SetAtMostOnce(ref obj, ReadEllipseObject(r), "Object marker"),
       "point" => () => Helpers.SetAtMostOnce(ref obj, ReadPointObject(r), "Object marker"),
       "polygon" => () => Helpers.SetAtMostOnce(ref obj, ReadPolygonObject(r), "Object marker"),
@@ -156,38 +156,6 @@ internal partial class Tmx
     obj.Properties = properties;
 
     return obj;
-  }
-
-  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty> overrideProperties)
-  {
-    if (baseProperties is null)
-      return overrideProperties ?? new Dictionary<string, IProperty>();
-
-    if (overrideProperties is null)
-      return baseProperties;
-
-    var result = new Dictionary<string, IProperty>(baseProperties);
-    foreach (var (key, value) in overrideProperties)
-    {
-      if (!result.TryGetValue(key, out var baseProp))
-      {
-        result[key] = value;
-        continue;
-      }
-      else
-      {
-        if (value is ClassProperty classProp)
-        {
-          ((ClassProperty)baseProp).Properties = MergeProperties(((ClassProperty)baseProp).Properties, classProp.Properties);
-        }
-        else
-        {
-          result[key] = value;
-        }
-      }
-    }
-
-    return result;
   }
 
   internal static EllipseObject ReadEllipseObject(XmlReader reader)

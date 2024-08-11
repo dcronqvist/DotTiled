@@ -56,7 +56,7 @@ internal partial class Tmx
       var propsInType = CreateInstanceOfCustomClass(ccd);
       var props = ReadProperties(reader, customTypeDefinitions);
 
-      var mergedProps = MergeProperties(propsInType, props);
+      var mergedProps = Helpers.MergeProperties(propsInType, props);
 
       reader.ReadEndElement();
       return new ClassProperty { Name = name, PropertyType = propertyType, Properties = mergedProps };

@@ -57,7 +57,7 @@ internal partial class Tmj
       var propsInType = CreateInstanceOfCustomClass(ccd);
       var props = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>>("value", el => ReadCustomClassProperties(el, ccd, customTypeDefinitions), []);
 
-      var mergedProps = MergeProperties(propsInType, props);
+      var mergedProps = Helpers.MergeProperties(propsInType, props);
 
       return new ClassProperty
       {
@@ -104,37 +104,5 @@ internal partial class Tmj
   internal static Dictionary<string, IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition)
   {
     return customClassDefinition.Members.ToDictionary(m => m.Name, m => m.Clone());
-  }
-
-  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty> overrideProperties)
-  {
-    if (baseProperties is null)
-      return overrideProperties ?? new Dictionary<string, IProperty>();
-
-    if (overrideProperties is null)
-      return baseProperties;
-
-    var result = baseProperties.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Clone());
-    foreach (var (key, value) in overrideProperties)
-    {
-      if (!result.TryGetValue(key, out var baseProp))
-      {
-        result[key] = value;
-        continue;
-      }
-      else
-      {
-        if (value is ClassProperty classProp)
-        {
-          ((ClassProperty)baseProp).Properties = MergeProperties(((ClassProperty)baseProp).Properties, classProp.Properties);
-        }
-        else
-        {
-          result[key] = value;
-        }
-      }
-    }
-
-    return result;
   }
 }

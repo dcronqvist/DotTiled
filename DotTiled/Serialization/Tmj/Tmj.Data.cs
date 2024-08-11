@@ -49,7 +49,7 @@ internal partial class Tmj
     {
       // Array of uint
       var data = element.GetValueAsList<uint>(e => e.GetValueAs<uint>()).ToArray();
-      var (globalTileIDs, flippingFlags) = Helpers.Data.ReadAndClearFlippingFlagsFromGIDs(data);
+      var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(data);
       return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
     }
     else if (encoding == DataEncoding.Base64)
@@ -58,21 +58,21 @@ internal partial class Tmj
 
       if (compression == null)
       {
-        var data = Helpers.Data.ReadBytesAsInt32Array(base64Data);
-        var (globalTileIDs, flippingFlags) = Helpers.Data.ReadAndClearFlippingFlagsFromGIDs(data);
+        var data = Helpers.ReadBytesAsInt32Array(base64Data);
+        var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(data);
         return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
       }
 
       using var stream = new MemoryStream(base64Data);
       var decompressed = compression switch
       {
-        DataCompression.GZip => Helpers.Data.DecompressGZip(stream),
-        DataCompression.ZLib => Helpers.Data.DecompressZLib(stream),
+        DataCompression.GZip => Helpers.DecompressGZip(stream),
+        DataCompression.ZLib => Helpers.DecompressZLib(stream),
         _ => throw new JsonException($"Unsupported compression '{compression}'.")
       };
 
       {
-        var (globalTileIDs, flippingFlags) = Helpers.Data.ReadAndClearFlippingFlagsFromGIDs(decompressed);
+        var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(decompressed);
         return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
       }
     }
