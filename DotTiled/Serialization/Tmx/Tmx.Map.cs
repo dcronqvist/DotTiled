@@ -8,7 +8,11 @@ namespace DotTiled;
 
 internal partial class Tmx
 {
-  internal static Map ReadMap(XmlReader reader, Func<string, Tileset> externalTilesetResolver, Func<string, Template> externalTemplateResolver)
+  internal static Map ReadMap(
+    XmlReader reader,
+    Func<string, Tileset> externalTilesetResolver,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var version = reader.GetRequiredAttribute("version");
@@ -64,12 +68,12 @@ internal partial class Tmx
 
     reader.ProcessChildren("map", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
-      "tileset" => () => tilesets.Add(ReadTileset(r, externalTilesetResolver, externalTemplateResolver)),
-      "layer" => () => layers.Add(ReadTileLayer(r, dataUsesChunks: infinite)),
-      "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver)),
-      "imagelayer" => () => layers.Add(ReadImageLayer(r)),
-      "group" => () => layers.Add(ReadGroup(r, externalTemplateResolver)),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
+      "tileset" => () => tilesets.Add(ReadTileset(r, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions)),
+      "layer" => () => layers.Add(ReadTileLayer(r, infinite, customTypeDefinitions)),
+      "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver, customTypeDefinitions)),
+      "imagelayer" => () => layers.Add(ReadImageLayer(r, customTypeDefinitions)),
+      "group" => () => layers.Add(ReadGroup(r, externalTemplateResolver, customTypeDefinitions)),
       _ => r.Skip
     });
 

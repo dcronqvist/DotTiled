@@ -15,7 +15,7 @@ public partial class TmxMapReaderTests
     // Act
     Action act = () =>
     {
-      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
     };
 
     // Assert
@@ -34,7 +34,7 @@ public partial class TmxMapReaderTests
     // Act
     Action act = () =>
     {
-      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
     };
 
     // Assert
@@ -53,7 +53,7 @@ public partial class TmxMapReaderTests
     // Act
     Action act = () =>
     {
-      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+      using var _ = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
     };
 
     // Assert
@@ -70,7 +70,7 @@ public partial class TmxMapReaderTests
     Func<string, Template> externalTemplateResolver = (_) => new Template { Object = new RectangleObject { } };
 
     // Act
-    using var tmxMapReader = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver);
+    using var tmxMapReader = new TmxMapReader(xmlReader, externalTilesetResolver, externalTemplateResolver, []);
 
     // Assert
     Assert.NotNull(tmxMapReader);
@@ -78,12 +78,12 @@ public partial class TmxMapReaderTests
 
   public static IEnumerable<object[]> DeserializeMap_ValidXmlNoExternalTilesets_ReturnsMapWithoutThrowing_Data =>
   [
-    ["Serialization.Tmx.TestData.Map.empty-map-csv.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Csv, null)],
-    ["Serialization.Tmx.TestData.Map.empty-map-base64.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Base64, null)],
-    ["Serialization.Tmx.TestData.Map.empty-map-base64-gzip.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.GZip)],
-    ["Serialization.Tmx.TestData.Map.empty-map-base64-zlib.tmx", EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.ZLib)],
-    ["Serialization.Tmx.TestData.Map.simple-tileset-embed.tmx", SimpleMapWithEmbeddedTileset()],
-    ["Serialization.Tmx.TestData.Map.empty-map-properties.tmx", EmptyMapWithProperties()],
+    ["Serialization.TestData.Map.empty-map-csv.tmx", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Csv, null)],
+    ["Serialization.TestData.Map.empty-map-base64.tmx", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Base64, null)],
+    ["Serialization.TestData.Map.empty-map-base64-gzip.tmx", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.GZip)],
+    ["Serialization.TestData.Map.empty-map-base64-zlib.tmx", TestData.EmptyMapWithEncodingAndCompression(DataEncoding.Base64, DataCompression.ZLib)],
+    ["Serialization.TestData.Map.simple-tileset-embed.tmx", TestData.SimpleMapWithEmbeddedTileset()],
+    ["Serialization.TestData.Map.empty-map-properties.tmx", TestData.EmptyMapWithProperties()],
   ];
 
   [Theory]
@@ -91,20 +91,55 @@ public partial class TmxMapReaderTests
   public void TmxMapReaderReadMap_ValidXmlNoExternalTilesets_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
-    using var reader = TmxMapReaderTestData.GetXmlReaderFor(testDataFile);
-    static Template ResolveTemplate(string source)
+    CustomTypeDefinition[] customTypeDefinitions = [
+      new CustomClassDefinition
+      {
+        Name = "TestClass",
+        ID = 1,
+        UseAs = CustomClassUseAs.Property,
+        Members = [
+          new StringProperty
+          {
+            Name = "Name",
+            Value = ""
+          },
+          new FloatProperty
+          {
+            Name = "Amount",
+            Value = 0f
+          }
+        ]
+      },
+      new CustomClassDefinition
+      {
+        Name = "Test",
+        ID = 2,
+        UseAs = CustomClassUseAs.All,
+        Members = [
+          new ClassProperty
+          {
+            Name = "Yep",
+            PropertyType = "TestClass",
+            Properties = []
+          }
+        ]
+      }
+    ];
+
+    using var reader = TestData.GetXmlReaderFor(testDataFile);
+    Template ResolveTemplate(string source)
     {
-      using var xmlTemplateReader = TmxMapReaderTestData.GetXmlReaderFor($"Serialization.Tmx.TestData.Template.{source}");
-      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate);
+      using var xmlTemplateReader = TestData.GetXmlReaderFor($"Serialization.TestData.Template.{source}");
+      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
       return templateReader.ReadTemplate();
     }
-    static Tileset ResolveTileset(string source)
+    Tileset ResolveTileset(string source)
     {
-      using var xmlTilesetReader = TmxMapReaderTestData.GetXmlReaderFor($"Serialization.Tmx.TestData.Tileset.{source}");
-      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate);
+      using var xmlTilesetReader = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
+      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate, customTypeDefinitions);
       return tilesetReader.ReadTileset();
     }
-    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate);
+    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
 
     // Act
     var map = mapReader.ReadMap();
@@ -116,8 +151,8 @@ public partial class TmxMapReaderTests
 
   public static IEnumerable<object[]> DeserializeMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected_Data =>
   [
-    ["Serialization.Tmx.TestData.Map.map-with-object-template.tmx", MapWithObjectTemplate()],
-    ["Serialization.Tmx.TestData.Map.map-with-group.tmx", MapWithGroup()],
+    ["Serialization.TestData.Map.map-with-object-template.tmx", TestData.MapWithObjectTemplate("tx")],
+    ["Serialization.TestData.Map.map-with-group.tmx", TestData.MapWithGroup()],
   ];
 
   [Theory]
@@ -125,20 +160,54 @@ public partial class TmxMapReaderTests
   public void TmxMapReaderReadMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(string testDataFile, Map expectedMap)
   {
     // Arrange
-    using var reader = TmxMapReaderTestData.GetXmlReaderFor(testDataFile);
-    static Template ResolveTemplate(string source)
+    CustomTypeDefinition[] customTypeDefinitions = [
+      new CustomClassDefinition
+      {
+        Name = "TestClass",
+        ID = 1,
+        UseAs = CustomClassUseAs.Property,
+        Members = [
+          new StringProperty
+          {
+            Name = "Name",
+            Value = ""
+          },
+          new FloatProperty
+          {
+            Name = "Amount",
+            Value = 0f
+          }
+        ]
+      },
+      new CustomClassDefinition
+      {
+        Name = "Test",
+        ID = 2,
+        UseAs = CustomClassUseAs.All,
+        Members = [
+          new ClassProperty
+          {
+            Name = "Yep",
+            PropertyType = "TestClass",
+            Properties = []
+          }
+        ]
+      }
+    ];
+    using var reader = TestData.GetXmlReaderFor(testDataFile);
+    Template ResolveTemplate(string source)
     {
-      using var xmlTemplateReader = TmxMapReaderTestData.GetXmlReaderFor($"Serialization.Tmx.TestData.Template.{source}");
-      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate);
+      using var xmlTemplateReader = TestData.GetXmlReaderFor($"Serialization.TestData.Template.{source}");
+      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
       return templateReader.ReadTemplate();
     }
-    static Tileset ResolveTileset(string source)
+    Tileset ResolveTileset(string source)
     {
-      using var xmlTilesetReader = TmxMapReaderTestData.GetXmlReaderFor($"Serialization.Tmx.TestData.Tileset.{source}");
-      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate);
+      using var xmlTilesetReader = TestData.GetXmlReaderFor($"Serialization.TestData.Tileset.{source}");
+      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate, customTypeDefinitions);
       return tilesetReader.ReadTileset();
     }
-    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate);
+    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
 
     // Act
     var map = mapReader.ReadMap();

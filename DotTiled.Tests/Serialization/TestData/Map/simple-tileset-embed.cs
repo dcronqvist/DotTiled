@@ -1,8 +1,8 @@
 namespace DotTiled.Tests;
 
-public partial class TmxMapReaderTests
+public partial class TestData
 {
-  private static Map SimpleMapWithEmbeddedTileset() => new Map
+  public static Map SimpleMapWithEmbeddedTileset() => new Map
   {
     Version = "1.10",
     TiledVersion = "1.11.0",
@@ -26,6 +26,7 @@ public partial class TmxMapReaderTests
         Columns = 4,
         Image = new Image
         {
+          Format = ImageFormat.Png,
           Source = "tiles.png",
           Width = 128,
           Height = 64

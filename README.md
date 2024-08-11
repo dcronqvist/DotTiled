@@ -60,15 +60,13 @@ BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.4651/22H2/2022Update)
   [Host]     : .NET 8.0.3 (8.0.324.11423), X64 RyuJIT AVX2
   DefaultJob : .NET 8.0.3 (8.0.324.11423), X64 RyuJIT AVX2
 ```
-| Method      | Categories               | Mean      | Error     | StdDev    | Ratio | RatioSD | Gen0   | Gen1   | Allocated | Alloc Ratio |
-|------------ |------------------------- |----------:|----------:|----------:|------:|--------:|-------:|-------:|----------:|------------:|
-| DotTiled    | MapFromInMemoryTmxString |  2.991 μs | 0.0266 μs | 0.0236 μs |  1.00 |    0.00 | 1.2817 | 0.0610 |  16.37 KB |        1.00 |
-| TiledLib    | MapFromInMemoryTmxString |  5.405 μs | 0.0466 μs | 0.0413 μs |  1.81 |    0.02 | 1.8158 | 0.1068 |  23.32 KB |        1.42 |
-| TiledCSPlus | MapFromInMemoryTmxString |  6.354 μs | 0.0703 μs | 0.0587 μs |  2.12 |    0.03 | 2.5940 | 0.1831 |  33.23 KB |        2.03 |
-|             |                          |           |           |           |       |         |        |        |           |             |
-| DotTiled    | MapFromTmxFile           | 28.570 μs | 0.1216 μs | 0.1137 μs |  1.00 |    0.00 | 1.0376 |      - |  13.88 KB |        1.00 |
-| TiledCSPlus | MapFromTmxFile           | 33.377 μs | 0.1086 μs | 0.1016 μs |  1.17 |    0.01 | 2.8076 | 0.1221 |  36.93 KB |        2.66 |
-| TiledLib    | MapFromTmxFile           | 36.077 μs | 0.1900 μs | 0.1777 μs |  1.26 |    0.01 | 2.0752 | 0.1221 |   27.1 KB |        1.95 |
+| Method      | Categories               | Mean     | Ratio | Gen0   | Gen1   | Allocated | Alloc Ratio |
+|------------ |------------------------- |---------:|------:|-------:|-------:|----------:|------------:|
+| DotTiled    | MapFromInMemoryTmjString | 4.292 μs |  1.00 | 0.4349 |      - |   5.62 KB |        1.00 |
+|             |                          |          |       |        |        |           |             |
+| DotTiled    | MapFromInMemoryTmxString | 3.075 μs |  1.00 | 1.2817 | 0.0610 |   16.4 KB |        1.00 |
+| TiledLib    | MapFromInMemoryTmxString | 5.574 μs |  1.81 | 1.8005 | 0.0916 |  23.32 KB |        1.42 |
+| TiledCSPlus | MapFromInMemoryTmxString | 6.546 μs |  2.13 | 2.5940 | 0.1831 |  33.16 KB |        2.02 |
 
 </details>
 

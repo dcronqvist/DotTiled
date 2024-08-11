@@ -9,7 +9,10 @@ namespace DotTiled;
 
 internal partial class Tmx
 {
-  internal static ObjectLayer ReadObjectLayer(XmlReader reader, Func<string, Template> externalTemplateResolver)
+  internal static ObjectLayer ReadObjectLayer(
+    XmlReader reader,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var id = reader.GetRequiredAttributeParseable<uint>("id");
@@ -40,8 +43,8 @@ internal partial class Tmx
 
     reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r), "Properties"),
-      "object" => () => objects.Add(ReadObject(r, externalTemplateResolver)),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
+      "object" => () => objects.Add(ReadObject(r, externalTemplateResolver, customTypeDefinitions)),
       _ => r.Skip
     });
 
@@ -68,7 +71,10 @@ internal partial class Tmx
     };
   }
 
-  internal static Object ReadObject(XmlReader reader, Func<string, Template> externalTemplateResolver)
+  internal static Object ReadObject(
+    XmlReader reader,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var template = reader.GetOptionalAttribute("template");
@@ -122,7 +128,7 @@ internal partial class Tmx
 
     reader.ProcessChildren("object", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, MergeProperties(properties, ReadProperties(r)), "Properties", ref propertiesCounter),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties(r, customTypeDefinitions)), "Properties", ref propertiesCounter),
       "ellipse" => () => Helpers.SetAtMostOnce(ref obj, ReadEllipseObject(r), "Object marker"),
       "point" => () => Helpers.SetAtMostOnce(ref obj, ReadPointObject(r), "Object marker"),
       "polygon" => () => Helpers.SetAtMostOnce(ref obj, ReadPolygonObject(r), "Object marker"),
@@ -150,38 +156,6 @@ internal partial class Tmx
     obj.Properties = properties;
 
     return obj;
-  }
-
-  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty> overrideProperties)
-  {
-    if (baseProperties is null)
-      return overrideProperties ?? new Dictionary<string, IProperty>();
-
-    if (overrideProperties is null)
-      return baseProperties;
-
-    var result = new Dictionary<string, IProperty>(baseProperties);
-    foreach (var (key, value) in overrideProperties)
-    {
-      if (!result.TryGetValue(key, out var baseProp))
-      {
-        result[key] = value;
-        continue;
-      }
-      else
-      {
-        if (value is ClassProperty classProp)
-        {
-          ((ClassProperty)baseProp).Properties = MergeProperties(((ClassProperty)baseProp).Properties, classProp.Properties);
-        }
-        else
-        {
-          result[key] = value;
-        }
-      }
-    }
-
-    return result;
   }
 
   internal static EllipseObject ReadEllipseObject(XmlReader reader)
@@ -280,7 +254,11 @@ internal partial class Tmx
     };
   }
 
-  internal static Template ReadTemplate(XmlReader reader, Func<string, Tileset> externalTilesetResolver, Func<string, Template> externalTemplateResolver)
+  internal static Template ReadTemplate(
+    XmlReader reader,
+    Func<string, Tileset> externalTilesetResolver,
+    Func<string, Template> externalTemplateResolver,
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // No attributes
 
@@ -292,8 +270,8 @@ internal partial class Tmx
 
     reader.ProcessChildren("template", (r, elementName) => elementName switch
     {
-      "tileset" => () => Helpers.SetAtMostOnce(ref tileset, ReadTileset(r, externalTilesetResolver, externalTemplateResolver), "Tileset"),
-      "object" => () => Helpers.SetAtMostOnce(ref obj, ReadObject(r, externalTemplateResolver), "Object"),
+      "tileset" => () => Helpers.SetAtMostOnce(ref tileset, ReadTileset(r, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions), "Tileset"),
+      "object" => () => Helpers.SetAtMostOnce(ref obj, ReadObject(r, externalTemplateResolver, customTypeDefinitions), "Object"),
       _ => r.Skip
     });
 
