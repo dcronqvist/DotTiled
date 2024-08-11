@@ -59,7 +59,7 @@ internal partial class Tmj
       "grid" => TileRenderSize.Grid,
       _ => throw new JsonException($"Unknown tile render size '{s}'")
     }, TileRenderSize.Tile);
-    var tiles = element.GetOptionalPropertyCustom<List<Tile>>("tiles", el => ReadTiles(el, customTypeDefinitions), []);
+    var tiles = element.GetOptionalPropertyCustom<List<Tile>>("tiles", el => ReadTiles(el, externalTemplateResolver, customTypeDefinitions), []);
     var tileWidth = element.GetOptionalProperty<uint?>("tilewidth", null);
     var transparentColor = element.GetOptionalPropertyParseable<Color?>("transparentcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
     var type = element.GetOptionalProperty<string?>("type", null);
@@ -159,10 +159,11 @@ internal partial class Tmj
 
   internal static List<Tile> ReadTiles(
     JsonElement element,
+    Func<string, Template> externalTemplateResolver,
     IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
     element.GetValueAsList<Tile>(e =>
     {
-      //var animation = e.GetOptionalPropertyCustom<List<Frame>>("animation", ReadFrames, null);
+      var animation = e.GetOptionalPropertyCustom<List<Frame>>("animation", e => e.GetValueAsList<Frame>(ReadFrame), null);
       var id = e.GetRequiredProperty<uint>("id");
       var image = e.GetOptionalProperty<string?>("image", null);
       var imageHeight = e.GetOptionalProperty<uint?>("imageheight", null);
@@ -171,7 +172,7 @@ internal partial class Tmj
       var y = e.GetOptionalProperty<uint>("y", 0);
       var width = e.GetOptionalProperty<uint>("width", imageWidth ?? 0);
       var height = e.GetOptionalProperty<uint>("height", imageHeight ?? 0);
-      //var objectGroup = e.GetOptionalPropertyCustom<ObjectLayer?>("objectgroup", ReadObjectLayer, null);
+      var objectGroup = e.GetOptionalPropertyCustom<ObjectLayer?>("objectgroup", e => ReadObjectLayer(e, externalTemplateResolver, customTypeDefinitions), null);
       var probability = e.GetOptionalProperty<float>("probability", 1.0f);
       var properties = e.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", el => ReadProperties(el, customTypeDefinitions), null);
       // var terrain, replaced by wangsets
@@ -187,17 +188,29 @@ internal partial class Tmj
 
       return new Tile
       {
-        //Animation = animation,
+        Animation = animation,
         ID = id,
         Image = imageModel,
         X = x,
         Y = y,
         Width = width,
         Height = height,
-        //ObjectLayer = objectGroup,
+        ObjectLayer = objectGroup,
         Probability = probability,
         Properties = properties,
         Type = type
       };
     });
+
+  internal static Frame ReadFrame(JsonElement element)
+  {
+    var duration = element.GetRequiredProperty<uint>("duration");
+    var tileID = element.GetRequiredProperty<uint>("tileid");
+
+    return new Frame
+    {
+      Duration = duration,
+      TileID = tileID
+    };
+  }
 }
