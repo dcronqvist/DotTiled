@@ -30,7 +30,8 @@ public static partial class TestData
 
   public static IEnumerable<object[]> MapsThatHaveTmxAndTmj =>
   [
-    ["Serialization.TestData.Map.default_map.default-map", TestData.DefaultMap(), Array.Empty<CustomTypeDefinition>()]
+    ["Serialization.TestData.Map.default_map.default-map", TestData.DefaultMap(), Array.Empty<CustomTypeDefinition>()],
+    ["Serialization.TestData.Map.map_with_common_props.map-with-common-props", TestData.MapWithCommonProps(), Array.Empty<CustomTypeDefinition>()]
   ];
 
   private static CustomTypeDefinition[] typedefs = [
