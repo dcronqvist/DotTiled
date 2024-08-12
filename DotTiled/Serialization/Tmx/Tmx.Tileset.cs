@@ -83,7 +83,7 @@ internal partial class Tmx
 
       var resolvedTileset = externalTilesetResolver(source);
       resolvedTileset.FirstGID = firstGID;
-      resolvedTileset.Source = null;
+      resolvedTileset.Source = source;
       return resolvedTileset;
     }
 
