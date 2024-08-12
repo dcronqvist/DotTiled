@@ -6,6 +6,8 @@ public static partial class TestData
 {
   public static XmlReader GetXmlReaderFor(string testDataFile)
   {
+    var names = typeof(TestData).Assembly.GetManifestResourceNames();
+
     var fullyQualifiedTestDataFile = $"DotTiled.Tests.{testDataFile}";
     using var stream = typeof(TestData).Assembly.GetManifestResourceStream(fullyQualifiedTestDataFile)
                        ?? throw new ArgumentException($"Test data file '{fullyQualifiedTestDataFile}' not found");
