@@ -27,4 +27,44 @@ public static partial class TestData
     using var stringReader = new StreamReader(stream);
     return stringReader.ReadToEnd();
   }
+
+  public static IEnumerable<object[]> MapsThatHaveTmxAndTmj =>
+  [
+    ["Serialization.TestData.Map.default_map.default-map", TestData.DefaultMap(), Array.Empty<CustomTypeDefinition>()]
+  ];
+
+  private static CustomTypeDefinition[] typedefs = [
+    new CustomClassDefinition
+    {
+      Name = "TestClass",
+      ID = 1,
+      UseAs = CustomClassUseAs.Property,
+      Members = [
+        new StringProperty
+        {
+          Name = "Name",
+          Value = ""
+        },
+        new FloatProperty
+        {
+          Name = "Amount",
+          Value = 0f
+        }
+      ]
+    },
+    new CustomClassDefinition
+    {
+      Name = "Test",
+      ID = 2,
+      UseAs = CustomClassUseAs.All,
+      Members = [
+        new ClassProperty
+        {
+          Name = "Yep",
+          PropertyType = "TestClass",
+          Properties = []
+        }
+      ]
+    }
+  ];
 }
