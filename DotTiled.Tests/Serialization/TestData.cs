@@ -32,7 +32,8 @@ public static partial class TestData
   [
     ["Serialization.TestData.Map.default_map.default-map", TestData.DefaultMap(), Array.Empty<CustomTypeDefinition>()],
     ["Serialization.TestData.Map.map_with_common_props.map-with-common-props", TestData.MapWithCommonProps(), Array.Empty<CustomTypeDefinition>()],
-    ["Serialization.TestData.Map.map_with_custom_type_props.map-with-custom-type-props", TestData.MapWithCustomTypeProps(), TestData.MapWithCustomTypePropsCustomTypeDefinitions()]
+    ["Serialization.TestData.Map.map_with_custom_type_props.map-with-custom-type-props", TestData.MapWithCustomTypeProps(), TestData.MapWithCustomTypePropsCustomTypeDefinitions()],
+    ["Serialization.TestData.Map.map_with_embedded_tileset.map-with-embedded-tileset", TestData.MapWithEmbeddedTileset(), Array.Empty<CustomTypeDefinition>()],
   ];
 
   private static CustomTypeDefinition[] typedefs = [
