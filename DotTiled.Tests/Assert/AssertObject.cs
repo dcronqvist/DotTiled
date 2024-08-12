@@ -5,17 +5,17 @@ public static partial class DotTiledAssert
   internal static void AssertObject(Object expected, Object actual)
   {
     // Attributes
-    Assert.Equal(expected.ID, actual.ID);
-    Assert.Equal(expected.Name, actual.Name);
-    Assert.Equal(expected.Type, actual.Type);
-    Assert.Equal(expected.X, actual.X);
-    Assert.Equal(expected.Y, actual.Y);
-    Assert.Equal(expected.Width, actual.Width);
-    Assert.Equal(expected.Height, actual.Height);
-    Assert.Equal(expected.Rotation, actual.Rotation);
-    Assert.Equal(expected.GID, actual.GID);
-    Assert.Equal(expected.Visible, actual.Visible);
-    Assert.Equal(expected.Template, actual.Template);
+    AssertEqual(expected.ID, actual.ID, nameof(Object.ID));
+    AssertEqual(expected.Name, actual.Name, nameof(Object.Name));
+    AssertEqual(expected.Type, actual.Type, nameof(Object.Type));
+    AssertEqual(expected.X, actual.X, nameof(Object.X));
+    AssertEqual(expected.Y, actual.Y, nameof(Object.Y));
+    AssertEqual(expected.Width, actual.Width, nameof(Object.Width));
+    AssertEqual(expected.Height, actual.Height, nameof(Object.Height));
+    AssertEqual(expected.Rotation, actual.Rotation, nameof(Object.Rotation));
+    AssertEqual(expected.GID, actual.GID, nameof(Object.GID));
+    AssertEqual(expected.Visible, actual.Visible, nameof(Object.Visible));
+    AssertEqual(expected.Template, actual.Template, nameof(Object.Template));
 
     AssertProperties(expected.Properties, actual.Properties);
     AssertObject((dynamic)expected, (dynamic)actual);
@@ -38,29 +38,29 @@ public static partial class DotTiledAssert
 
   private static void AssertObject(PolygonObject expected, PolygonObject actual)
   {
-    Assert.Equal(expected.Points, actual.Points);
+    AssertEqual(expected.Points, actual.Points, nameof(PolygonObject.Points));
   }
 
   private static void AssertObject(PolylineObject expected, PolylineObject actual)
   {
-    Assert.Equal(expected.Points, actual.Points);
+    AssertEqual(expected.Points, actual.Points, nameof(PolylineObject.Points));
   }
 
   private static void AssertObject(TextObject expected, TextObject actual)
   {
     // Attributes
-    Assert.Equal(expected.FontFamily, actual.FontFamily);
-    Assert.Equal(expected.PixelSize, actual.PixelSize);
-    Assert.Equal(expected.Wrap, actual.Wrap);
-    Assert.Equal(expected.Color, actual.Color);
-    Assert.Equal(expected.Bold, actual.Bold);
-    Assert.Equal(expected.Italic, actual.Italic);
-    Assert.Equal(expected.Underline, actual.Underline);
-    Assert.Equal(expected.Strikeout, actual.Strikeout);
-    Assert.Equal(expected.Kerning, actual.Kerning);
-    Assert.Equal(expected.HorizontalAlignment, actual.HorizontalAlignment);
-    Assert.Equal(expected.VerticalAlignment, actual.VerticalAlignment);
+    AssertEqual(expected.FontFamily, actual.FontFamily, nameof(TextObject.FontFamily));
+    AssertEqual(expected.PixelSize, actual.PixelSize, nameof(TextObject.PixelSize));
+    AssertEqual(expected.Wrap, actual.Wrap, nameof(TextObject.Wrap));
+    AssertEqual(expected.Color, actual.Color, nameof(TextObject.Color));
+    AssertEqual(expected.Bold, actual.Bold, nameof(TextObject.Bold));
+    AssertEqual(expected.Italic, actual.Italic, nameof(TextObject.Italic));
+    AssertEqual(expected.Underline, actual.Underline, nameof(TextObject.Underline));
+    AssertEqual(expected.Strikeout, actual.Strikeout, nameof(TextObject.Strikeout));
+    AssertEqual(expected.Kerning, actual.Kerning, nameof(TextObject.Kerning));
+    AssertEqual(expected.HorizontalAlignment, actual.HorizontalAlignment, nameof(TextObject.HorizontalAlignment));
+    AssertEqual(expected.VerticalAlignment, actual.VerticalAlignment, nameof(TextObject.VerticalAlignment));
 
-    Assert.Equal(expected.Text, actual.Text);
+    AssertEqual(expected.Text, actual.Text, nameof(TextObject.Text));
   }
 }

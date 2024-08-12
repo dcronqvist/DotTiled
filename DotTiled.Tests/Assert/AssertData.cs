@@ -12,17 +12,17 @@ public static partial class DotTiledAssert
 
     // Attributes
     Assert.NotNull(actual);
-    Assert.Equal(expected.Encoding, actual.Encoding);
-    Assert.Equal(expected.Compression, actual.Compression);
+    AssertEqual(expected.Encoding, actual.Encoding, nameof(Data.Encoding));
+    AssertEqual(expected.Compression, actual.Compression, nameof(Data.Compression));
 
     // Data
-    Assert.Equal(expected.GlobalTileIDs, actual.GlobalTileIDs);
-    Assert.Equal(expected.FlippingFlags, actual.FlippingFlags);
+    AssertEqual(expected.GlobalTileIDs, actual.GlobalTileIDs, nameof(Data.GlobalTileIDs));
+    AssertEqual(expected.FlippingFlags, actual.FlippingFlags, nameof(Data.FlippingFlags));
 
     if (expected.Chunks is not null)
     {
       Assert.NotNull(actual.Chunks);
-      Assert.Equal(expected.Chunks.Length, actual.Chunks.Length);
+      AssertEqual(expected.Chunks.Length, actual.Chunks.Length, "Chunks.Length");
       for (var i = 0; i < expected.Chunks.Length; i++)
         AssertChunk(expected.Chunks[i], actual.Chunks[i]);
     }
@@ -31,13 +31,13 @@ public static partial class DotTiledAssert
   private static void AssertChunk(Chunk expected, Chunk actual)
   {
     // Attributes
-    Assert.Equal(expected.X, actual.X);
-    Assert.Equal(expected.Y, actual.Y);
-    Assert.Equal(expected.Width, actual.Width);
-    Assert.Equal(expected.Height, actual.Height);
+    AssertEqual(expected.X, actual.X, nameof(Chunk.X));
+    AssertEqual(expected.Y, actual.Y, nameof(Chunk.Y));
+    AssertEqual(expected.Width, actual.Width, nameof(Chunk.Width));
+    AssertEqual(expected.Height, actual.Height, nameof(Chunk.Height));
 
     // Data
-    Assert.Equal(expected.GlobalTileIDs, actual.GlobalTileIDs);
-    Assert.Equal(expected.FlippingFlags, actual.FlippingFlags);
+    AssertEqual(expected.GlobalTileIDs, actual.GlobalTileIDs, nameof(Chunk.GlobalTileIDs));
+    AssertEqual(expected.FlippingFlags, actual.FlippingFlags, nameof(Chunk.FlippingFlags));
   }
 }

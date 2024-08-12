@@ -12,10 +12,10 @@ public static partial class DotTiledAssert
 
     // Attributes
     Assert.NotNull(actual);
-    Assert.Equal(expected.Format, actual.Format);
-    Assert.Equal(expected.Source, actual.Source);
-    Assert.Equal(expected.TransparentColor, actual.TransparentColor);
-    Assert.Equal(expected.Width, actual.Width);
-    Assert.Equal(expected.Height, actual.Height);
+    AssertEqual(expected.Format, actual.Format, nameof(Image.Format));
+    AssertEqual(expected.Source, actual.Source, nameof(Image.Source));
+    AssertEqual(expected.TransparentColor, actual.TransparentColor, nameof(Image.TransparentColor));
+    AssertEqual(expected.Width, actual.Width, nameof(Image.Width));
+    AssertEqual(expected.Height, actual.Height, nameof(Image.Height));
   }
 }
