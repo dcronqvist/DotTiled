@@ -36,6 +36,7 @@ public static partial class TestData
     ["Serialization/TestData/Map/map_with_custom_type_props/map-with-custom-type-props", (string f) => TestData.MapWithCustomTypeProps(), TestData.MapWithCustomTypePropsCustomTypeDefinitions()],
     ["Serialization/TestData/Map/map_with_embedded_tileset/map-with-embedded-tileset", (string f) => TestData.MapWithEmbeddedTileset(), Array.Empty<CustomTypeDefinition>()],
     ["Serialization/TestData/Map/map_with_external_tileset/map-with-external-tileset", (string f) => TestData.MapWithExternalTileset(f), Array.Empty<CustomTypeDefinition>()],
+    ["Serialization/TestData/Map/map_with_flippingflags/map-with-flippingflags", (string f) => TestData.MapWithFlippingFlags(f), Array.Empty<CustomTypeDefinition>()],
   ];
 
   private static CustomTypeDefinition[] typedefs = [
