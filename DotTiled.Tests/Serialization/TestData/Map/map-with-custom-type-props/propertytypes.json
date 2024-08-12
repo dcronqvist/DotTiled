@@ -1,0 +1,49 @@
+[
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 8,
+        "members": [
+            {
+                "name": "boolinclass",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "colorinclass",
+                "type": "color",
+                "value": ""
+            },
+            {
+                "name": "fileinclass",
+                "type": "file",
+                "value": ""
+            },
+            {
+                "name": "floatinclass",
+                "type": "float",
+                "value": 0
+            },
+            {
+                "name": "intinclass",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "objectinclass",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "stringinclass",
+                "type": "string",
+                "value": ""
+            }
+        ],
+        "name": "CustomClass",
+        "type": "class",
+        "useAs": [
+            "property"
+        ]
+    }
+]

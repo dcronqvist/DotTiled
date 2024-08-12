@@ -4,7 +4,7 @@ namespace DotTiled.Tests;
 
 public partial class TmxMapReaderTests
 {
-  public static IEnumerable<object[]> Maps => TestData.MapsThatHaveTmxAndTmj;
+  public static IEnumerable<object[]> Maps => TestData.MapTests;
   [Theory]
   [MemberData(nameof(Maps))]
   public void TmxMapReaderReadMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(

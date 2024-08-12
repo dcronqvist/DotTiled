@@ -28,10 +28,11 @@ public static partial class TestData
     return stringReader.ReadToEnd();
   }
 
-  public static IEnumerable<object[]> MapsThatHaveTmxAndTmj =>
+  public static IEnumerable<object[]> MapTests =>
   [
     ["Serialization.TestData.Map.default_map.default-map", TestData.DefaultMap(), Array.Empty<CustomTypeDefinition>()],
-    ["Serialization.TestData.Map.map_with_common_props.map-with-common-props", TestData.MapWithCommonProps(), Array.Empty<CustomTypeDefinition>()]
+    ["Serialization.TestData.Map.map_with_common_props.map-with-common-props", TestData.MapWithCommonProps(), Array.Empty<CustomTypeDefinition>()],
+    ["Serialization.TestData.Map.map_with_custom_type_props.map-with-custom-type-props", TestData.MapWithCustomTypeProps(), TestData.MapWithCustomTypePropsCustomTypeDefinitions()]
   ];
 
   private static CustomTypeDefinition[] typedefs = [
