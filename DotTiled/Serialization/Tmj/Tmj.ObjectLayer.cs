@@ -97,7 +97,6 @@ internal partial class Tmj
       widthDefault = templObj.Width;
       heightDefault = templObj.Height;
       rotationDefault = templObj.Rotation;
-      gidDefault = templObj.GID;
       visibleDefault = templObj.Visible;
       propertiesDefault = templObj.Properties;
       ellipseDefault = templObj is EllipseObject;
@@ -123,6 +122,25 @@ internal partial class Tmj
     var x = element.GetOptionalProperty<float>("x", xDefault);
     var y = element.GetOptionalProperty<float>("y", yDefault);
 
+    if (gid is not null)
+    {
+      return new TileObject
+      {
+        ID = id,
+        Name = name,
+        Type = type,
+        X = x,
+        Y = y,
+        Width = width,
+        Height = height,
+        Rotation = rotation,
+        Visible = visible,
+        Template = template,
+        Properties = properties,
+        GID = gid.Value
+      };
+    }
+
     if (ellipse)
     {
       return new EllipseObject
@@ -135,7 +153,6 @@ internal partial class Tmj
         Width = width,
         Height = height,
         Rotation = rotation,
-        GID = gid,
         Visible = visible,
         Template = template,
         Properties = properties
@@ -154,7 +171,6 @@ internal partial class Tmj
         Width = width,
         Height = height,
         Rotation = rotation,
-        GID = gid,
         Visible = visible,
         Template = template,
         Properties = properties
@@ -173,7 +189,6 @@ internal partial class Tmj
         Width = width,
         Height = height,
         Rotation = rotation,
-        GID = gid,
         Visible = visible,
         Template = template,
         Properties = properties,
@@ -193,7 +208,6 @@ internal partial class Tmj
         Width = width,
         Height = height,
         Rotation = rotation,
-        GID = gid,
         Visible = visible,
         Template = template,
         Properties = properties,
@@ -211,7 +225,6 @@ internal partial class Tmj
       text.Width = width;
       text.Height = height;
       text.Rotation = rotation;
-      text.GID = gid;
       text.Visible = visible;
       text.Template = template;
       text.Properties = properties;
@@ -228,7 +241,6 @@ internal partial class Tmj
       Width = width,
       Height = height,
       Rotation = rotation,
-      GID = gid,
       Visible = visible,
       Template = template,
       Properties = properties

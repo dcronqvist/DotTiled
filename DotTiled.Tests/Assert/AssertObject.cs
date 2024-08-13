@@ -13,7 +13,6 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Width, actual.Width, nameof(Object.Width));
     AssertEqual(expected.Height, actual.Height, nameof(Object.Height));
     AssertEqual(expected.Rotation, actual.Rotation, nameof(Object.Rotation));
-    AssertEqual(expected.GID, actual.GID, nameof(Object.GID));
     AssertEqual(expected.Visible, actual.Visible, nameof(Object.Visible));
     AssertEqual(expected.Template, actual.Template, nameof(Object.Template));
 
@@ -62,5 +61,11 @@ public static partial class DotTiledAssert
     AssertEqual(expected.VerticalAlignment, actual.VerticalAlignment, nameof(TextObject.VerticalAlignment));
 
     AssertEqual(expected.Text, actual.Text, nameof(TextObject.Text));
+  }
+
+  private static void AssertObject(TileObject expected, TileObject actual)
+  {
+    // Attributes
+    AssertEqual(expected.GID, actual.GID, nameof(TileObject.GID));
   }
 }

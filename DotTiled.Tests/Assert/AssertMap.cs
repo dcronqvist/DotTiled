@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Numerics;
+
 namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
@@ -7,6 +10,29 @@ public static partial class DotTiledAssert
     if (expected == null)
     {
       Assert.Null(actual);
+      return;
+    }
+
+    if (typeof(T) == typeof(float))
+    {
+      var expectedFloat = (float)(object)expected;
+      var actualFloat = (float)(object)actual!;
+
+      var expecRounded = MathF.Round(expectedFloat, 3);
+      var actRounded = MathF.Round(actualFloat, 3);
+
+      Assert.True(expecRounded == actRounded, $"Expected {nameof} '{expecRounded}' but got '{actRounded}'");
+      return;
+    }
+
+    if (expected is Vector2)
+    {
+      var expectedVector = (Vector2)(object)expected;
+      var actualVector = (Vector2)(object)actual!;
+
+      AssertEqual(expectedVector.X, actualVector.X, $"{nameof}.X");
+      AssertEqual(expectedVector.Y, actualVector.Y, $"{nameof}.Y");
+
       return;
     }
 
@@ -20,6 +46,20 @@ public static partial class DotTiledAssert
 
       for (var i = 0; i < expectedArray.Length; i++)
         AssertEqual(expectedArray.GetValue(i), actualArray.GetValue(i), $"{nameof}[{i}]");
+
+      return;
+    }
+
+    if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
+    {
+      var expectedList = (IList)(object)expected;
+      var actualList = (IList)(object)actual!;
+
+      Assert.NotNull(actualList);
+      AssertEqual(expectedList.Count, actualList.Count, $"{nameof}.Count");
+
+      for (var i = 0; i < expectedList.Count; i++)
+        AssertEqual(expectedList[i], actualList[i], $"{nameof}[{i}]");
 
       return;
     }

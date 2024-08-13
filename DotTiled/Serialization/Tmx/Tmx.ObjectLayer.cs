@@ -105,7 +105,6 @@ internal partial class Tmx
       widthDefault = templObj.Width;
       heightDefault = templObj.Height;
       rotationDefault = templObj.Rotation;
-      gidDefault = templObj.GID;
       visibleDefault = templObj.Visible;
       propertiesDefault = templObj.Properties;
     }
@@ -137,12 +136,19 @@ internal partial class Tmx
       _ => throw new Exception($"Unknown object marker '{elementName}'")
     });
 
+    if (gid is not null)
+    {
+      obj = new TileObject { ID = id, GID = gid.Value };
+      reader.Skip();
+    }
+
     if (obj is null)
     {
       obj = new RectangleObject { ID = id };
       reader.Skip();
     }
 
+    obj.ID = id;
     obj.Name = name;
     obj.Type = type;
     obj.X = x;
@@ -150,7 +156,6 @@ internal partial class Tmx
     obj.Width = width;
     obj.Height = height;
     obj.Rotation = rotation;
-    obj.GID = gid;
     obj.Visible = visible;
     obj.Template = template;
     obj.Properties = properties;

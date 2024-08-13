@@ -1,0 +1,181 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "id":2,
+         "layers":[
+                {
+                 "draworder":"topdown",
+                 "id":3,
+                 "name":"Objects",
+                 "objects":[
+                        {
+                         "height":31.3333333333333,
+                         "id":1,
+                         "name":"Object 1",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":31.3333333333333,
+                         "x":25.6666666666667,
+                         "y":28.6666666666667
+                        }, 
+                        {
+                         "height":0,
+                         "id":3,
+                         "name":"P1",
+                         "point":true,
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":0,
+                         "x":117.666666666667,
+                         "y":48.6666666666667
+                        }, 
+                        {
+                         "ellipse":true,
+                         "height":34.6666666666667,
+                         "id":4,
+                         "name":"Circle1",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":34.6666666666667,
+                         "x":77,
+                         "y":72.3333333333333
+                        }, 
+                        {
+                         "height":0,
+                         "id":5,
+                         "name":"Poly",
+                         "polygon":[
+                                {
+                                 "x":0,
+                                 "y":0
+                                }, 
+                                {
+                                 "x":104,
+                                 "y":20
+                                }, 
+                                {
+                                 "x":35.6666666666667,
+                                 "y":32.3333333333333
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":0,
+                         "x":20.6666666666667,
+                         "y":114.666666666667
+                        }, 
+                        {
+                         "gid":7,
+                         "height":146,
+                         "id":6,
+                         "name":"TileObj",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":64,
+                         "x":-35,
+                         "y":110.333333333333
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "id":5,
+                 "layers":[
+                        {
+                         "data":[0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0],
+                         "height":5,
+                         "id":7,
+                         "name":"Tile 3",
+                         "opacity":1,
+                         "type":"tilelayer",
+                         "visible":true,
+                         "width":5,
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "data":[0, 15, 15, 0, 0,
+                            0, 15, 15, 0, 0,
+                            0, 15, 15, 15, 0,
+                            15, 15, 15, 0, 0,
+                            0, 0, 0, 0, 0],
+                         "height":5,
+                         "id":6,
+                         "name":"Tile 2",
+                         "opacity":1,
+                         "type":"tilelayer",
+                         "visible":true,
+                         "width":5,
+                         "x":0,
+                         "y":0
+                        }],
+                 "name":"Sub",
+                 "opacity":1,
+                 "type":"group",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "id":4,
+                 "image":"tileset.png",
+                 "name":"ImageLayer",
+                 "opacity":1,
+                 "repeatx":true,
+                 "type":"imagelayer",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "data":[1, 1, 1, 1, 1,
+                    0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0],
+                 "height":5,
+                 "id":1,
+                 "name":"Tile Layer 1",
+                 "opacity":1,
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":5,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"Root",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":8,
+ "nextobjectid":7,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.0",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"tileset.tsj"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":5
+}
