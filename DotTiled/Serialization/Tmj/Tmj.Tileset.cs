@@ -77,14 +77,14 @@ internal partial class Tmj
       return resolvedTileset;
     }
 
-    var imageModel = new Image
+    var imageModel = image is not null ? new Image
     {
-      Format = Helpers.ParseImageFormatFromSource(image!),
+      Format = Helpers.ParseImageFormatFromSource(image),
       Source = image,
       Height = imageHeight,
       Width = imageWidth,
       TransparentColor = transparentColor
-    };
+    } : null;
 
     return new Tileset
     {
@@ -159,7 +159,7 @@ internal partial class Tmj
       var width = e.GetOptionalProperty<uint>("width", imageWidth ?? 0);
       var height = e.GetOptionalProperty<uint>("height", imageHeight ?? 0);
       var objectGroup = e.GetOptionalPropertyCustom<ObjectLayer?>("objectgroup", e => ReadObjectLayer(e, externalTemplateResolver, customTypeDefinitions), null);
-      var probability = e.GetOptionalProperty<float>("probability", 1.0f);
+      var probability = e.GetOptionalProperty<float>("probability", 0.0f);
       var properties = e.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", el => ReadProperties(el, customTypeDefinitions), null);
       // var terrain, replaced by wangsets
       var type = e.GetOptionalProperty<string>("type", "");
