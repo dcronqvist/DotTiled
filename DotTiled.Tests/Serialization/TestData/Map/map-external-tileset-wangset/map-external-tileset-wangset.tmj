@@ -1,0 +1,36 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[2147483650, 2, 2147483660, 2147483659, 0,
+            1073741825, 12, 1, 3221225483, 0,
+            2, 1, 0, 3221225473, 0,
+            12, 11, 12, 2147483650, 0,
+            0, 0, 0, 0, 0],
+         "height":5,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.0",
+ "tileheight":24,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"wangset-tileset.tsj"
+        }],
+ "tilewidth":24,
+ "type":"map",
+ "version":"1.10",
+ "width":5
+}

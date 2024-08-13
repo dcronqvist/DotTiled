@@ -7,7 +7,7 @@ public class Wangset
   // Attributes
   public required string Name { get; set; }
   public string Class { get; set; } = "";
-  public required uint Tile { get; set; }
+  public required int Tile { get; set; }
 
   // Elements
   // At most one of
