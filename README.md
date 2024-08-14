@@ -7,6 +7,7 @@ DotTiled is a simple and easy-to-use library for loading, saving, and managing [
 DotTiled is designed to be a lightweight and efficient library that provides a simple API for loading and managing Tiled maps and tilesets. It is built with performance in mind and aims to be as fast and memory-efficient as possible. Targeting `netstandard2.0` and `net8.0` allows DotTiled to be used in popular game engines like Unity and Godot, as well as in popular game development frameworks like MonoGame.
 
 - [Alternative libraries and comparison + benchmarks](#alternative-libraries-and-comparison)
+- [Feature coverage comparison](#feature-coverage-comparison)
 - [Quickstart](#quickstart)
   - [Installing DotTiled](#installing-dottiled)
 
@@ -26,25 +27,6 @@ Other similar libraries exist, and you may want to consider them for your projec
 
 > [!NOTE]
 > *Both benchmark time and memory ratios are relative to DotTiled. Lower is better. Benchmark (time) refers to the execution time of loading the same map from an in-memory string that contains XML data in the `.tmx` format. Benchmark (memory) refers to the memory allocated during that loading process. For further details on the benchmark results, see the collapsible section below.
-
-<details>
-<summary>
-Feature coverage comparison
-</summary>
-
-| **Comparison**|**DotTiled**|[TiledLib](https://github.com/Ragath/TiledLib.Net)|[TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus)|[TiledSharp](https://github.com/marshallward/TiledSharp)|[TiledCS](https://github.com/TheBoneJarmer/TiledCS)|[TiledNet](https://github.com/napen123/Tiled.Net)|
-|---------------------------------|:-:|:-:|:-:|:-:|:-:|:-:|
-| Full XML support `.tmx`         |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| Full JSON support `.tmj`        |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| Load from string (implies file) |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| Load from file                  |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| External tilesets               |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| Template files                  |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| Property custom types           |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| Hierarchical layers (groups)    |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-| Infinite maps                   |✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
-
-</details>
 
 <details>
 <summary>
@@ -71,6 +53,24 @@ BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.4651/22H2/2022Update)
 </details>
 
 [MonoGame](https://www.monogame.net) users may also want to consider using [MonoGame.Extended](https://github.com/craftworkgames/MonoGame.Extended) for loading Tiled maps and tilesets. Like MonoGame.Extended, DotTiled also provides a way to properly import Tiled maps and tilesets with the MonoGame content pipeline (with the DotTiled.MonoGame.Pipeline NuGet). However, unlike MonoGame.Extended, DotTiled does *not* include any kind of rendering capabilities, and it is up to you as a developer to implement any kind of rendering for your maps when using DotTiled. The feature coverage by MonoGame.Extended is less than that of DotTiled, so you may want to consider using DotTiled if you need access to more Tiled features and flexibility.
+
+# Feature coverage comparison
+
+Below is a comparison of the feature coverage of DotTiled and other similar libraries. This comparison is based on the features provided by the Tiled map editor and the support for those features in each library. The comparison is not exhaustive, and you may want to refer to the respective library's documentation or implementation for details. Due to some libraries not having obvious documentation or feature lists, some features may be incorrectly marked as not supported. If you find any inaccuracies, please let me know.
+
+| **Comparison**|**DotTiled**|[TiledLib](https://github.com/Ragath/TiledLib.Net)|[TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus)|[TiledSharp](https://github.com/marshallward/TiledSharp)|[TiledCS](https://github.com/TheBoneJarmer/TiledCS)|[TiledNet](https://github.com/napen123/Tiled.Net)|
+|---------------------------------|:-:|:-:|:-:|:-:|:-:|:-:|
+| XML format `.tmx`               |✅ |⚠️|⚠️|⚠️|⚠️|⚠️|
+| JSON format `.tmj`              |✅ |⚠️|❌|❌|❌|❌|
+| External tileset callback       |✅ |✅|❌|✅|❌|❌|
+| Object templates                |✅ |❌|❌|❌|❌|❌|
+| Custom types (properties)       |✅ |❌|❌|❌|❌|❌|
+| Hierarchical layers (groups)    |✅ |❌|❌|✅|❌|✅|
+| Infinite maps                   |✅ |❌|✅|✅|✅|❌|
+| Wangsets                        |✅ |❌|⚠️|⚠️|❌|⚠️|
+
+> [!NOTE]
+> ✅ Full support. ⚠️ Partial support, see respective library for details about supported features. ❌ No support.
 
 # Quickstart
 
