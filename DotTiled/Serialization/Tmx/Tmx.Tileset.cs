@@ -83,7 +83,7 @@ internal partial class Tmx
 
       var resolvedTileset = externalTilesetResolver(source);
       resolvedTileset.FirstGID = firstGID;
-      resolvedTileset.Source = null;
+      resolvedTileset.Source = source;
       return resolvedTileset;
     }
 
@@ -193,10 +193,10 @@ internal partial class Tmx
   internal static Transformations ReadTransformations(XmlReader reader)
   {
     // Attributes
-    var hFlip = reader.GetOptionalAttributeParseable<bool>("hflip") ?? false;
-    var vFlip = reader.GetOptionalAttributeParseable<bool>("vflip") ?? false;
-    var rotate = reader.GetOptionalAttributeParseable<bool>("rotate") ?? false;
-    var preferUntransformed = reader.GetOptionalAttributeParseable<bool>("preferuntransformed") ?? false;
+    var hFlip = (reader.GetOptionalAttributeParseable<uint>("hflip") ?? 0) == 1;
+    var vFlip = (reader.GetOptionalAttributeParseable<uint>("vflip") ?? 0) == 1;
+    var rotate = (reader.GetOptionalAttributeParseable<uint>("rotate") ?? 0) == 1;
+    var preferUntransformed = (reader.GetOptionalAttributeParseable<uint>("preferuntransformed") ?? 0) == 1;
 
     reader.ReadStartElement("transformations");
     return new Transformations { HFlip = hFlip, VFlip = vFlip, Rotate = rotate, PreferUntransformed = preferUntransformed };
@@ -266,7 +266,7 @@ internal partial class Tmx
     // Attributes
     var name = reader.GetRequiredAttribute("name");
     var @class = reader.GetOptionalAttribute("class") ?? "";
-    var tile = reader.GetRequiredAttributeParseable<uint>("tile");
+    var tile = reader.GetRequiredAttributeParseable<int>("tile");
 
     // Elements
     Dictionary<string, IProperty>? properties = null;
@@ -303,7 +303,7 @@ internal partial class Tmx
     var name = reader.GetRequiredAttribute("name");
     var @class = reader.GetOptionalAttribute("class") ?? "";
     var color = reader.GetRequiredAttributeParseable<Color>("color");
-    var tile = reader.GetRequiredAttributeParseable<uint>("tile");
+    var tile = reader.GetRequiredAttributeParseable<int>("tile");
     var probability = reader.GetOptionalAttributeParseable<float>("probability") ?? 0f;
 
     // Elements
@@ -338,6 +338,8 @@ internal partial class Tmx
         throw new ArgumentException("Wang ID can have at most 8 indices.");
       return indices;
     });
+
+    reader.ReadStartElement("wangtile");
 
     return new WangTile
     {

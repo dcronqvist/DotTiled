@@ -72,7 +72,7 @@ internal static partial class Helpers
     };
   }
 
-  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty> overrideProperties)
+  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty>? overrideProperties)
   {
     if (baseProperties is null)
       return overrideProperties ?? new Dictionary<string, IProperty>();

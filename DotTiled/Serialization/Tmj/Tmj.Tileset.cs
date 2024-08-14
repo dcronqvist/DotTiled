@@ -64,7 +64,8 @@ internal partial class Tmj
     var transparentColor = element.GetOptionalPropertyParseable<Color?>("transparentcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
     var type = element.GetOptionalProperty<string?>("type", null);
     var version = element.GetOptionalProperty<string?>("version", null);
-    //var wangsets = element.GetOptionalPropertyCustom<List<Wangset>?>("wangsets", ReadWangSets, null);
+    var transformations = element.GetOptionalPropertyCustom<Transformations?>("transformations", ReadTransformations, null);
+    var wangsets = element.GetOptionalPropertyCustom<List<Wangset>?>("wangsets", el => el.GetValueAsList<Wangset>(e => ReadWangset(e, customTypeDefinitions)), null);
 
     if (source is not null)
     {
@@ -77,14 +78,14 @@ internal partial class Tmj
       return resolvedTileset;
     }
 
-    var imageModel = new Image
+    var imageModel = image is not null ? new Image
     {
-      Format = Helpers.ParseImageFormatFromSource(image!),
+      Format = Helpers.ParseImageFormatFromSource(image),
       Source = image,
       Height = imageHeight,
       Width = imageWidth,
       TransparentColor = transparentColor
-    };
+    } : null;
 
     return new Tileset
     {
@@ -108,7 +109,24 @@ internal partial class Tmj
       Tiles = tiles,
       TileWidth = tileWidth,
       Version = version,
-      //Wangsets = wangsets
+      Wangsets = wangsets,
+      Transformations = transformations
+    };
+  }
+
+  internal static Transformations ReadTransformations(JsonElement element)
+  {
+    var hFlip = element.GetOptionalProperty<bool>("hflip", false);
+    var vFlip = element.GetOptionalProperty<bool>("vflip", false);
+    var rotate = element.GetOptionalProperty<bool>("rotate", false);
+    var preferUntransformed = element.GetOptionalProperty<bool>("preferuntransformed", false);
+
+    return new Transformations
+    {
+      HFlip = hFlip,
+      VFlip = vFlip,
+      Rotate = rotate,
+      PreferUntransformed = preferUntransformed
     };
   }
 
@@ -159,7 +177,7 @@ internal partial class Tmj
       var width = e.GetOptionalProperty<uint>("width", imageWidth ?? 0);
       var height = e.GetOptionalProperty<uint>("height", imageHeight ?? 0);
       var objectGroup = e.GetOptionalPropertyCustom<ObjectLayer?>("objectgroup", e => ReadObjectLayer(e, externalTemplateResolver, customTypeDefinitions), null);
-      var probability = e.GetOptionalProperty<float>("probability", 1.0f);
+      var probability = e.GetOptionalProperty<float>("probability", 0.0f);
       var properties = e.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", el => ReadProperties(el, customTypeDefinitions), null);
       // var terrain, replaced by wangsets
       var type = e.GetOptionalProperty<string>("type", "");
@@ -208,7 +226,7 @@ internal partial class Tmj
     var colors = element.GetOptionalPropertyCustom<List<WangColor>>("colors", e => e.GetValueAsList<WangColor>(el => ReadWangColor(el, customTypeDefinitions)), []);
     var name = element.GetRequiredProperty<string>("name");
     var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
-    var tile = element.GetOptionalProperty<uint>("tile", 0);
+    var tile = element.GetOptionalProperty<int>("tile", 0);
     var type = element.GetOptionalProperty<string>("type", "");
     var wangTiles = element.GetOptionalPropertyCustom<List<WangTile>>("wangtiles", e => e.GetValueAsList<WangTile>(ReadWangTile), []);
 
@@ -232,7 +250,7 @@ internal partial class Tmj
     var name = element.GetRequiredProperty<string>("name");
     var probability = element.GetOptionalProperty<float>("probability", 1.0f);
     var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
-    var tile = element.GetOptionalProperty<uint>("tile", 0);
+    var tile = element.GetOptionalProperty<int>("tile", 0);
 
     return new WangColor
     {

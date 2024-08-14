@@ -74,8 +74,8 @@ internal partial class Tmx
     var offsetY = reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
     var parallaxX = reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
     var parallaxY = reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
-    var repeatX = reader.GetRequiredAttributeParseable<bool>("repeatx");
-    var repeatY = reader.GetRequiredAttributeParseable<bool>("repeaty");
+    var repeatX = (reader.GetOptionalAttributeParseable<uint>("repeatx") ?? 0) == 1;
+    var repeatY = (reader.GetOptionalAttributeParseable<uint>("repeaty") ?? 0) == 1;
 
     Dictionary<string, IProperty>? properties = null;
     Image? image = null;

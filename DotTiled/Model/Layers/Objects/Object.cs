@@ -13,7 +13,6 @@ public abstract class Object
   public float Width { get; set; } = 0f;
   public float Height { get; set; } = 0f;
   public float Rotation { get; set; } = 0f;
-  public uint? GID { get; set; }
   public bool Visible { get; set; } = true;
   public string? Template { get; set; }
 

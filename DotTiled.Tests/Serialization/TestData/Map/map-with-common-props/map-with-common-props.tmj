@@ -1,0 +1,70 @@
+{ "backgroundcolor":"#00ff00",
+ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0],
+         "height":5,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"isometric",
+ "properties":[
+        {
+         "name":"boolprop",
+         "type":"bool",
+         "value":true
+        }, 
+        {
+         "name":"colorprop",
+         "type":"color",
+         "value":"#ff55ffff"
+        }, 
+        {
+         "name":"fileprop",
+         "type":"file",
+         "value":"file.txt"
+        }, 
+        {
+         "name":"floatprop",
+         "type":"float",
+         "value":4.2
+        }, 
+        {
+         "name":"intprop",
+         "type":"int",
+         "value":8
+        },
+    
+        {
+         "name":"objectprop",
+         "type":"object",
+         "value":5
+        }, 
+        {
+         "name":"stringprop",
+         "type":"string",
+         "value":"This is a string, hello world!"
+        }],
+ "renderorder":"right-down",
+ "tiledversion":"1.11.0",
+ "tileheight":16,
+ "tilesets":[],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":5
+}

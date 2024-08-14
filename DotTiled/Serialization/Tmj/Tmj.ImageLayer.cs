@@ -25,8 +25,8 @@ internal partial class Tmj
     var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
 
     var image = element.GetRequiredProperty<string>("image");
-    var repeatX = element.GetRequiredProperty<bool>("repeatx");
-    var repeatY = element.GetRequiredProperty<bool>("repeaty");
+    var repeatX = element.GetOptionalProperty<bool>("repeatx", false);
+    var repeatY = element.GetOptionalProperty<bool>("repeaty", false);
     var transparentColor = element.GetOptionalPropertyParseable<Color?>("transparentcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
     var x = element.GetOptionalProperty<uint>("x", 0);
     var y = element.GetOptionalProperty<uint>("y", 0);
