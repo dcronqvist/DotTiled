@@ -78,36 +78,21 @@ internal partial class Tmx
   {
     // Attributes
     var template = reader.GetOptionalAttribute("template");
-
-    uint? idDefault = null;
-    string nameDefault = "";
-    string typeDefault = "";
-    float xDefault = 0f;
-    float yDefault = 0f;
-    float widthDefault = 0f;
-    float heightDefault = 0f;
-    float rotationDefault = 0f;
-    uint? gidDefault = null;
-    bool visibleDefault = true;
-    Dictionary<string, IProperty>? propertiesDefault = null;
-
-    // Perform template copy first
+    Object? obj = null;
     if (template is not null)
-    {
-      var resolvedTemplate = externalTemplateResolver(template);
-      var templObj = resolvedTemplate.Object;
+      obj = externalTemplateResolver(template).Object;
 
-      idDefault = templObj.ID;
-      nameDefault = templObj.Name;
-      typeDefault = templObj.Type;
-      xDefault = templObj.X;
-      yDefault = templObj.Y;
-      widthDefault = templObj.Width;
-      heightDefault = templObj.Height;
-      rotationDefault = templObj.Rotation;
-      visibleDefault = templObj.Visible;
-      propertiesDefault = templObj.Properties;
-    }
+    uint? idDefault = obj?.ID ?? null;
+    string nameDefault = obj?.Name ?? "";
+    string typeDefault = obj?.Type ?? "";
+    float xDefault = obj?.X ?? 0f;
+    float yDefault = obj?.Y ?? 0f;
+    float widthDefault = obj?.Width ?? 0f;
+    float heightDefault = obj?.Height ?? 0f;
+    float rotationDefault = obj?.Rotation ?? 0f;
+    uint? gidDefault = obj is TileObject tileObj ? tileObj.GID : null;
+    bool visibleDefault = obj?.Visible ?? true;
+    Dictionary<string, IProperty>? propertiesDefault = obj?.Properties ?? null;
 
     var id = reader.GetOptionalAttributeParseable<uint>("id") ?? idDefault;
     var name = reader.GetOptionalAttribute("name") ?? nameDefault;
@@ -121,46 +106,66 @@ internal partial class Tmx
     var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
 
     // Elements
-    Object? obj = null;
+    Object? foundObject = null;
     int propertiesCounter = 0;
     Dictionary<string, IProperty>? properties = propertiesDefault;
 
     reader.ProcessChildren("object", (r, elementName) => elementName switch
     {
       "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties(r, customTypeDefinitions)), "Properties", ref propertiesCounter),
-      "ellipse" => () => Helpers.SetAtMostOnce(ref obj, ReadEllipseObject(r), "Object marker"),
-      "point" => () => Helpers.SetAtMostOnce(ref obj, ReadPointObject(r), "Object marker"),
-      "polygon" => () => Helpers.SetAtMostOnce(ref obj, ReadPolygonObject(r), "Object marker"),
-      "polyline" => () => Helpers.SetAtMostOnce(ref obj, ReadPolylineObject(r), "Object marker"),
-      "text" => () => Helpers.SetAtMostOnce(ref obj, ReadTextObject(r), "Object marker"),
+      "ellipse" => () => Helpers.SetAtMostOnce(ref foundObject, ReadEllipseObject(r), "Object marker"),
+      "point" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPointObject(r), "Object marker"),
+      "polygon" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolygonObject(r), "Object marker"),
+      "polyline" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolylineObject(r), "Object marker"),
+      "text" => () => Helpers.SetAtMostOnce(ref foundObject, ReadTextObject(r), "Object marker"),
       _ => throw new Exception($"Unknown object marker '{elementName}'")
     });
 
-    if (gid is not null)
+    if (foundObject is null)
     {
-      obj = new TileObject { ID = id, GID = gid.Value };
-      reader.Skip();
+      if (gid is not null)
+        foundObject = new TileObject { ID = id, GID = gid.Value };
+      else
+        foundObject = new RectangleObject { ID = id };
     }
 
+    foundObject.ID = id;
+    foundObject.Name = name;
+    foundObject.Type = type;
+    foundObject.X = x;
+    foundObject.Y = y;
+    foundObject.Width = width;
+    foundObject.Height = height;
+    foundObject.Rotation = rotation;
+    foundObject.Visible = visible;
+    foundObject.Properties = properties;
+    foundObject.Template = template;
+
+    return OverrideObject(obj, foundObject);
+  }
+
+  internal static Object OverrideObject(Object? obj, Object foundObject)
+  {
     if (obj is null)
+      return foundObject;
+
+    if (obj.GetType() != foundObject.GetType())
     {
-      obj = new RectangleObject { ID = id };
-      reader.Skip();
+      obj.ID = foundObject.ID;
+      obj.Name = foundObject.Name;
+      obj.Type = foundObject.Type;
+      obj.X = foundObject.X;
+      obj.Y = foundObject.Y;
+      obj.Width = foundObject.Width;
+      obj.Height = foundObject.Height;
+      obj.Rotation = foundObject.Rotation;
+      obj.Visible = foundObject.Visible;
+      obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties);
+      obj.Template = foundObject.Template;
+      return obj;
     }
 
-    obj.ID = id;
-    obj.Name = name;
-    obj.Type = type;
-    obj.X = x;
-    obj.Y = y;
-    obj.Width = width;
-    obj.Height = height;
-    obj.Rotation = rotation;
-    obj.Visible = visible;
-    obj.Template = template;
-    obj.Properties = properties;
-
-    return obj;
+    return OverrideObject((dynamic)obj, (dynamic)foundObject);
   }
 
   internal static EllipseObject ReadEllipseObject(XmlReader reader)
@@ -169,11 +174,15 @@ internal partial class Tmx
     return new EllipseObject { };
   }
 
+  internal static EllipseObject OverrideObject(EllipseObject obj, EllipseObject foundObject) => obj;
+
   internal static PointObject ReadPointObject(XmlReader reader)
   {
     reader.Skip();
     return new PointObject { };
   }
+
+  internal static PointObject OverrideObject(PointObject obj, PointObject foundObject) => obj;
 
   internal static PolygonObject ReadPolygonObject(XmlReader reader)
   {
@@ -193,6 +202,12 @@ internal partial class Tmx
     return new PolygonObject { Points = points };
   }
 
+  internal static PolygonObject OverrideObject(PolygonObject obj, PolygonObject foundObject)
+  {
+    obj.Points = foundObject.Points;
+    return obj;
+  }
+
   internal static PolylineObject ReadPolylineObject(XmlReader reader)
   {
     // Attributes
@@ -209,6 +224,12 @@ internal partial class Tmx
 
     reader.ReadStartElement("polyline");
     return new PolylineObject { Points = points };
+  }
+
+  internal static PolylineObject OverrideObject(PolylineObject obj, PolylineObject foundObject)
+  {
+    obj.Points = foundObject.Points;
+    return obj;
   }
 
   internal static TextObject ReadTextObject(XmlReader reader)
@@ -257,6 +278,29 @@ internal partial class Tmx
       VerticalAlignment = vAlign,
       Text = text
     };
+  }
+
+  internal static TextObject OverrideObject(TextObject obj, TextObject foundObject)
+  {
+    obj.FontFamily = foundObject.FontFamily;
+    obj.PixelSize = foundObject.PixelSize;
+    obj.Wrap = foundObject.Wrap;
+    obj.Color = foundObject.Color;
+    obj.Bold = foundObject.Bold;
+    obj.Italic = foundObject.Italic;
+    obj.Underline = foundObject.Underline;
+    obj.Strikeout = foundObject.Strikeout;
+    obj.Kerning = foundObject.Kerning;
+    obj.HorizontalAlignment = foundObject.HorizontalAlignment;
+    obj.VerticalAlignment = foundObject.VerticalAlignment;
+    obj.Text = foundObject.Text;
+    return obj;
+  }
+
+  internal static TileObject OverrideObject(TileObject obj, TileObject foundObject)
+  {
+    obj.GID = foundObject.GID;
+    return obj;
   }
 
   internal static Template ReadTemplate(

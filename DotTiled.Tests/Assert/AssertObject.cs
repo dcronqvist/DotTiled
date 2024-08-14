@@ -17,6 +17,8 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Template, actual.Template, nameof(Object.Template));
 
     AssertProperties(expected.Properties, actual.Properties);
+
+    Assert.True(expected.GetType() == actual.GetType(), $"Expected object type {expected.GetType()} but got {actual.GetType()}");
     AssertObject((dynamic)expected, (dynamic)actual);
   }
 

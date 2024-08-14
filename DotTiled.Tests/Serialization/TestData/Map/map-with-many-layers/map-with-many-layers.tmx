@@ -10,9 +10,7 @@
    <object id="4" name="Circle1" x="77" y="72.3333" width="34.6667" height="34.6667">
     <ellipse/>
    </object>
-   <object id="5" name="Poly" x="20.6667" y="114.667">
-    <polygon points="0,0 104,20 35.6667,32.3333"/>
-   </object>
+   <object id="5" template="poly.tx" x="20.6667" y="114.667"/>
    <object id="6" name="TileObj" gid="7" x="-35" y="110.333" width="64" height="146"/>
   </objectgroup>
   <group id="5" name="Sub">
