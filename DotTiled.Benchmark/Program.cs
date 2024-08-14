@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -18,17 +19,23 @@ namespace MyBenchmarks
   [HideColumns(["StdDev", "Error", "RatioSD"])]
   public class MapLoading
   {
-    private string _tmxPath = @"C:\Users\Daniel\winrepos\DotTiled\DotTiled.Tests\Serialization\TestData\Map\empty-map-csv.tmx";
+    private string _tmxPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmx";
     private string _tmxContents = "";
 
-    private string _tmjPath = @"C:\Users\Daniel\winrepos\DotTiled\DotTiled.Tests\Serialization\TestData\Map\empty-map-csv.tmj";
+    private string _tmjPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmj";
     private string _tmjContents = "";
 
     public MapLoading()
     {
-      _tmxContents = System.IO.File.ReadAllText(_tmxPath);
-      _tmjContents = System.IO.File.ReadAllText(_tmjPath);
+      var basePath = Path.GetDirectoryName(WhereAmI())!;
+      var tmxPath = Path.Combine(basePath, $"../{_tmxPath}");
+      var tmjPath = Path.Combine(basePath, $"../{_tmjPath}");
+
+      _tmxContents = System.IO.File.ReadAllText(tmxPath);
+      _tmjContents = System.IO.File.ReadAllText(tmjPath);
     }
+
+    static string WhereAmI([CallerFilePath] string callerFilePath = "") => callerFilePath;
 
     [BenchmarkCategory("MapFromInMemoryTmxString")]
     [Benchmark(Baseline = true, Description = "DotTiled")]
@@ -53,6 +60,14 @@ namespace MyBenchmarks
     public TiledLib.Map LoadWithTiledLibFromInMemoryTmxString()
     {
       using var memStream = new MemoryStream(Encoding.UTF8.GetBytes(_tmxContents));
+      return TiledLib.Map.FromStream(memStream);
+    }
+
+    [BenchmarkCategory("MapFromInMemoryTmjString")]
+    [Benchmark(Description = "TiledLib")]
+    public TiledLib.Map LoadWithTiledLibFromInMemoryTmjString()
+    {
+      using var memStream = new MemoryStream(Encoding.UTF8.GetBytes(_tmjContents));
       return TiledLib.Map.FromStream(memStream);
     }
 

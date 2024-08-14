@@ -18,15 +18,16 @@ Other similar libraries exist, and you may want to consider them for your projec
 |**Comparison**|**DotTiled**|[TiledLib](https://github.com/Ragath/TiledLib.Net)|[TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus)|[TiledSharp](https://github.com/marshallward/TiledSharp)|[TiledCS](https://github.com/TheBoneJarmer/TiledCS)|[TiledNet](https://github.com/napen123/Tiled.Net)|
 |---------------------------------|:-----------------------:|:--------:|:-----------:|:----------:|:-------:|:------:|
 | Actively maintained             |            ✅          |     ✅   |     ✅      |      ❌   |    ❌  |   ❌   |
-| Benchmark (time)*               |           1.00          |   1.81   |     2.12    |      -     |    -    |    -   |
-| Benchmark (memory)*             |           1.00          |   1.42   |     2.03    |      -     |    -    |    -   |
-| .NET Targets                    | `net8.0`<br>`netstandard2.0` |`net6.0`<br>`net7.0`|`netstandard2.1`|`netstandard2.0`|`netstandard2.0`|`net45`|
+| Benchmark (time)*               |           1.00          |   1.83   |     2.16    |      -     |    -    |    -   |
+| Benchmark (memory)*             |           1.00          |   1.43   |     2.03    |      -     |    -    |    -   |
+| .NET Targets                    | `net8.0` |`net6.0`<br>`net7.0`|`netstandard2.1`|`netstandard2.0`|`netstandard2.0`|`net45`|
 | Docs                            |Usage,<br>XML Docs|Usage|Usage, API,<br>XML Docs|Usage, API|Usage, XML Docs|Usage, XML Docs|
 | License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
-| *Feature coverage<br>comparison below*|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|✅/❌|
 
 > [!NOTE]
 > *Both benchmark time and memory ratios are relative to DotTiled. Lower is better. Benchmark (time) refers to the execution time of loading the same map from an in-memory string that contains XML data in the `.tmx` format. Benchmark (memory) refers to the memory allocated during that loading process. For further details on the benchmark results, see the collapsible section below.
+
+[MonoGame](https://www.monogame.net) users may also want to consider using [MonoGame.Extended](https://github.com/craftworkgames/MonoGame.Extended) for loading Tiled maps and tilesets. Like MonoGame.Extended, DotTiled also provides a way to properly import Tiled maps and tilesets with the MonoGame content pipeline (with the DotTiled.MonoGame.Pipeline NuGet). However, unlike MonoGame.Extended, DotTiled does *not* include any kind of rendering capabilities, and it is up to you as a developer to implement any kind of rendering for your maps when using DotTiled. The feature coverage by MonoGame.Extended is less than that of DotTiled, so you may want to consider using DotTiled if you need access to more Tiled features and flexibility.
 
 <details>
 <summary>
@@ -44,15 +45,16 @@ BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.4651/22H2/2022Update)
 ```
 | Method      | Categories               | Mean     | Ratio | Gen0   | Gen1   | Allocated | Alloc Ratio |
 |------------ |------------------------- |---------:|------:|-------:|-------:|----------:|------------:|
-| DotTiled    | MapFromInMemoryTmjString | 4.292 μs |  1.00 | 0.4349 |      - |   5.62 KB |        1.00 |
+| DotTiled    | MapFromInMemoryTmjString | 4.431 μs |  1.00 | 0.4349 |      - |   5.58 KB |        1.00 |
+| TiledLib    | MapFromInMemoryTmjString | 6.369 μs |  1.44 | 0.7019 | 0.0153 |   9.01 KB |        1.61 |
 |             |                          |          |       |        |        |           |             |
-| DotTiled    | MapFromInMemoryTmxString | 3.075 μs |  1.00 | 1.2817 | 0.0610 |   16.4 KB |        1.00 |
-| TiledLib    | MapFromInMemoryTmxString | 5.574 μs |  1.81 | 1.8005 | 0.0916 |  23.32 KB |        1.42 |
-| TiledCSPlus | MapFromInMemoryTmxString | 6.546 μs |  2.13 | 2.5940 | 0.1831 |  33.16 KB |        2.02 |
+| DotTiled    | MapFromInMemoryTmxString | 3.125 μs |  1.00 | 1.2817 | 0.0610 |  16.36 KB |        1.00 |
+| TiledLib    | MapFromInMemoryTmxString | 5.709 μs |  1.83 | 1.8005 | 0.0916 |  23.32 KB |        1.43 |
+| TiledCSPlus | MapFromInMemoryTmxString | 6.757 μs |  2.16 | 2.5940 | 0.1831 |  33.16 KB |        2.03 |
+
+It is important to note that the above benchmark results come from loading a very small map with a single tile layer as I had to find a common denominator between the libraries so that they all could load the same map. The results aim to be indicative of the performance of the libraries, but should be taken with a grain of salt. Only the actively maintained libraries are included in the benchmark results. TiledCSPlus does not support the `.tmj` format, so it was not included for that benchmark category.
 
 </details>
-
-[MonoGame](https://www.monogame.net) users may also want to consider using [MonoGame.Extended](https://github.com/craftworkgames/MonoGame.Extended) for loading Tiled maps and tilesets. Like MonoGame.Extended, DotTiled also provides a way to properly import Tiled maps and tilesets with the MonoGame content pipeline (with the DotTiled.MonoGame.Pipeline NuGet). However, unlike MonoGame.Extended, DotTiled does *not* include any kind of rendering capabilities, and it is up to you as a developer to implement any kind of rendering for your maps when using DotTiled. The feature coverage by MonoGame.Extended is less than that of DotTiled, so you may want to consider using DotTiled if you need access to more Tiled features and flexibility.
 
 # Feature coverage comparison
 
