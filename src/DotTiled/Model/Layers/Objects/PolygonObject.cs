@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace DotTiled;
+namespace DotTiled.Model.Layers.Objects;
 
 public class PolygonObject : Object
 {

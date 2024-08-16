@@ -4,8 +4,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Xml;
+using DotTiled.Model.Layers;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmx;
 
 internal partial class Tmx
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace DotTiled;
+namespace DotTiled.Model.Layers;
 
 public enum DataEncoding
 {

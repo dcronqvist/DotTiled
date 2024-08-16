@@ -5,8 +5,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
+using DotTiled.Model.Layers;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmj;
 
 internal partial class Tmj
 {

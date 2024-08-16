@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using DotTiled.Model;
+using DotTiled.Model.Properties.CustomTypes;
+using DotTiled.Model.Tilesets;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmx;
 
 public class TmxMapReader : IMapReader
 {

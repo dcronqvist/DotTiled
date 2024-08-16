@@ -1,3 +1,8 @@
+using DotTiled.Model;
+using DotTiled.Model.Properties.CustomTypes;
+using DotTiled.Model.Tilesets;
+using DotTiled.Serialization.Tmj;
+
 namespace DotTiled.Tests;
 
 public partial class TmjMapReaderTests

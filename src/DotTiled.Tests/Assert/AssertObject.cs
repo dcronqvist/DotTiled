@@ -1,20 +1,22 @@
+using DotTiled.Model.Layers.Objects;
+
 namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertObject(Object expected, Object actual)
+  internal static void AssertObject(Model.Layers.Objects.Object expected, Model.Layers.Objects.Object actual)
   {
     // Attributes
-    AssertEqual(expected.ID, actual.ID, nameof(Object.ID));
-    AssertEqual(expected.Name, actual.Name, nameof(Object.Name));
-    AssertEqual(expected.Type, actual.Type, nameof(Object.Type));
-    AssertEqual(expected.X, actual.X, nameof(Object.X));
-    AssertEqual(expected.Y, actual.Y, nameof(Object.Y));
-    AssertEqual(expected.Width, actual.Width, nameof(Object.Width));
-    AssertEqual(expected.Height, actual.Height, nameof(Object.Height));
-    AssertEqual(expected.Rotation, actual.Rotation, nameof(Object.Rotation));
-    AssertEqual(expected.Visible, actual.Visible, nameof(Object.Visible));
-    AssertEqual(expected.Template, actual.Template, nameof(Object.Template));
+    AssertEqual(expected.ID, actual.ID, nameof(Model.Layers.Objects.Object.ID));
+    AssertEqual(expected.Name, actual.Name, nameof(Model.Layers.Objects.Object.Name));
+    AssertEqual(expected.Type, actual.Type, nameof(Model.Layers.Objects.Object.Type));
+    AssertEqual(expected.X, actual.X, nameof(Model.Layers.Objects.Object.X));
+    AssertEqual(expected.Y, actual.Y, nameof(Model.Layers.Objects.Object.Y));
+    AssertEqual(expected.Width, actual.Width, nameof(Model.Layers.Objects.Object.Width));
+    AssertEqual(expected.Height, actual.Height, nameof(Model.Layers.Objects.Object.Height));
+    AssertEqual(expected.Rotation, actual.Rotation, nameof(Model.Layers.Objects.Object.Rotation));
+    AssertEqual(expected.Visible, actual.Visible, nameof(Model.Layers.Objects.Object.Visible));
+    AssertEqual(expected.Template, actual.Template, nameof(Model.Layers.Objects.Object.Template));
 
     AssertProperties(expected.Properties, actual.Properties);
 

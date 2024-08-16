@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace DotTiled;
+namespace DotTiled.Model;
 
 public class Color : IParsable<Color>, IEquatable<Color>
 {

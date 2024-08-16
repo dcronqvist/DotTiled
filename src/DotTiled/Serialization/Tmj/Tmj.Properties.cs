@@ -3,8 +3,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using DotTiled.Model;
+using DotTiled.Model.Properties;
+using DotTiled.Model.Properties.CustomTypes;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmj;
 
 internal partial class Tmj
 {

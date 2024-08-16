@@ -1,4 +1,6 @@
-namespace DotTiled;
+using DotTiled.Model.Tilesets;
+
+namespace DotTiled.Model.Layers;
 
 public class ImageLayer : BaseLayer
 {

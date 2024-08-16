@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using DotTiled.Model;
+using DotTiled.Model.Properties.CustomTypes;
+using DotTiled.Model.Tilesets;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmj;
 
 public class TsjTilesetReader : ITilesetReader
 {

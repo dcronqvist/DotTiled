@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using DotTiled.Model.Properties;
 
-namespace DotTiled;
+namespace DotTiled.Model.Tilesets;
 
 public class WangColor
 {

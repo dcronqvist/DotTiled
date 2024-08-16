@@ -1,3 +1,6 @@
+using DotTiled.Model;
+using DotTiled.Model.Layers;
+
 namespace DotTiled.Tests;
 
 public partial class TestData

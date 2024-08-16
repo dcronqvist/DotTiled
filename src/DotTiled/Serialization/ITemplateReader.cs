@@ -1,6 +1,7 @@
 using System;
+using DotTiled.Model;
 
-namespace DotTiled;
+namespace DotTiled.Serialization;
 
 public interface ITemplateReader : IDisposable
 {

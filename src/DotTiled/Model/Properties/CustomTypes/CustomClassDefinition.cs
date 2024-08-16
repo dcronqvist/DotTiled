@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DotTiled;
+namespace DotTiled.Model.Properties.CustomTypes;
 
 [Flags]
 public enum CustomClassUseAs

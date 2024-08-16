@@ -4,8 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Xml;
+using DotTiled.Model;
+using DotTiled.Model.Layers;
+using DotTiled.Model.Layers.Objects;
+using DotTiled.Model.Properties;
+using DotTiled.Model.Properties.CustomTypes;
+using DotTiled.Model.Tilesets;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmx;
 
 internal partial class Tmx
 {
@@ -39,7 +45,7 @@ internal partial class Tmx
 
     // Elements
     Dictionary<string, IProperty>? properties = null;
-    List<Object> objects = [];
+    List<Model.Layers.Objects.Object> objects = [];
 
     reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
     {
@@ -71,14 +77,14 @@ internal partial class Tmx
     };
   }
 
-  internal static Object ReadObject(
+  internal static Model.Layers.Objects.Object ReadObject(
     XmlReader reader,
     Func<string, Template> externalTemplateResolver,
     IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var template = reader.GetOptionalAttribute("template");
-    Object? obj = null;
+    Model.Layers.Objects.Object? obj = null;
     if (template is not null)
       obj = externalTemplateResolver(template).Object;
 
@@ -106,7 +112,7 @@ internal partial class Tmx
     var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
 
     // Elements
-    Object? foundObject = null;
+    Model.Layers.Objects.Object? foundObject = null;
     int propertiesCounter = 0;
     Dictionary<string, IProperty>? properties = propertiesDefault;
 
@@ -144,7 +150,7 @@ internal partial class Tmx
     return OverrideObject(obj, foundObject);
   }
 
-  internal static Object OverrideObject(Object? obj, Object foundObject)
+  internal static Model.Layers.Objects.Object OverrideObject(Model.Layers.Objects.Object? obj, Model.Layers.Objects.Object foundObject)
   {
     if (obj is null)
       return foundObject;
@@ -315,7 +321,7 @@ internal partial class Tmx
     Tileset? tileset = null;
 
     // Should contain exactly one of
-    Object? obj = null;
+    Model.Layers.Objects.Object? obj = null;
 
     reader.ProcessChildren("template", (r, elementName) => elementName switch
     {

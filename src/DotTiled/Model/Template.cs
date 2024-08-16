@@ -1,4 +1,7 @@
-namespace DotTiled;
+using DotTiled.Model.Layers.Objects;
+using DotTiled.Model.Tilesets;
+
+namespace DotTiled.Model;
 
 public class Template
 {

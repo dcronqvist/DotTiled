@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using DotTiled.Model.Layers;
+using DotTiled.Model.Properties;
+using DotTiled.Model.Tilesets;
 
-namespace DotTiled;
+namespace DotTiled.Serialization;
 
 internal static partial class Helpers
 {

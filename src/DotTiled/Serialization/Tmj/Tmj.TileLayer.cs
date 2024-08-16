@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
 using System.Text.Json;
+using DotTiled.Model;
+using DotTiled.Model.Layers;
+using DotTiled.Model.Properties;
+using DotTiled.Model.Properties.CustomTypes;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmj;
 
 internal partial class Tmj
 {
-
   internal static TileLayer ReadTileLayer(
     JsonElement element,
     IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)

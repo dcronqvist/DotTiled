@@ -1,4 +1,7 @@
 using System.Globalization;
+using DotTiled.Model;
+using DotTiled.Model.Layers;
+using DotTiled.Model.Properties;
 
 namespace DotTiled.Tests;
 

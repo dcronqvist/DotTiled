@@ -1,4 +1,6 @@
 using System.Xml;
+using DotTiled.Model.Properties;
+using DotTiled.Model.Properties.CustomTypes;
 
 namespace DotTiled.Tests;
 

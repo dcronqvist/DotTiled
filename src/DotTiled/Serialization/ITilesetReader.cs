@@ -1,6 +1,7 @@
 using System;
+using DotTiled.Model.Tilesets;
 
-namespace DotTiled;
+namespace DotTiled.Serialization;
 
 public interface ITilesetReader : IDisposable
 {

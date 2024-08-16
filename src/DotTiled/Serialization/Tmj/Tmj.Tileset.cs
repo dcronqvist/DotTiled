@@ -5,8 +5,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
+using DotTiled.Model;
+using DotTiled.Model.Layers;
+using DotTiled.Model.Properties;
+using DotTiled.Model.Properties.CustomTypes;
+using DotTiled.Model.Tilesets;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmj;
 
 internal partial class Tmj
 {

@@ -1,4 +1,4 @@
-namespace DotTiled;
+namespace DotTiled.Model.Properties;
 
 public enum PropertyType
 {

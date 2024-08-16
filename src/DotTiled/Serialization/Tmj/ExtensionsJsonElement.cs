@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmj;
 
 internal static class ExtensionsJsonElement
 {

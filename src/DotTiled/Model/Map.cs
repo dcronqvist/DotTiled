@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Globalization;
+using DotTiled.Model.Layers;
+using DotTiled.Model.Properties;
+using DotTiled.Model.Tilesets;
 
-namespace DotTiled;
+namespace DotTiled.Model;
 
 public enum MapOrientation
 {

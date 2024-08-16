@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmx;
 
 internal static class ExtensionsXmlReader
 {

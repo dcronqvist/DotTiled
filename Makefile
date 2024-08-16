@@ -1,5 +1,5 @@
 test:
-	dotnet test
+	dotnet test src/DotTiled.sln
 
 BENCHMARK_SOURCES = DotTiled.Benchmark/Program.cs DotTiled.Benchmark/DotTiled.Benchmark.csproj
 BENCHMARK_OUTPUTDIR = DotTiled.Benchmark/BenchmarkDotNet.Artifacts

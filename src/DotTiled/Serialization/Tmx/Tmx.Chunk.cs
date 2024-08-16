@@ -1,6 +1,7 @@
 using System.Xml;
+using DotTiled.Model.Layers;
 
-namespace DotTiled;
+namespace DotTiled.Serialization.Tmx;
 
 internal partial class Tmx
 {
