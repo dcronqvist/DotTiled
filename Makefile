@@ -1,6 +1,13 @@
 test:
 	dotnet test src/DotTiled.sln
 
+docs-serve: docs-build
+	docfx docs/docfx.json --serve
+
+docs-build:
+	cp README.md docs/index.md
+	docfx docs/docfx.json
+
 BENCHMARK_SOURCES = DotTiled.Benchmark/Program.cs DotTiled.Benchmark/DotTiled.Benchmark.csproj
 BENCHMARK_OUTPUTDIR = DotTiled.Benchmark/BenchmarkDotNet.Artifacts
 .PHONY: benchmark
