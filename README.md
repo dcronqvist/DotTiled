@@ -8,8 +8,7 @@ DotTiled is designed to be a lightweight and efficient library that provides a s
 
 - [Alternative libraries and comparison + benchmarks](#alternative-libraries-and-comparison)
 - [Feature coverage comparison](#feature-coverage-comparison)
-- [Quickstart](#quickstart)
-  - [Installing DotTiled](#installing-dottiled)
+- [Installing DotTiled](#installing-dottiled)
 
 # Alternative libraries and comparison
 
@@ -74,9 +73,7 @@ Below is a comparison of the feature coverage of DotTiled and other similar libr
 > [!NOTE]
 > ✅ Full support. ⚠️ Partial support, see respective library for details about supported features. ❌ No support.
 
-# Quickstart
-
-### Installing DotTiled
+# Installing DotTiled
 
 DotTiled is available as a NuGet package. You can install it by using the NuGet Package Manager UI in Visual Studio, or equivalent, or using the following command for the .NET CLI:
 

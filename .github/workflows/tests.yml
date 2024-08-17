@@ -5,7 +5,7 @@ on:
       - dev
       
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -14,9 +14,9 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/DotTiled.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore src/DotTiled.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal src/DotTiled.sln
       
