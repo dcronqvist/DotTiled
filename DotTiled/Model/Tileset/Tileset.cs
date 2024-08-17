@@ -39,8 +39,8 @@ public class Tileset
   public string Class { get; set; } = "";
   public uint? TileWidth { get; set; }
   public uint? TileHeight { get; set; }
-  public float? Spacing { get; set; }
-  public float? Margin { get; set; }
+  public float? Spacing { get; set; } = 0f;
+  public float? Margin { get; set; } = 0f;
   public uint? TileCount { get; set; }
   public uint? Columns { get; set; }
   public ObjectAlignment ObjectAlignment { get; set; } = ObjectAlignment.Unspecified;

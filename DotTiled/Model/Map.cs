@@ -60,5 +60,4 @@ public class Map
   // Any number of
   public List<Tileset> Tilesets { get; set; } = [];
   public List<BaseLayer> Layers { get; set; } = [];
-  // public List<Group> Groups { get; set; } = [];
 }

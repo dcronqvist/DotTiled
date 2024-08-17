@@ -66,4 +66,6 @@ public class Color : IParsable<Color>, IEquatable<Color>
   public override bool Equals(object? obj) => obj is Color other && Equals(other);
 
   public override int GetHashCode() => HashCode.Combine(R, G, B, A);
+
+  public override string ToString() => $"#{A:x2}{R:x2}{G:x2}{B:x2}";
 }

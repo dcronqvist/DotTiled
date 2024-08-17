@@ -8,8 +8,6 @@ public abstract class BaseLayer
   public required uint ID { get; set; }
   public string Name { get; set; } = "";
   public string Class { get; set; } = "";
-  public uint X { get; set; } = 0;
-  public uint Y { get; set; } = 0;
   public float Opacity { get; set; } = 1.0f;
   public bool Visible { get; set; } = true;
   public Color? TintColor { get; set; }
