@@ -1,4 +1,4 @@
-namespace DotTiled.Model.Layers;
+namespace DotTiled.Model;
 
 public class TileLayer : BaseLayer
 {

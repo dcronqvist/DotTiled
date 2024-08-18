@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using DotTiled.Model.Properties;
 
-namespace DotTiled.Model.Layers.Objects;
+namespace DotTiled.Model;
 
 public abstract class Object
 {

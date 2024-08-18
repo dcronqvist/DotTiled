@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using DotTiled.Model.Layers.Objects;
 
-namespace DotTiled.Model.Layers;
+namespace DotTiled.Model;
 
 public enum DrawOrder
 {

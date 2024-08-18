@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DotTiled.Model.Properties.CustomTypes;
+namespace DotTiled.Model;
 
 public enum CustomEnumStorageType
 {

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DotTiled.Model;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
 
 namespace DotTiled.Serialization.Tmj;
 

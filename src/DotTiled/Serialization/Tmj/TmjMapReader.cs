@@ -4,8 +4,6 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using DotTiled.Model;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
 
 namespace DotTiled.Serialization.Tmj;
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace DotTiled.Model.Layers.Objects;
+namespace DotTiled.Model;
 
 public class PolylineObject : Object
 {

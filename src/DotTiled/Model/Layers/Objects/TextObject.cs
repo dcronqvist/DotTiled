@@ -1,7 +1,6 @@
 using System.Globalization;
 
-namespace DotTiled.Model.Layers.Objects;
-
+namespace DotTiled.Model;
 
 public enum TextHorizontalAlignment
 {

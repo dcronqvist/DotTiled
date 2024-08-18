@@ -1,4 +1,4 @@
-namespace DotTiled.Model.Properties;
+namespace DotTiled.Model;
 
 public interface IProperty
 {

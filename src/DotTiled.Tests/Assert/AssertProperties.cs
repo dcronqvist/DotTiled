@@ -1,4 +1,4 @@
-using DotTiled.Model.Properties;
+using DotTiled.Model;
 
 namespace DotTiled.Tests;
 

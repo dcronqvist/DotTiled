@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DotTiled.Model.Layers;
+namespace DotTiled.Model;
 
 public class Group : BaseLayer
 {

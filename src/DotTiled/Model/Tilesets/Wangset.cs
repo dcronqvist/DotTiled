@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using DotTiled.Model.Properties;
 
-namespace DotTiled.Model.Tilesets;
+namespace DotTiled.Model;
 
 public class Wangset
 {

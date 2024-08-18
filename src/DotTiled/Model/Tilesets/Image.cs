@@ -1,4 +1,4 @@
-namespace DotTiled.Model.Tilesets;
+namespace DotTiled.Model;
 
 public enum ImageFormat
 {

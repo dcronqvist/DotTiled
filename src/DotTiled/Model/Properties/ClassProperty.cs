@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DotTiled.Model.Properties;
+namespace DotTiled.Model;
 
 public class ClassProperty : IProperty
 {

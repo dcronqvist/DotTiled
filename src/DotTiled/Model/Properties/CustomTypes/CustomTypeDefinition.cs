@@ -1,4 +1,4 @@
-namespace DotTiled.Model.Properties.CustomTypes;
+namespace DotTiled.Model;
 
 public abstract class CustomTypeDefinition
 {

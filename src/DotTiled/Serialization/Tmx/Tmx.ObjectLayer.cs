@@ -5,11 +5,6 @@ using System.Linq;
 using System.Numerics;
 using System.Xml;
 using DotTiled.Model;
-using DotTiled.Model.Layers;
-using DotTiled.Model.Layers.Objects;
-using DotTiled.Model.Properties;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
 
 namespace DotTiled.Serialization.Tmx;
 
