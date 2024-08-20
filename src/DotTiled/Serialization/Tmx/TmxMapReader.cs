@@ -5,6 +5,9 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 
+/// <summary>
+/// A map reader for the Tiled XML format.
+/// </summary>
 public class TmxMapReader : IMapReader
 {
   // External resolvers
@@ -16,6 +19,14 @@ public class TmxMapReader : IMapReader
 
   private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
 
+  /// <summary>
+  /// Constructs a new <see cref="TmxMapReader"/>.
+  /// </summary>
+  /// <param name="reader">An XML reader for reading a Tiled map in the Tiled XML format.</param>
+  /// <param name="externalTilesetResolver">A function that resolves external tilesets given their source.</param>
+  /// <param name="externalTemplateResolver">A function that resolves external templates given their source.</param>
+  /// <param name="customTypeDefinitions">A collection of custom type definitions that can be used to resolve custom types when encountering <see cref="ClassProperty"/>.</param>
+  /// <exception cref="ArgumentNullException">Thrown when any of the arguments are null.</exception>
   public TmxMapReader(
     XmlReader reader,
     Func<string, Tileset> externalTilesetResolver,
@@ -31,11 +42,13 @@ public class TmxMapReader : IMapReader
     _reader.MoveToContent();
   }
 
+  /// <inheritdoc/>
   public Map ReadMap()
   {
     return Tmx.ReadMap(_reader, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
   }
 
+  /// <inheritdoc/>
   protected virtual void Dispose(bool disposing)
   {
     if (!disposedValue)
@@ -59,6 +72,7 @@ public class TmxMapReader : IMapReader
   //     Dispose(disposing: false);
   // }
 
+  /// <inheritdoc/>
   public void Dispose()
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method

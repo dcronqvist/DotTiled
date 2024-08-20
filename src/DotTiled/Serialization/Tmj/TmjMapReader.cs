@@ -7,6 +7,9 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
+/// <summary>
+/// A map reader for reading Tiled JSON maps.
+/// </summary>
 public class TmjMapReader : IMapReader
 {
   // External resolvers
@@ -18,6 +21,14 @@ public class TmjMapReader : IMapReader
 
   private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
 
+  /// <summary>
+  /// Constructs a new <see cref="TmjMapReader"/>.
+  /// </summary>
+  /// <param name="jsonString">A string containing a Tiled map in the Tiled JSON format.</param>
+  /// <param name="externalTilesetResolver">A function that resolves external tilesets given their source.</param>
+  /// <param name="externalTemplateResolver">A function that resolves external templates given their source.</param>
+  /// <param name="customTypeDefinitions">A collection of custom type definitions that can be used to resolve custom types when encountering <see cref="ClassProperty"/>.</param>
+  /// <exception cref="ArgumentNullException">Thrown when any of the arguments are null.</exception>
   public TmjMapReader(
     string jsonString,
     Func<string, Tileset> externalTilesetResolver,
@@ -30,6 +41,7 @@ public class TmjMapReader : IMapReader
     _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
   }
 
+  /// <inheritdoc/>
   public Map ReadMap()
   {
     var jsonDoc = JsonDocument.Parse(_jsonString);
@@ -37,6 +49,7 @@ public class TmjMapReader : IMapReader
     return Tmj.ReadMap(rootElement, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
   }
 
+  /// <inheritdoc/>
   protected virtual void Dispose(bool disposing)
   {
     if (!disposedValue)
@@ -59,6 +72,7 @@ public class TmjMapReader : IMapReader
   //     Dispose(disposing: false);
   // }
 
+  /// <inheritdoc/>
   public void Dispose()
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method

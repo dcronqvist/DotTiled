@@ -5,6 +5,9 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 
+/// <summary>
+/// A template reader for the Tiled XML format.
+/// </summary>
 public class TxTemplateReader : ITemplateReader
 {
   // Resolvers
@@ -16,6 +19,14 @@ public class TxTemplateReader : ITemplateReader
 
   private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
 
+  /// <summary>
+  /// Constructs a new <see cref="TxTemplateReader"/>.
+  /// </summary>
+  /// <param name="reader">An XML reader for reading a Tiled template in the Tiled XML format.</param>
+  /// <param name="externalTilesetResolver">A function that resolves external tilesets given their source.</param>
+  /// <param name="externalTemplateResolver">A function that resolves external templates given their source.</param>
+  /// <param name="customTypeDefinitions">A collection of custom type definitions that can be used to resolve custom types when encountering <see cref="ClassProperty"/>.</param>
+  /// <exception cref="ArgumentNullException">Thrown when any of the arguments are null.</exception>
   public TxTemplateReader(
     XmlReader reader,
     Func<string, Tileset> externalTilesetResolver,
@@ -31,8 +42,10 @@ public class TxTemplateReader : ITemplateReader
     _reader.MoveToContent();
   }
 
+  /// <inheritdoc/>
   public Template ReadTemplate() => Tmx.ReadTemplate(_reader, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
 
+  /// <inheritdoc/>
   protected virtual void Dispose(bool disposing)
   {
     if (!disposedValue)
@@ -55,6 +68,7 @@ public class TxTemplateReader : ITemplateReader
   //     Dispose(disposing: false);
   // }
 
+  /// <inheritdoc/>
   public void Dispose()
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
