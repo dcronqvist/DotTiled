@@ -1,7 +1,7 @@
 test:
 	dotnet test src/DotTiled.sln
 
-docs-serve: docs-build
+docs-serve:
 	docfx docs/docfx.json --serve
 
 docs-build:
