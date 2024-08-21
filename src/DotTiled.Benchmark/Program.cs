@@ -39,7 +39,7 @@ namespace MyBenchmarks
 
     [BenchmarkCategory("MapFromInMemoryTmxString")]
     [Benchmark(Baseline = true, Description = "DotTiled")]
-    public DotTiled.Model LoadWithDotTiledFromInMemoryTmxString()
+    public DotTiled.Model.Map LoadWithDotTiledFromInMemoryTmxString()
     {
       using var stringReader = new StringReader(_tmxContents);
       using var xmlReader = XmlReader.Create(stringReader);
@@ -49,7 +49,7 @@ namespace MyBenchmarks
 
     [BenchmarkCategory("MapFromInMemoryTmjString")]
     [Benchmark(Baseline = true, Description = "DotTiled")]
-    public DotTiled.Model LoadWithDotTiledFromInMemoryTmjString()
+    public DotTiled.Model.Map LoadWithDotTiledFromInMemoryTmjString()
     {
       using var mapReader = new DotTiled.Serialization.Tmj.TmjMapReader(_tmjContents, _ => throw new Exception(), _ => throw new Exception(), []);
       return mapReader.ReadMap();

@@ -1,4 +1,5 @@
 test:
+	dotnet build src/DotTiled.sln
 	dotnet test src/DotTiled.sln
 
 docs-serve:
