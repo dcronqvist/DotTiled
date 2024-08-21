@@ -15,10 +15,8 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 #### .NET Coding Conventions ####
-
-# Organize usings
 dotnet_separate_import_directive_groups = false
-dotnet_sort_system_directives_first = false
+dotnet_sort_system_directives_first = true
 file_header_template = unset
 
 # this. and Me. preferences
@@ -228,6 +226,8 @@ dotnet_naming_style.begins_with_i.required_prefix = I
 dotnet_naming_style.begins_with_i.required_suffix = 
 dotnet_naming_style.begins_with_i.word_separator = 
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+dotnet_diagnostic.IDE0005.severity = error
 
 [.github/**/*.yml]
 charset = utf-8
