@@ -39,14 +39,11 @@ public class TmxMapReader : IMapReader
     _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
 
     // Prepare reader
-    _reader.MoveToContent();
+    _ = _reader.MoveToContent();
   }
 
   /// <inheritdoc/>
-  public Map ReadMap()
-  {
-    return Tmx.ReadMap(_reader, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
-  }
+  public Map ReadMap() => Tmx.ReadMap(_reader, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
 
   /// <inheritdoc/>
   protected virtual void Dispose(bool disposing)
@@ -77,6 +74,6 @@ public class TmxMapReader : IMapReader
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
     Dispose(disposing: true);
-    System.GC.SuppressFinalize(this);
+    GC.SuppressFinalize(this);
   }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Threading;
 
 namespace DotTiled.Model;
 
@@ -40,7 +39,7 @@ public class Color : IParsable<Color>, IEquatable<Color>
   /// <exception cref="FormatException">Thrown in case the provided string <paramref name="s"/> is not in a valid format.</exception>
   public static Color Parse(string s, IFormatProvider? provider)
   {
-    TryParse(s, provider, out var result);
+    _ = TryParse(s, provider, out var result);
     return result ?? throw new FormatException($"Invalid format for TiledColor: {s}");
   }
 
@@ -61,7 +60,7 @@ public class Color : IParsable<Color>, IEquatable<Color>
       return TryParse($"#{s}", provider, out result);
 
     // Format: #RRGGBB or #AARRGGBB
-    if (s is null || s.Length != 7 && s.Length != 9 || s[0] != '#')
+    if (s is null || (s.Length != 7 && s.Length != 9) || s[0] != '#')
     {
       result = default;
       return false;

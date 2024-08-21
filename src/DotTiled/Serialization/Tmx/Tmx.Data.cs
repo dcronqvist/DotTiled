@@ -62,10 +62,8 @@ internal partial class Tmx
     return (clearedGlobalTileIDs, flippingFlags);
   }
 
-  internal static uint[] ReadTileChildrenInWrapper(string wrapper, XmlReader reader)
-  {
-    return reader.ReadList(wrapper, "tile", (r) => r.GetOptionalAttributeParseable<uint>("gid") ?? 0).ToArray();
-  }
+  internal static uint[] ReadTileChildrenInWrapper(string wrapper, XmlReader reader) =>
+    reader.ReadList(wrapper, "tile", (r) => r.GetOptionalAttributeParseable<uint>("gid") ?? 0).ToArray();
 
   internal static uint[] ReadRawData(XmlReader reader, DataEncoding encoding, DataCompression? compression)
   {

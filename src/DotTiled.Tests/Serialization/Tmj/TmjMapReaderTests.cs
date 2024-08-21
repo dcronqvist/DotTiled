@@ -1,6 +1,4 @@
 using DotTiled.Model;
-using DotTiled.Model;
-using DotTiled.Model;
 using DotTiled.Serialization.Tmj;
 
 namespace DotTiled.Tests;

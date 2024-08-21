@@ -66,8 +66,6 @@ internal partial class Tmx
     throw new XmlException($"Unkonwn custom class definition: {propertyType}");
   }
 
-  internal static Dictionary<string, IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition)
-  {
-    return customClassDefinition.Members.ToDictionary(m => m.Name, m => m.Clone());
-  }
+  internal static Dictionary<string, IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition) =>
+    customClassDefinition.Members.ToDictionary(m => m.Name, m => m.Clone());
 }

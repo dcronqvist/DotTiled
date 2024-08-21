@@ -9,10 +9,9 @@ internal static class ExtensionsJsonElement
 {
   internal static T GetRequiredProperty<T>(this JsonElement element, string propertyName)
   {
-    if (!element.TryGetProperty(propertyName, out var property))
-      throw new JsonException($"Missing required property '{propertyName}'.");
-
-    return property.GetValueAs<T>();
+    return !element.TryGetProperty(propertyName, out var property)
+      ? throw new JsonException($"Missing required property '{propertyName}'.")
+      : property.GetValueAs<T>();
   }
 
   internal static T GetOptionalProperty<T>(this JsonElement element, string propertyName, T defaultValue)

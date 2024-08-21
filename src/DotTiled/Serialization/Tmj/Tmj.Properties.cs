@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
 using DotTiled.Model;
@@ -102,8 +101,6 @@ internal partial class Tmj
     return resultingProps;
   }
 
-  internal static Dictionary<string, IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition)
-  {
-    return customClassDefinition.Members.ToDictionary(m => m.Name, m => m.Clone());
-  }
+  internal static Dictionary<string, IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition) =>
+    customClassDefinition.Members.ToDictionary(m => m.Name, m => m.Clone());
 }

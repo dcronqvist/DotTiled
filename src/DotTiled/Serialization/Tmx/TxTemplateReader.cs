@@ -39,7 +39,7 @@ public class TxTemplateReader : ITemplateReader
     _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
 
     // Prepare reader
-    _reader.MoveToContent();
+    _ = _reader.MoveToContent();
   }
 
   /// <inheritdoc/>
@@ -53,6 +53,7 @@ public class TxTemplateReader : ITemplateReader
       if (disposing)
       {
         // TODO: dispose managed state (managed objects)
+        _reader.Dispose();
       }
 
       // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -73,6 +74,6 @@ public class TxTemplateReader : ITemplateReader
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
     Dispose(disposing: true);
-    System.GC.SuppressFinalize(this);
+    GC.SuppressFinalize(this);
   }
 }

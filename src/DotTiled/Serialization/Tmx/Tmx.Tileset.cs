@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -40,19 +41,19 @@ internal partial class Tmx
       "bottomleft" => ObjectAlignment.BottomLeft,
       "bottom" => ObjectAlignment.Bottom,
       "bottomright" => ObjectAlignment.BottomRight,
-      _ => throw new Exception($"Unknown object alignment '{s}'")
+      _ => throw new InvalidOperationException($"Unknown object alignment '{s}'")
     }) ?? ObjectAlignment.Unspecified;
     var renderSize = reader.GetOptionalAttributeEnum<TileRenderSize>("rendersize", s => s switch
     {
       "tile" => TileRenderSize.Tile,
       "grid" => TileRenderSize.Grid,
-      _ => throw new Exception($"Unknown render size '{s}'")
+      _ => throw new InvalidOperationException($"Unknown render size '{s}'")
     }) ?? TileRenderSize.Tile;
     var fillMode = reader.GetOptionalAttributeEnum<FillMode>("fillmode", s => s switch
     {
       "stretch" => FillMode.Stretch,
       "preserve-aspect-fit" => FillMode.PreserveAspectFit,
-      _ => throw new Exception($"Unknown fill mode '{s}'")
+      _ => throw new InvalidOperationException($"Unknown fill mode '{s}'")
     }) ?? FillMode.Stretch;
 
     // Elements
@@ -124,7 +125,7 @@ internal partial class Tmx
       "jpg" => ImageFormat.Jpg,
       "bmp" => ImageFormat.Bmp,
       "gif" => ImageFormat.Gif,
-      _ => throw new Exception($"Unknown image format '{s}'")
+      _ => throw new InvalidOperationException($"Unknown image format '{s}'")
     });
     var source = reader.GetOptionalAttribute("source");
     var transparentColor = reader.GetOptionalAttributeClass<Color>("trans");
@@ -182,7 +183,7 @@ internal partial class Tmx
     {
       "orthogonal" => GridOrientation.Orthogonal,
       "isometric" => GridOrientation.Isometric,
-      _ => throw new Exception($"Unknown orientation '{s}'")
+      _ => throw new InvalidOperationException($"Unknown orientation '{s}'")
     }) ?? GridOrientation.Orthogonal;
     var width = reader.GetRequiredAttributeParseable<uint>("width");
     var height = reader.GetRequiredAttributeParseable<uint>("height");
@@ -255,10 +256,8 @@ internal partial class Tmx
 
   internal static List<Wangset> ReadWangsets(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
-  {
-    return reader.ReadList<Wangset>("wangsets", "wangset", r => ReadWangset(r, customTypeDefinitions));
-  }
+    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
+    reader.ReadList<Wangset>("wangsets", "wangset", r => ReadWangset(r, customTypeDefinitions));
 
   internal static Wangset ReadWangset(
     XmlReader reader,
@@ -334,7 +333,7 @@ internal partial class Tmx
     var wangID = reader.GetRequiredAttributeParseable<byte[]>("wangid", s =>
     {
       // Comma-separated list of indices (0-254)
-      var indices = s.Split(',').Select(i => byte.Parse(i)).ToArray();
+      var indices = s.Split(',').Select(i => byte.Parse(i, CultureInfo.InvariantCulture)).ToArray();
       if (indices.Length > 8)
         throw new ArgumentException("Wang ID can have at most 8 indices.");
       return indices;

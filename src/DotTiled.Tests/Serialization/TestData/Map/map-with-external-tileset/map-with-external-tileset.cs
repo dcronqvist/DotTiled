@@ -1,7 +1,5 @@
 using System.Globalization;
 using DotTiled.Model;
-using DotTiled.Model;
-using DotTiled.Model;
 
 namespace DotTiled.Tests;
 

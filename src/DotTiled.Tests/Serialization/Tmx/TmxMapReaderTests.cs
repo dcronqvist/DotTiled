@@ -1,6 +1,3 @@
-using System.Xml;
-using DotTiled.Model;
-using DotTiled.Model;
 using DotTiled.Model;
 using DotTiled.Serialization.Tmx;
 
