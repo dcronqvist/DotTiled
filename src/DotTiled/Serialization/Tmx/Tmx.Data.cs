@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Xml;
-using DotTiled.Model.Layers;
+using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 

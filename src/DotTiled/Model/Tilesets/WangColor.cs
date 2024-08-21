@@ -1,17 +1,39 @@
 using System.Collections.Generic;
-using DotTiled.Model.Properties;
 
-namespace DotTiled.Model.Tilesets;
+namespace DotTiled.Model;
 
+/// <summary>
+/// Represents a Wang color in a Wang set.
+/// </summary>
 public class WangColor
 {
-  // Attributes
+  /// <summary>
+  /// The name of this color.
+  /// </summary>
   public required string Name { get; set; }
+
+  /// <summary>
+  /// The class of the Wang color.
+  /// </summary>
   public string Class { get; set; } = "";
+
+  /// <summary>
+  /// The color of the Wang color.
+  /// </summary>
   public required Color Color { get; set; }
+
+  /// <summary>
+  /// The tile ID of the tile representing this color.
+  /// </summary>
   public required int Tile { get; set; }
+
+  /// <summary>
+  /// The relative probability that this color is chosen over others in case of multiple options.
+  /// </summary>
   public float Probability { get; set; } = 0f;
 
-  // Elements
+  /// <summary>
+  /// The Wang color properties.
+  /// </summary>
   public Dictionary<string, IProperty>? Properties { get; set; }
 }

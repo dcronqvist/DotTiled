@@ -4,10 +4,6 @@ using System.Globalization;
 using System.Numerics;
 using System.Text.Json;
 using DotTiled.Model;
-using DotTiled.Model.Layers;
-using DotTiled.Model.Layers.Objects;
-using DotTiled.Model.Properties;
-using DotTiled.Model.Properties.CustomTypes;
 
 namespace DotTiled.Serialization.Tmj;
 
@@ -42,7 +38,7 @@ internal partial class Tmj
       _ => throw new JsonException($"Unknown draw order '{s}'.")
     }, DrawOrder.TopDown);
 
-    var objects = element.GetOptionalPropertyCustom<List<Model.Layers.Objects.Object>>("objects", e => e.GetValueAsList<Model.Layers.Objects.Object>(el => ReadObject(el, externalTemplateResolver, customTypeDefinitions)), []);
+    var objects = element.GetOptionalPropertyCustom<List<Model.Object>>("objects", e => e.GetValueAsList<Model.Object>(el => ReadObject(el, externalTemplateResolver, customTypeDefinitions)), []);
 
     return new ObjectLayer
     {
@@ -67,7 +63,7 @@ internal partial class Tmj
     };
   }
 
-  internal static Model.Layers.Objects.Object ReadObject(
+  internal static Model.Object ReadObject(
     JsonElement element,
     Func<string, Template> externalTemplateResolver,
     IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)

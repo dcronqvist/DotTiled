@@ -1,8 +1,17 @@
-namespace DotTiled.Model.Tilesets;
+namespace DotTiled.Model;
 
+/// <summary>
+/// A single frame of an animated tile.
+/// </summary>
 public class Frame
 {
-  // Attributes
+  /// <summary>
+  /// The local tile ID within the parent tileset.
+  /// </summary>
   public required uint TileID { get; set; }
+
+  /// <summary>
+  /// How long (in milliseconds) this frame should be displayed before advancing to the next frame.
+  /// </summary>
   public required uint Duration { get; set; }
 }

@@ -4,8 +4,6 @@ using System.Globalization;
 using System.Numerics;
 using System.Text.Json;
 using DotTiled.Model;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
 
 namespace DotTiled.Serialization.Tmj;
 
@@ -19,7 +17,7 @@ internal partial class Tmj
   {
     var type = element.GetRequiredProperty<string>("type");
     var tileset = element.GetOptionalPropertyCustom<Tileset?>("tileset", el => ReadTileset(el, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions), null);
-    var @object = element.GetRequiredPropertyCustom<Model.Layers.Objects.Object>("object", el => ReadObject(el, externalTemplateResolver, customTypeDefinitions));
+    var @object = element.GetRequiredPropertyCustom<Model.Object>("object", el => ReadObject(el, externalTemplateResolver, customTypeDefinitions));
 
     return new Template
     {

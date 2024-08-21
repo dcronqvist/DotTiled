@@ -5,11 +5,6 @@ using System.Linq;
 using System.Numerics;
 using System.Xml;
 using DotTiled.Model;
-using DotTiled.Model.Layers;
-using DotTiled.Model.Layers.Objects;
-using DotTiled.Model.Properties;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
 
 namespace DotTiled.Serialization.Tmx;
 
@@ -45,7 +40,7 @@ internal partial class Tmx
 
     // Elements
     Dictionary<string, IProperty>? properties = null;
-    List<Model.Layers.Objects.Object> objects = [];
+    List<Model.Object> objects = [];
 
     reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
     {
@@ -77,14 +72,14 @@ internal partial class Tmx
     };
   }
 
-  internal static Model.Layers.Objects.Object ReadObject(
+  internal static Model.Object ReadObject(
     XmlReader reader,
     Func<string, Template> externalTemplateResolver,
     IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var template = reader.GetOptionalAttribute("template");
-    Model.Layers.Objects.Object? obj = null;
+    Model.Object? obj = null;
     if (template is not null)
       obj = externalTemplateResolver(template).Object;
 
@@ -112,7 +107,7 @@ internal partial class Tmx
     var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
 
     // Elements
-    Model.Layers.Objects.Object? foundObject = null;
+    Model.Object? foundObject = null;
     int propertiesCounter = 0;
     Dictionary<string, IProperty>? properties = propertiesDefault;
 
@@ -150,7 +145,7 @@ internal partial class Tmx
     return OverrideObject(obj, foundObject);
   }
 
-  internal static Model.Layers.Objects.Object OverrideObject(Model.Layers.Objects.Object? obj, Model.Layers.Objects.Object foundObject)
+  internal static Model.Object OverrideObject(Model.Object? obj, Model.Object foundObject)
   {
     if (obj is null)
       return foundObject;
@@ -321,7 +316,7 @@ internal partial class Tmx
     Tileset? tileset = null;
 
     // Should contain exactly one of
-    Model.Layers.Objects.Object? obj = null;
+    Model.Object? obj = null;
 
     reader.ProcessChildren("template", (r, elementName) => elementName switch
     {

@@ -4,10 +4,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Text.Json;
 using DotTiled.Model;
-using DotTiled.Model.Layers;
-using DotTiled.Model.Properties;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
+using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 

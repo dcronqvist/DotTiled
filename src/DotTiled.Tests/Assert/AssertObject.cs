@@ -1,22 +1,22 @@
-using DotTiled.Model.Layers.Objects;
+using DotTiled.Model;
 
 namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertObject(Model.Layers.Objects.Object expected, Model.Layers.Objects.Object actual)
+  internal static void AssertObject(Model.Object expected, Model.Object actual)
   {
     // Attributes
-    AssertEqual(expected.ID, actual.ID, nameof(Model.Layers.Objects.Object.ID));
-    AssertEqual(expected.Name, actual.Name, nameof(Model.Layers.Objects.Object.Name));
-    AssertEqual(expected.Type, actual.Type, nameof(Model.Layers.Objects.Object.Type));
-    AssertEqual(expected.X, actual.X, nameof(Model.Layers.Objects.Object.X));
-    AssertEqual(expected.Y, actual.Y, nameof(Model.Layers.Objects.Object.Y));
-    AssertEqual(expected.Width, actual.Width, nameof(Model.Layers.Objects.Object.Width));
-    AssertEqual(expected.Height, actual.Height, nameof(Model.Layers.Objects.Object.Height));
-    AssertEqual(expected.Rotation, actual.Rotation, nameof(Model.Layers.Objects.Object.Rotation));
-    AssertEqual(expected.Visible, actual.Visible, nameof(Model.Layers.Objects.Object.Visible));
-    AssertEqual(expected.Template, actual.Template, nameof(Model.Layers.Objects.Object.Template));
+    AssertEqual(expected.ID, actual.ID, nameof(Model.Object.ID));
+    AssertEqual(expected.Name, actual.Name, nameof(Model.Object.Name));
+    AssertEqual(expected.Type, actual.Type, nameof(Model.Object.Type));
+    AssertEqual(expected.X, actual.X, nameof(Model.Object.X));
+    AssertEqual(expected.Y, actual.Y, nameof(Model.Object.Y));
+    AssertEqual(expected.Width, actual.Width, nameof(Model.Object.Width));
+    AssertEqual(expected.Height, actual.Height, nameof(Model.Object.Height));
+    AssertEqual(expected.Rotation, actual.Rotation, nameof(Model.Object.Rotation));
+    AssertEqual(expected.Visible, actual.Visible, nameof(Model.Object.Visible));
+    AssertEqual(expected.Template, actual.Template, nameof(Model.Object.Template));
 
     AssertProperties(expected.Properties, actual.Properties);
 

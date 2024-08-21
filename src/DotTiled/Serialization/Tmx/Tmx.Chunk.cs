@@ -1,5 +1,5 @@
 using System.Xml;
-using DotTiled.Model.Layers;
+using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 

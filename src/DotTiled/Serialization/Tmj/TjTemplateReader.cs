@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using DotTiled.Model;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
 
 namespace DotTiled.Serialization.Tmj;
 
+/// <summary>
+/// A template reader for reading Tiled JSON templates.
+/// </summary>
 public class TjTemplateReader : ITemplateReader
 {
   // External resolvers
@@ -17,6 +18,14 @@ public class TjTemplateReader : ITemplateReader
 
   private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
 
+  /// <summary>
+  /// Constructs a new <see cref="TjTemplateReader"/>.
+  /// </summary>
+  /// <param name="jsonString">A string containing a Tiled template in the Tiled JSON format.</param>
+  /// <param name="externalTilesetResolver">A function that resolves external tilesets given their source.</param>
+  /// <param name="externalTemplateResolver">A function that resolves external templates given their source.</param>
+  /// <param name="customTypeDefinitions">A collection of custom type definitions that can be used to resolve custom types when encountering <see cref="ClassProperty"/>.</param>
+  /// <exception cref="ArgumentNullException">Thrown when any of the arguments are null.</exception>
   public TjTemplateReader(
     string jsonString,
     Func<string, Tileset> externalTilesetResolver,
@@ -29,6 +38,7 @@ public class TjTemplateReader : ITemplateReader
     _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
   }
 
+  /// <inheritdoc/>
   public Template ReadTemplate()
   {
     var jsonDoc = System.Text.Json.JsonDocument.Parse(_jsonString);
@@ -36,6 +46,7 @@ public class TjTemplateReader : ITemplateReader
     return Tmj.ReadTemplate(rootElement, _externalTilesetResolver, _externalTemplateResolver, _customTypeDefinitions);
   }
 
+  /// <inheritdoc/>
   protected virtual void Dispose(bool disposing)
   {
     if (!disposedValue)
@@ -58,6 +69,7 @@ public class TjTemplateReader : ITemplateReader
   //     Dispose(disposing: false);
   // }
 
+  /// <inheritdoc/>
   public void Dispose()
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method

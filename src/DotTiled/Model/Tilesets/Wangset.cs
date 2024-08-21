@@ -1,22 +1,40 @@
 using System.Collections.Generic;
-using DotTiled.Model.Properties;
 
-namespace DotTiled.Model.Tilesets;
+namespace DotTiled.Model;
 
+/// <summary>
+/// Defines a list of colors and any number of Wang tiles using these colors.
+/// </summary>
 public class Wangset
 {
-  // Attributes
+  /// <summary>
+  /// The name of the Wang set.
+  /// </summary>
   public required string Name { get; set; }
+
+  /// <summary>
+  /// The class of the Wang set.
+  /// </summary>
   public string Class { get; set; } = "";
+
+  /// <summary>
+  /// The tile ID of the tile representing the Wang set.
+  /// </summary>
   public required int Tile { get; set; }
 
-  // Elements
-  // At most one of
+  /// <summary>
+  /// The Wang set properties.
+  /// </summary>
   public Dictionary<string, IProperty>? Properties { get; set; }
 
   // Up to 254 Wang colors
+  /// <summary>
+  /// The Wang colors in the Wang set.
+  /// </summary>
   public List<WangColor>? WangColors { get; set; } = [];
 
-  // Any number of
+  /// <summary>
+  /// The Wang tiles in the Wang set.
+  /// </summary>
   public List<WangTile> WangTiles { get; set; } = [];
 }

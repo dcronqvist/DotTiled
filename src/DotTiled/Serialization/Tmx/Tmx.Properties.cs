@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using DotTiled.Model;
-using DotTiled.Model.Properties;
-using DotTiled.Model.Properties.CustomTypes;
 
 namespace DotTiled.Serialization.Tmx;
 
