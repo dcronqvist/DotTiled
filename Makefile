@@ -11,8 +11,8 @@ docs-build:
 
 lint:
 	dotnet build src/DotTiled.sln
-	dotnet format style --verify-no-changes --verbosity diagnostic src/DotTiled.sln
-	dotnet format analyzers --verify-no-changes --verbosity diagnostic src/DotTiled.sln
+	dotnet format style --verify-no-changes src/DotTiled.sln
+	dotnet format analyzers --verify-no-changes src/DotTiled.sln
 
 BENCHMARK_SOURCES = DotTiled.Benchmark/Program.cs DotTiled.Benchmark/DotTiled.Benchmark.csproj
 BENCHMARK_OUTPUTDIR = DotTiled.Benchmark/BenchmarkDotNet.Artifacts

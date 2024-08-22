@@ -19,7 +19,7 @@ jobs:
       run: dotnet build --no-restore src/DotTiled.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal src/DotTiled.sln
-    - name: Lint
-      run: |
-        dotnet format style --verify-no-changes --verbosity diagnostic src/DotTiled.sln
-        dotnet format analyzers --verify-no-changes --verbosity diagnostic src/DotTiled.sln
+    - name: Lint style
+      run: dotnet format style --verify-no-changes --verbosity diagnostic src/DotTiled.sln
+    - name: Lint analyzers
+      run: dotnet format analyzers --verify-no-changes --verbosity diagnostic src/DotTiled.sln
