@@ -11,7 +11,7 @@ public partial class TmxMapReaderTests
   public void TmxMapReaderReadMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(
     string testDataFile,
     Func<string, Map> expectedMap,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Arrange
     testDataFile += ".tmx";

@@ -13,7 +13,7 @@ internal partial class Tmx
   internal static ObjectLayer ReadObjectLayer(
     XmlReader reader,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var id = reader.GetRequiredAttributeParseable<uint>("id");
@@ -75,7 +75,7 @@ internal partial class Tmx
   internal static Model.Object ReadObject(
     XmlReader reader,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var template = reader.GetOptionalAttribute("template");
@@ -308,7 +308,7 @@ internal partial class Tmx
     XmlReader reader,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // No attributes
 

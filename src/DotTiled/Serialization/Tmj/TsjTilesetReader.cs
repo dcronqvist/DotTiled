@@ -15,7 +15,7 @@ public class TsjTilesetReader : ITilesetReader
   private readonly string _jsonString;
   private bool disposedValue;
 
-  private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
+  private readonly IReadOnlyCollection<ICustomTypeDefinition> _customTypeDefinitions;
 
   /// <summary>
   /// Constructs a new <see cref="TsjTilesetReader"/>.
@@ -27,7 +27,7 @@ public class TsjTilesetReader : ITilesetReader
   public TsjTilesetReader(
     string jsonString,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     _jsonString = jsonString ?? throw new ArgumentNullException(nameof(jsonString));
     _externalTemplateResolver = externalTemplateResolver ?? throw new ArgumentNullException(nameof(externalTemplateResolver));

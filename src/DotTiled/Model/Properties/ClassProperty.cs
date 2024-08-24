@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -38,7 +39,16 @@ public class ClassProperty : IHasProperties, IProperty<IList<IProperty>>
   public IList<IProperty> GetProperties() => Value;
 
   /// <inheritdoc/>
-  public T GetProperty<T>(string name) where T : IProperty => throw new System.NotImplementedException();
+  public T GetProperty<T>(string name) where T : IProperty
+  {
+    var property = Value.FirstOrDefault(_properties => _properties.Name == name) ?? throw new InvalidOperationException($"Property '{name}' not found.");
+    if (property is T prop)
+    {
+      return prop;
+    }
+
+    throw new InvalidOperationException($"Property '{name}' is not of type '{typeof(T).Name}'.");
+  }
 
   /// <inheritdoc/>
   public bool TryGetProperty<T>(string name, [NotNullWhen(true)] out T? property) where T : IProperty

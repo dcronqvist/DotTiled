@@ -11,7 +11,7 @@ internal partial class Tmj
   internal static Group ReadGroup(
     JsonElement element,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");

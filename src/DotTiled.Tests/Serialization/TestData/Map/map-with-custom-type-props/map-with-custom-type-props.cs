@@ -74,7 +74,7 @@ public partial class TestData
   };
 
   // This comes from map-with-custom-type-props/propertytypes.json
-  public static IReadOnlyCollection<CustomTypeDefinition> MapWithCustomTypePropsCustomTypeDefinitions() => [
+  public static IReadOnlyCollection<ICustomTypeDefinition> MapWithCustomTypePropsCustomTypeDefinitions() => [
     new CustomClassDefinition
     {
       Name = "CustomClass",

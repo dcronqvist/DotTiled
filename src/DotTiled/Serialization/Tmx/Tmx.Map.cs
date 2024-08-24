@@ -13,7 +13,7 @@ internal partial class Tmx
     XmlReader reader,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var version = reader.GetRequiredAttribute("version");

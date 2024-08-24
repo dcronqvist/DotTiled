@@ -9,7 +9,7 @@ internal partial class Tmj
 {
   internal static ImageLayer ReadImageLayer(
     JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");

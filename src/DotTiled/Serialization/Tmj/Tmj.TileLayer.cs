@@ -9,7 +9,7 @@ internal partial class Tmj
 {
   internal static TileLayer ReadTileLayer(
     JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var compression = element.GetOptionalPropertyParseable<DataCompression?>("compression", s => s switch
     {

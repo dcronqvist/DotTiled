@@ -11,7 +11,7 @@ internal partial class Tmx
   internal static TileLayer ReadTileLayer(
     XmlReader reader,
     bool dataUsesChunks,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -61,7 +61,7 @@ internal partial class Tmx
 
   internal static ImageLayer ReadImageLayer(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";
@@ -112,7 +112,7 @@ internal partial class Tmx
   internal static Group ReadGroup(
     XmlReader reader,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var id = reader.GetRequiredAttributeParseable<uint>("id");
     var name = reader.GetOptionalAttribute("name") ?? "";

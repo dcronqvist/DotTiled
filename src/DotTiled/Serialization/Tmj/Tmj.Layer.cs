@@ -10,7 +10,7 @@ internal partial class Tmj
   internal static BaseLayer ReadLayer(
     JsonElement element,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var type = element.GetRequiredProperty<string>("type");
 

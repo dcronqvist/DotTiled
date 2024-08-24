@@ -17,7 +17,7 @@ public class TmxMapReader : IMapReader
   private readonly XmlReader _reader;
   private bool disposedValue;
 
-  private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
+  private readonly IReadOnlyCollection<ICustomTypeDefinition> _customTypeDefinitions;
 
   /// <summary>
   /// Constructs a new <see cref="TmxMapReader"/>.
@@ -31,7 +31,7 @@ public class TmxMapReader : IMapReader
     XmlReader reader,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     _reader = reader ?? throw new ArgumentNullException(nameof(reader));
     _externalTilesetResolver = externalTilesetResolver ?? throw new ArgumentNullException(nameof(externalTilesetResolver));

@@ -12,7 +12,7 @@ internal partial class Tmj
     JsonElement element,
     Func<string, Tileset>? externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var backgroundColor = element.GetOptionalPropertyParseable<Color?>("backgroundcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
     var @class = element.GetOptionalProperty<string>("class", "");
@@ -162,7 +162,7 @@ internal partial class Tmj
   internal static List<Tile> ReadTiles(
     JsonElement element,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions) =>
     element.GetValueAsList<Tile>(e =>
     {
       var animation = e.GetOptionalPropertyCustom<List<Frame>?>("animation", e => e.GetValueAsList<Frame>(ReadFrame), null);
@@ -218,7 +218,7 @@ internal partial class Tmj
 
   internal static Wangset ReadWangset(
     JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var @clalss = element.GetOptionalProperty<string>("class", "");
     var colors = element.GetOptionalPropertyCustom<List<WangColor>>("colors", e => e.GetValueAsList<WangColor>(el => ReadWangColor(el, customTypeDefinitions)), []);
@@ -241,7 +241,7 @@ internal partial class Tmj
 
   internal static WangColor ReadWangColor(
     JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var @class = element.GetOptionalProperty<string>("class", "");
     var color = element.GetRequiredPropertyParseable<Color>("color", s => Color.Parse(s, CultureInfo.InvariantCulture));

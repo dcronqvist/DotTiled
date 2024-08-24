@@ -65,8 +65,14 @@ public enum CustomClassUseAs
 /// Represents a custom class definition in Tiled. Refer to the
 /// <see href="https://doc.mapeditor.org/en/stable/manual/custom-properties/#custom-types">documentation of custom types to understand how they work</see>.
 /// </summary>
-public class CustomClassDefinition : CustomTypeDefinition
+public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
 {
+  /// <inheritdoc/>
+  public uint ID { get; set; }
+
+  /// <inheritdoc/>
+  public required string Name { get; set; }
+
   /// <summary>
   /// The color of the custom class inside the Tiled editor.
   /// </summary>
@@ -86,4 +92,7 @@ public class CustomClassDefinition : CustomTypeDefinition
   /// The members of the custom class, with their names, types and default values.
   /// </summary>
   public List<IProperty> Members { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Members;
 }

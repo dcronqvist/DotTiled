@@ -11,7 +11,7 @@ public partial class TmjMapReaderTests
   public void TmxMapReaderReadMap_ValidTmjExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(
     string testDataFile,
     Func<string, Map> expectedMap,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Arrange
     testDataFile += ".tmj";

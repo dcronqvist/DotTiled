@@ -16,7 +16,7 @@ public class TsxTilesetReader : ITilesetReader
   private readonly XmlReader _reader;
   private bool disposedValue;
 
-  private readonly IReadOnlyCollection<CustomTypeDefinition> _customTypeDefinitions;
+  private readonly IReadOnlyCollection<ICustomTypeDefinition> _customTypeDefinitions;
 
   /// <summary>
   /// Constructs a new <see cref="TsxTilesetReader"/>.
@@ -28,7 +28,7 @@ public class TsxTilesetReader : ITilesetReader
   public TsxTilesetReader(
     XmlReader reader,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     _reader = reader ?? throw new ArgumentNullException(nameof(reader));
     _externalTemplateResolver = externalTemplateResolver ?? throw new ArgumentNullException(nameof(externalTemplateResolver));

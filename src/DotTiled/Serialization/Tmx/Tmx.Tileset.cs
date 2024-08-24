@@ -14,7 +14,7 @@ internal partial class Tmx
     XmlReader reader,
     Func<string, Tileset>? externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var version = reader.GetOptionalAttribute("version");
@@ -207,7 +207,7 @@ internal partial class Tmx
   internal static Tile ReadTile(
     XmlReader reader,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var id = reader.GetRequiredAttributeParseable<uint>("id");
@@ -256,12 +256,12 @@ internal partial class Tmx
 
   internal static List<Wangset> ReadWangsets(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions) =>
     reader.ReadList<Wangset>("wangsets", "wangset", r => ReadWangset(r, customTypeDefinitions));
 
   internal static Wangset ReadWangset(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var name = reader.GetRequiredAttribute("name");
@@ -297,7 +297,7 @@ internal partial class Tmx
 
   internal static WangColor ReadWangColor(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Attributes
     var name = reader.GetRequiredAttribute("name");

@@ -9,7 +9,7 @@ internal partial class Tmx
 {
   internal static Dictionary<string, IProperty> ReadProperties(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     return reader.ReadList("properties", "property", (r) =>
     {
@@ -45,7 +45,7 @@ internal partial class Tmx
 
   internal static List<IProperty> ReadPropertiesList(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     return reader.ReadList("properties", "property", (r) =>
     {
@@ -81,7 +81,7 @@ internal partial class Tmx
 
   internal static ClassProperty ReadClassProperty(
     XmlReader reader,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var name = reader.GetRequiredAttribute("name");
     var propertyType = reader.GetRequiredAttribute("propertytype");

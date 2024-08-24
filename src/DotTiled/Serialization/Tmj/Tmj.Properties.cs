@@ -10,7 +10,7 @@ internal partial class Tmj
 {
   internal static Dictionary<string, IProperty> ReadProperties(
     JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions) =>
     element.GetValueAsList<IProperty>(e =>
     {
       var name = e.GetRequiredProperty<string>("name");
@@ -45,7 +45,7 @@ internal partial class Tmj
 
   internal static List<IProperty> ReadPropertiesList(
     JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions) =>
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions) =>
     element.GetValueAsList<IProperty>(e =>
     {
       var name = e.GetRequiredProperty<string>("name");
@@ -80,7 +80,7 @@ internal partial class Tmj
 
   internal static ClassProperty ReadClassProperty(
     JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var name = element.GetRequiredProperty<string>("name");
     var propertyType = element.GetRequiredProperty<string>("propertytype");
@@ -108,7 +108,7 @@ internal partial class Tmj
   internal static List<IProperty> ReadCustomClassProperties(
     JsonElement element,
     CustomClassDefinition customClassDefinition,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     List<IProperty> resultingProps = Helpers.CreateInstanceOfCustomClass(customClassDefinition);
 

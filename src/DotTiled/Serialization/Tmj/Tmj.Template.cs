@@ -11,7 +11,7 @@ internal partial class Tmj
     JsonElement element,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var type = element.GetRequiredProperty<string>("type");
     var tileset = element.GetOptionalPropertyCustom<Tileset?>("tileset", el => ReadTileset(el, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions), null);

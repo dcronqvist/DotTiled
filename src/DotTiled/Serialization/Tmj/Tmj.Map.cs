@@ -12,7 +12,7 @@ internal partial class Tmj
     JsonElement element,
     Func<string, Tileset>? externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var version = element.GetRequiredProperty<string>("version");
     var tiledVersion = element.GetRequiredProperty<string>("tiledversion");

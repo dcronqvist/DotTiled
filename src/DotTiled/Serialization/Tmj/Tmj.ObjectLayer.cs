@@ -12,7 +12,7 @@ internal partial class Tmj
   internal static ObjectLayer ReadObjectLayer(
       JsonElement element,
       Func<string, Template> externalTemplateResolver,
-      IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+      IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
@@ -66,7 +66,7 @@ internal partial class Tmj
   internal static Model.Object ReadObject(
     JsonElement element,
     Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     uint? idDefault = null;
     string nameDefault = "";
