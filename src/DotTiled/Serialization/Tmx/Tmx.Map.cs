@@ -61,7 +61,7 @@ internal partial class Tmx
     var infinite = (reader.GetOptionalAttributeParseable<uint>("infinite") ?? 0) == 1;
 
     // At most one of
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
 
     // Any number of
     List<BaseLayer> layers = [];
@@ -69,7 +69,7 @@ internal partial class Tmx
 
     reader.ProcessChildren("map", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadPropertiesList(r, customTypeDefinitions), "Properties"),
       "tileset" => () => tilesets.Add(ReadTileset(r, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions)),
       "layer" => () => layers.Add(ReadTileLayer(r, infinite, customTypeDefinitions)),
       "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver, customTypeDefinitions)),
@@ -99,7 +99,7 @@ internal partial class Tmx
       NextLayerID = nextLayerID,
       NextObjectID = nextObjectID,
       Infinite = infinite,
-      Properties = properties,
+      Properties = properties ?? [],
       Tilesets = tilesets,
       Layers = layers
     };

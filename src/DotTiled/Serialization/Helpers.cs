@@ -73,6 +73,9 @@ internal static partial class Helpers
     };
   }
 
+  internal static List<IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition) =>
+    customClassDefinition.Members.Select(x => x.Clone()).ToList();
+
   internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty>? overrideProperties)
   {
     if (baseProperties is null)
@@ -93,7 +96,7 @@ internal static partial class Helpers
       {
         if (value is ClassProperty classProp)
         {
-          ((ClassProperty)baseProp).Properties = MergeProperties(((ClassProperty)baseProp).Properties, classProp.Properties);
+          ((ClassProperty)baseProp).Value = MergePropertiesList(((ClassProperty)baseProp).Value, classProp.Value);
         }
         else
         {
@@ -103,6 +106,48 @@ internal static partial class Helpers
     }
 
     return result;
+  }
+
+  internal static IList<IProperty> MergePropertiesList(IList<IProperty>? baseProperties, IList<IProperty>? overrideProperties)
+  {
+    if (baseProperties is null)
+      return overrideProperties ?? [];
+
+    if (overrideProperties is null)
+      return baseProperties;
+
+    var result = baseProperties.Select(x => x.Clone()).ToList();
+    foreach (var overrideProp in overrideProperties)
+    {
+      if (!result.Any(x => x.Name == overrideProp.Name))
+      {
+        result.Add(overrideProp);
+        continue;
+      }
+      else
+      {
+        var existingProp = result.First(x => x.Name == overrideProp.Name);
+        if (existingProp is ClassProperty classProp)
+        {
+          classProp.Value = MergePropertiesList(classProp.Value, ((ClassProperty)overrideProp).Value);
+        }
+        else
+        {
+          ReplacePropertyInList(result, overrideProp);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  internal static void ReplacePropertyInList(List<IProperty> properties, IProperty property)
+  {
+    var index = properties.FindIndex(p => p.Name == property.Name);
+    if (index == -1)
+      properties.Add(property);
+    else
+      properties[index] = property;
   }
 
   internal static void SetAtMostOnce<T>(ref T? field, T value, string fieldName)

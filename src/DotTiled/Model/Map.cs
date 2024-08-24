@@ -90,7 +90,7 @@ public enum StaggerIndex
 /// <summary>
 /// Represents a Tiled map.
 /// </summary>
-public class Map
+public class Map : HasPropertiesBase
 {
   /// <summary>
   /// The TMX format version. Is incremented to match minor Tiled releases.
@@ -191,7 +191,10 @@ public class Map
   /// <summary>
   /// Map properties.
   /// </summary>
-  public Dictionary<string, IProperty>? Properties { get; set; }
+  public List<IProperty> Properties { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Properties;
 
   /// <summary>
   /// List of tilesets used by the map.

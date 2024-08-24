@@ -3,7 +3,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Represents a color property.
 /// </summary>
-public class ColorProperty : IProperty
+public class ColorProperty : IProperty<Color>
 {
   /// <inheritdoc/>
   public required string Name { get; set; }

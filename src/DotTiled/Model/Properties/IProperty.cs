@@ -22,3 +22,15 @@ public interface IProperty
   /// <returns>An identical, but non-reference-equal, instance of the same property.</returns>
   IProperty Clone();
 }
+
+/// <summary>
+/// Interface for properties that can be attached to objects, tiles, tilesets, maps etc.
+/// </summary>
+/// <typeparam name="T">The type of the property value.</typeparam>
+public interface IProperty<T> : IProperty
+{
+  /// <summary>
+  /// The value of the property.
+  /// </summary>
+  public T Value { get; set; }
+}

@@ -21,6 +21,25 @@ public static partial class DotTiledAssert
     }
   }
 
+  internal static void AssertPropertiesList(IList<IProperty>? expected, IList<IProperty>? actual)
+  {
+    if (expected is null)
+    {
+      Assert.Null(actual);
+      return;
+    }
+
+    Assert.NotNull(actual);
+    AssertEqual(expected.Count, actual.Count, "Properties.Count");
+    foreach (var prop in expected)
+    {
+      Assert.Contains(actual, p => p.Name == prop.Name);
+
+      var actualProp = actual.First(p => p.Name == prop.Name);
+      AssertProperty((dynamic)prop, (dynamic)actualProp);
+    }
+  }
+
   private static void AssertProperty(IProperty expected, IProperty actual)
   {
     AssertEqual(expected.Type, actual.Type, "Property.Type");
@@ -45,6 +64,6 @@ public static partial class DotTiledAssert
   private static void AssertProperty(ClassProperty expected, ClassProperty actual)
   {
     AssertEqual(expected.PropertyType, actual.PropertyType, "ClassProperty.PropertyType");
-    AssertProperties(expected.Properties, actual.Properties);
+    AssertPropertiesList(expected.Value, actual.Value);
   }
 }

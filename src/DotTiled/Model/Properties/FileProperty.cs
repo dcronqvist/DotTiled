@@ -3,7 +3,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Represents a file property.
 /// </summary>
-public class FileProperty : IProperty
+public class FileProperty : IProperty<string>
 {
   /// <inheritdoc/>
   public required string Name { get; set; }

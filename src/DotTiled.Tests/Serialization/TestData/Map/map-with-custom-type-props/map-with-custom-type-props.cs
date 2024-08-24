@@ -55,24 +55,22 @@ public partial class TestData
         }
       }
     ],
-    Properties = new Dictionary<string, IProperty>
-    {
-      ["customclassprop"] = new ClassProperty
+    Properties = [
+      new ClassProperty
       {
         Name = "customclassprop",
         PropertyType = "CustomClass",
-        Properties = new Dictionary<string, IProperty>
-        {
-          ["boolinclass"] = new BoolProperty { Name = "boolinclass", Value = true },
-          ["colorinclass"] = new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
-          ["fileinclass"] = new FileProperty { Name = "fileinclass", Value = "" },
-          ["floatinclass"] = new FloatProperty { Name = "floatinclass", Value = 13.37f },
-          ["intinclass"] = new IntProperty { Name = "intinclass", Value = 0 },
-          ["objectinclass"] = new ObjectProperty { Name = "objectinclass", Value = 0 },
-          ["stringinclass"] = new StringProperty { Name = "stringinclass", Value = "This is a set string" }
-        }
+        Value = [
+          new BoolProperty { Name = "boolinclass", Value = true },
+          new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
+          new FileProperty { Name = "fileinclass", Value = "" },
+          new FloatProperty { Name = "floatinclass", Value = 13.37f },
+          new IntProperty { Name = "intinclass", Value = 0 },
+          new ObjectProperty { Name = "objectinclass", Value = 0 },
+          new StringProperty { Name = "stringinclass", Value = "This is a set string" }
+        ]
       }
-    }
+    ]
   };
 
   // This comes from map-with-custom-type-props/propertytypes.json

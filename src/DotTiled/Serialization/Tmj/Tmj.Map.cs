@@ -58,7 +58,7 @@ internal partial class Tmj
     var nextObjectID = element.GetRequiredProperty<uint>("nextobjectid");
     var infinite = element.GetOptionalProperty<bool>("infinite", false);
 
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", el => ReadProperties(el, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom<List<IProperty>?>("properties", el => ReadPropertiesList(el, customTypeDefinitions), null);
 
     List<BaseLayer> layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(el => ReadLayer(el, externalTemplateResolver, customTypeDefinitions)), []);
     List<Tileset> tilesets = element.GetOptionalPropertyCustom<List<Tileset>>("tilesets", e => e.GetValueAsList<Tileset>(el => ReadTileset(el, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions)), []);
@@ -84,7 +84,7 @@ internal partial class Tmj
       NextLayerID = nextLayerID,
       NextObjectID = nextObjectID,
       Infinite = infinite,
-      Properties = properties,
+      Properties = properties ?? [],
       Tilesets = tilesets,
       Layers = layers
     };

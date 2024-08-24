@@ -3,7 +3,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Represents an integer property.
 /// </summary>
-public class IntProperty : IProperty
+public class IntProperty : IProperty<int>
 {
   /// <inheritdoc/>
   public required string Name { get; set; }
