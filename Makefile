@@ -10,7 +10,6 @@ docs-build:
 	docfx docs/docfx.json
 
 lint:
-	dotnet build src/DotTiled.sln
 	dotnet format style --verify-no-changes src/DotTiled.sln
 	dotnet format analyzers --verify-no-changes src/DotTiled.sln
 
