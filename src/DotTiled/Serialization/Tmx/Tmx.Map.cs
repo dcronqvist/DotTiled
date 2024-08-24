@@ -69,7 +69,7 @@ internal partial class Tmx
 
     reader.ProcessChildren("map", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadPropertiesList(r, customTypeDefinitions), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
       "tileset" => () => tilesets.Add(ReadTileset(r, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions)),
       "layer" => () => layers.Add(ReadTileLayer(r, infinite, customTypeDefinitions)),
       "objectgroup" => () => layers.Add(ReadObjectLayer(r, externalTemplateResolver, customTypeDefinitions)),

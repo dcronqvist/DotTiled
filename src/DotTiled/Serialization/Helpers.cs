@@ -76,39 +76,7 @@ internal static partial class Helpers
   internal static List<IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition) =>
     customClassDefinition.Members.Select(x => x.Clone()).ToList();
 
-  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty>? overrideProperties)
-  {
-    if (baseProperties is null)
-      return overrideProperties ?? new Dictionary<string, IProperty>();
-
-    if (overrideProperties is null)
-      return baseProperties;
-
-    var result = baseProperties.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Clone());
-    foreach (var (key, value) in overrideProperties)
-    {
-      if (!result.TryGetValue(key, out var baseProp))
-      {
-        result[key] = value;
-        continue;
-      }
-      else
-      {
-        if (value is ClassProperty classProp)
-        {
-          ((ClassProperty)baseProp).Value = MergePropertiesList(((ClassProperty)baseProp).Value, classProp.Value);
-        }
-        else
-        {
-          result[key] = value;
-        }
-      }
-    }
-
-    return result;
-  }
-
-  internal static IList<IProperty> MergePropertiesList(IList<IProperty>? baseProperties, IList<IProperty>? overrideProperties)
+  internal static IList<IProperty> MergeProperties(IList<IProperty>? baseProperties, IList<IProperty>? overrideProperties)
   {
     if (baseProperties is null)
       return overrideProperties ?? [];
@@ -129,7 +97,7 @@ internal static partial class Helpers
         var existingProp = result.First(x => x.Name == overrideProp.Name);
         if (existingProp is ClassProperty classProp)
         {
-          classProp.Value = MergePropertiesList(classProp.Value, ((ClassProperty)overrideProp).Value);
+          classProp.Value = MergeProperties(classProp.Value, ((ClassProperty)overrideProp).Value);
         }
         else
         {

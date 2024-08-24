@@ -95,10 +95,9 @@ public partial class TestData
                   new Vector2(35.6667f, 32.3333f)
                 ],
                 Template = fileExt == "tmx" ? "poly.tx" : "poly.tj",
-                Properties = new Dictionary<string, IProperty>
-                {
-                  ["templateprop"] = new StringProperty { Name = "templateprop", Value = "helo there" }
-                }
+                Properties = [
+                  new StringProperty { Name = "templateprop", Value = "helo there" }
+                ]
               },
               new TileObject
               {

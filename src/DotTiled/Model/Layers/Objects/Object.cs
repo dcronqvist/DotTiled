@@ -5,7 +5,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Base class for objects in object layers.
 /// </summary>
-public abstract class Object
+public abstract class Object : HasPropertiesBase
 {
   /// <summary>
   /// Unique ID of the objects. Each object that is placed on a map gets a unique ID. Even if an object was deleted, no object gets the same ID.
@@ -60,5 +60,8 @@ public abstract class Object
   /// <summary>
   /// Object properties.
   /// </summary>
-  public Dictionary<string, IProperty>? Properties { get; set; }
+  public List<IProperty> Properties { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Properties;
 }

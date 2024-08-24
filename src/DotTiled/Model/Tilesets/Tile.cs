@@ -6,7 +6,7 @@ namespace DotTiled.Model;
 /// Represents a single tile in a tileset, when using a collection of images to represent the tileset.
 /// <see href="https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tile">Tiled documentation for Tileset tiles</see>
 /// </summary>
-public class Tile
+public class Tile : HasPropertiesBase
 {
   /// <summary>
   /// The local tile ID within its tileset.
@@ -46,7 +46,10 @@ public class Tile
   /// <summary>
   /// Tile properties.
   /// </summary>
-  public Dictionary<string, IProperty>? Properties { get; set; }
+  public List<IProperty> Properties { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Properties;
 
   /// <summary>
   /// The image representing this tile. Only used for tilesets that composed of a collection of images.

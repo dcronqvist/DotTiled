@@ -44,7 +44,7 @@ internal partial class Tmj
       "bottomright" => ObjectAlignment.BottomRight,
       _ => throw new JsonException($"Unknown object alignment '{s}'")
     }, ObjectAlignment.Unspecified);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", el => ReadProperties(el, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", el => ReadProperties(el, customTypeDefinitions), []);
     var source = element.GetOptionalProperty<string?>("source", null);
     var spacing = element.GetOptionalProperty<uint?>("spacing", null);
     var tileCount = element.GetOptionalProperty<uint?>("tilecount", null);
@@ -176,7 +176,7 @@ internal partial class Tmj
       var height = e.GetOptionalProperty<uint>("height", imageHeight ?? 0);
       var objectGroup = e.GetOptionalPropertyCustom<ObjectLayer?>("objectgroup", e => ReadObjectLayer(e, externalTemplateResolver, customTypeDefinitions), null);
       var probability = e.GetOptionalProperty<float>("probability", 0.0f);
-      var properties = e.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", el => ReadProperties(el, customTypeDefinitions), null);
+      var properties = e.GetOptionalPropertyCustom("properties", el => ReadProperties(el, customTypeDefinitions), []);
       // var terrain, replaced by wangsets
       var type = e.GetOptionalProperty<string>("type", "");
 
@@ -223,7 +223,7 @@ internal partial class Tmj
     var @clalss = element.GetOptionalProperty<string>("class", "");
     var colors = element.GetOptionalPropertyCustom<List<WangColor>>("colors", e => e.GetValueAsList<WangColor>(el => ReadWangColor(el, customTypeDefinitions)), []);
     var name = element.GetRequiredProperty<string>("name");
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", e => ReadProperties(e, customTypeDefinitions), []);
     var tile = element.GetOptionalProperty<int>("tile", 0);
     var type = element.GetOptionalProperty<string>("type", "");
     var wangTiles = element.GetOptionalPropertyCustom<List<WangTile>>("wangtiles", e => e.GetValueAsList<WangTile>(ReadWangTile), []);
@@ -247,7 +247,7 @@ internal partial class Tmj
     var color = element.GetRequiredPropertyParseable<Color>("color", s => Color.Parse(s, CultureInfo.InvariantCulture));
     var name = element.GetRequiredProperty<string>("name");
     var probability = element.GetOptionalProperty<float>("probability", 1.0f);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", e => ReadProperties(e, customTypeDefinitions), []);
     var tile = element.GetOptionalProperty<int>("tile", 0);
 
     return new WangColor

@@ -5,7 +5,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Represents a Wang color in a Wang set.
 /// </summary>
-public class WangColor
+public class WangColor : HasPropertiesBase
 {
   /// <summary>
   /// The name of this color.
@@ -35,5 +35,8 @@ public class WangColor
   /// <summary>
   /// The Wang color properties.
   /// </summary>
-  public Dictionary<string, IProperty>? Properties { get; set; }
+  public List<IProperty> Properties { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Properties;
 }

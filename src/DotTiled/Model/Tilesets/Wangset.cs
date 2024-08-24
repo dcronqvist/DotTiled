@@ -5,7 +5,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Defines a list of colors and any number of Wang tiles using these colors.
 /// </summary>
-public class Wangset
+public class Wangset : HasPropertiesBase
 {
   /// <summary>
   /// The name of the Wang set.
@@ -25,7 +25,10 @@ public class Wangset
   /// <summary>
   /// The Wang set properties.
   /// </summary>
-  public Dictionary<string, IProperty>? Properties { get; set; }
+  public List<IProperty> Properties { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Properties;
 
   // Up to 254 Wang colors
   /// <summary>

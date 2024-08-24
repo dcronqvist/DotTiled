@@ -60,7 +60,7 @@ internal partial class Tmx
     Image? image = null;
     TileOffset? tileOffset = null;
     Grid? grid = null;
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     List<Wangset>? wangsets = null;
     Transformations? transformations = null;
     List<Tile> tiles = [];
@@ -109,7 +109,7 @@ internal partial class Tmx
       Image = image,
       TileOffset = tileOffset,
       Grid = grid,
-      Properties = properties,
+      Properties = properties ?? [],
       Wangsets = wangsets,
       Transformations = transformations,
       Tiles = tiles
@@ -219,7 +219,7 @@ internal partial class Tmx
     var height = reader.GetOptionalAttributeParseable<uint>("height");
 
     // Elements
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     Image? image = null;
     ObjectLayer? objectLayer = null;
     List<Frame>? animation = null;
@@ -247,7 +247,7 @@ internal partial class Tmx
       Y = y,
       Width = width ?? image?.Width ?? 0,
       Height = height ?? image?.Height ?? 0,
-      Properties = properties,
+      Properties = properties ?? [],
       Image = image,
       ObjectLayer = objectLayer,
       Animation = animation
@@ -269,7 +269,7 @@ internal partial class Tmx
     var tile = reader.GetRequiredAttributeParseable<int>("tile");
 
     // Elements
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     List<WangColor> wangColors = [];
     List<WangTile> wangTiles = [];
 
@@ -289,7 +289,7 @@ internal partial class Tmx
       Name = name,
       Class = @class,
       Tile = tile,
-      Properties = properties,
+      Properties = properties ?? [],
       WangColors = wangColors,
       WangTiles = wangTiles
     };
@@ -307,7 +307,7 @@ internal partial class Tmx
     var probability = reader.GetOptionalAttributeParseable<float>("probability") ?? 0f;
 
     // Elements
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
 
     reader.ProcessChildren("wangcolor", (r, elementName) => elementName switch
     {
@@ -322,7 +322,7 @@ internal partial class Tmx
       Color = color,
       Tile = tile,
       Probability = probability,
-      Properties = properties
+      Properties = properties ?? []
     };
   }
 

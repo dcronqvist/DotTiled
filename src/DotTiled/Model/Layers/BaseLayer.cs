@@ -7,7 +7,7 @@ namespace DotTiled.Model;
 /// To check the type of a layer, <see href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/functional/pattern-matching">use C# pattern matching</see>,
 /// or some other mechanism to determine the type of the layer at runtime.
 /// </summary>
-public abstract class BaseLayer
+public abstract class BaseLayer : HasPropertiesBase
 {
   /// <summary>
   /// Unique ID of the layer. Each layer that is added to a map gets a unique ID. Even if a layer is deleted, no layer ever gets the same ID.
@@ -62,5 +62,8 @@ public abstract class BaseLayer
   /// <summary>
   /// Layer properties.
   /// </summary>
-  public Dictionary<string, IProperty>? Properties { get; set; }
+  public List<IProperty> Properties { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Properties;
 }

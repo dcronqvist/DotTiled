@@ -28,7 +28,7 @@ internal partial class Tmx
     var parallaxX = reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
     var parallaxY = reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
 
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     Data? data = null;
 
     reader.ProcessChildren("layer", (r, elementName) => elementName switch
@@ -55,7 +55,7 @@ internal partial class Tmx
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
       Data = data,
-      Properties = properties
+      Properties = properties ?? []
     };
   }
 
@@ -78,7 +78,7 @@ internal partial class Tmx
     var repeatX = (reader.GetOptionalAttributeParseable<uint>("repeatx") ?? 0) == 1;
     var repeatY = (reader.GetOptionalAttributeParseable<uint>("repeaty") ?? 0) == 1;
 
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     Image? image = null;
 
     reader.ProcessChildren("imagelayer", (r, elementName) => elementName switch
@@ -102,7 +102,7 @@ internal partial class Tmx
       OffsetY = offsetY,
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
-      Properties = properties,
+      Properties = properties ?? [],
       Image = image,
       RepeatX = repeatX,
       RepeatY = repeatY
@@ -125,7 +125,7 @@ internal partial class Tmx
     var parallaxX = reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
     var parallaxY = reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
 
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     List<BaseLayer> layers = [];
 
     reader.ProcessChildren("group", (r, elementName) => elementName switch
@@ -150,7 +150,7 @@ internal partial class Tmx
       OffsetY = offsetY,
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
-      Properties = properties,
+      Properties = properties ?? [],
       Layers = layers
     };
   }

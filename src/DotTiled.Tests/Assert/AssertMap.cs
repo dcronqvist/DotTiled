@@ -91,7 +91,7 @@ public static partial class DotTiledAssert
     AssertEqual(expected.NextObjectID, actual.NextObjectID, nameof(Map.NextObjectID));
     AssertEqual(expected.Infinite, actual.Infinite, nameof(Map.Infinite));
 
-    AssertPropertiesList(actual.Properties, expected.Properties);
+    AssertProperties(actual.Properties, expected.Properties);
 
     Assert.NotNull(actual.Tilesets);
     AssertEqual(expected.Tilesets.Count, actual.Tilesets.Count, "Tilesets.Count");

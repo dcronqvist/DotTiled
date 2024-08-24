@@ -24,7 +24,7 @@ internal partial class Tmj
     var offsetY = element.GetOptionalProperty<float>("offsety", 0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx", 1.0f);
     var parallaxY = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", e => ReadProperties(e, customTypeDefinitions), []);
 
     var x = element.GetOptionalProperty<uint>("x", 0);
     var y = element.GetOptionalProperty<uint>("y", 0);
@@ -82,7 +82,7 @@ internal partial class Tmj
     bool pointDefault = false;
     List<Vector2>? polygonDefault = null;
     List<Vector2>? polylineDefault = null;
-    Dictionary<string, IProperty>? propertiesDefault = null;
+    List<IProperty> propertiesDefault = [];
 
     var template = element.GetOptionalProperty<string?>("template", null);
     if (template is not null)
@@ -114,7 +114,7 @@ internal partial class Tmj
     var point = element.GetOptionalProperty<bool>("point", pointDefault);
     var polygon = element.GetOptionalPropertyCustom<List<Vector2>?>("polygon", ReadPoints, polygonDefault);
     var polyline = element.GetOptionalPropertyCustom<List<Vector2>?>("polyline", ReadPoints, polylineDefault);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), propertiesDefault);
+    var properties = element.GetOptionalPropertyCustom("properties", e => ReadProperties(e, customTypeDefinitions), propertiesDefault);
     var rotation = element.GetOptionalProperty<float>("rotation", rotationDefault);
     var text = element.GetOptionalPropertyCustom<TextObject?>("text", ReadText, null);
     var type = element.GetOptionalProperty<string>("type", typeDefault);

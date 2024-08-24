@@ -35,7 +35,7 @@ internal partial class Tmj
     var opacity = element.GetOptionalProperty<float>("opacity", 1.0f);
     var parallaxx = element.GetOptionalProperty<float>("parallaxx", 1.0f);
     var parallaxy = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", e => ReadProperties(e, customTypeDefinitions), []);
     var repeatX = element.GetOptionalProperty<bool>("repeatx", false);
     var repeatY = element.GetOptionalProperty<bool>("repeaty", false);
     var startX = element.GetOptionalProperty<int>("startx", 0);

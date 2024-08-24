@@ -39,7 +39,7 @@ internal partial class Tmx
     }) ?? DrawOrder.TopDown;
 
     // Elements
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     List<Model.Object> objects = [];
 
     reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
@@ -66,7 +66,7 @@ internal partial class Tmx
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
       Color = color,
-      Properties = properties,
+      Properties = properties ?? [],
       DrawOrder = drawOrder,
       Objects = objects
     };
@@ -93,7 +93,7 @@ internal partial class Tmx
     float rotationDefault = obj?.Rotation ?? 0f;
     uint? gidDefault = obj is TileObject tileObj ? tileObj.GID : null;
     bool visibleDefault = obj?.Visible ?? true;
-    Dictionary<string, IProperty>? propertiesDefault = obj?.Properties ?? null;
+    List<IProperty>? propertiesDefault = obj?.Properties ?? null;
 
     var id = reader.GetOptionalAttributeParseable<uint>("id") ?? idDefault;
     var name = reader.GetOptionalAttribute("name") ?? nameDefault;
@@ -109,11 +109,11 @@ internal partial class Tmx
     // Elements
     Model.Object? foundObject = null;
     int propertiesCounter = 0;
-    Dictionary<string, IProperty>? properties = propertiesDefault;
+    List<IProperty>? properties = propertiesDefault;
 
     reader.ProcessChildren("object", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties(r, customTypeDefinitions)), "Properties", ref propertiesCounter),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties(r, customTypeDefinitions)).ToList(), "Properties", ref propertiesCounter),
       "ellipse" => () => Helpers.SetAtMostOnce(ref foundObject, ReadEllipseObject(r), "Object marker"),
       "point" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPointObject(r), "Object marker"),
       "polygon" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolygonObject(r), "Object marker"),
@@ -139,7 +139,7 @@ internal partial class Tmx
     foundObject.Height = height;
     foundObject.Rotation = rotation;
     foundObject.Visible = visible;
-    foundObject.Properties = properties;
+    foundObject.Properties = properties ?? [];
     foundObject.Template = template;
 
     return OverrideObject(obj, foundObject);
@@ -161,7 +161,7 @@ internal partial class Tmx
       obj.Height = foundObject.Height;
       obj.Rotation = foundObject.Rotation;
       obj.Visible = foundObject.Visible;
-      obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties);
+      obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties).ToList();
       obj.Template = foundObject.Template;
       return obj;
     }
