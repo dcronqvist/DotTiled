@@ -35,7 +35,7 @@ public class TsxTilesetReader : ITilesetReader
     _customTypeDefinitions = customTypeDefinitions ?? throw new ArgumentNullException(nameof(customTypeDefinitions));
 
     // Prepare reader
-    _reader.MoveToContent();
+    _ = _reader.MoveToContent();
   }
 
   /// <inheritdoc/>
@@ -49,6 +49,7 @@ public class TsxTilesetReader : ITilesetReader
       if (disposing)
       {
         // TODO: dispose managed state (managed objects)
+        _reader.Dispose();
       }
 
       // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -69,6 +70,6 @@ public class TsxTilesetReader : ITilesetReader
   {
     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
     Dispose(disposing: true);
-    System.GC.SuppressFinalize(this);
+    GC.SuppressFinalize(this);
   }
 }

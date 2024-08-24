@@ -35,7 +35,7 @@ internal partial class Tmx
     {
       "topdown" => DrawOrder.TopDown,
       "index" => DrawOrder.Index,
-      _ => throw new Exception($"Unknown draw order '{s}'")
+      _ => throw new InvalidOperationException($"Unknown draw order '{s}'")
     }) ?? DrawOrder.TopDown;
 
     // Elements
@@ -119,7 +119,7 @@ internal partial class Tmx
       "polygon" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolygonObject(r), "Object marker"),
       "polyline" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolylineObject(r), "Object marker"),
       "text" => () => Helpers.SetAtMostOnce(ref foundObject, ReadTextObject(r), "Object marker"),
-      _ => throw new Exception($"Unknown object marker '{elementName}'")
+      _ => throw new InvalidOperationException($"Unknown object marker '{elementName}'")
     });
 
     if (foundObject is null)
@@ -175,7 +175,7 @@ internal partial class Tmx
     return new EllipseObject { };
   }
 
-  internal static EllipseObject OverrideObject(EllipseObject obj, EllipseObject foundObject) => obj;
+  internal static EllipseObject OverrideObject(EllipseObject obj, EllipseObject _) => obj;
 
   internal static PointObject ReadPointObject(XmlReader reader)
   {
@@ -183,7 +183,7 @@ internal partial class Tmx
     return new PointObject { };
   }
 
-  internal static PointObject OverrideObject(PointObject obj, PointObject foundObject) => obj;
+  internal static PointObject OverrideObject(PointObject obj, PointObject _) => obj;
 
   internal static PolygonObject ReadPolygonObject(XmlReader reader)
   {
@@ -251,14 +251,14 @@ internal partial class Tmx
       "center" => TextHorizontalAlignment.Center,
       "right" => TextHorizontalAlignment.Right,
       "justify" => TextHorizontalAlignment.Justify,
-      _ => throw new Exception($"Unknown horizontal alignment '{s}'")
+      _ => throw new InvalidOperationException($"Unknown horizontal alignment '{s}'")
     }) ?? TextHorizontalAlignment.Left;
     var vAlign = reader.GetOptionalAttributeEnum<TextVerticalAlignment>("valign", s => s switch
     {
       "top" => TextVerticalAlignment.Top,
       "center" => TextVerticalAlignment.Center,
       "bottom" => TextVerticalAlignment.Bottom,
-      _ => throw new Exception($"Unknown vertical alignment '{s}'")
+      _ => throw new InvalidOperationException($"Unknown vertical alignment '{s}'")
     }) ?? TextVerticalAlignment.Top;
 
     // Elements

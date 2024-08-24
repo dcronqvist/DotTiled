@@ -25,7 +25,7 @@ internal partial class Tmx
       "isometric" => MapOrientation.Isometric,
       "staggered" => MapOrientation.Staggered,
       "hexagonal" => MapOrientation.Hexagonal,
-      _ => throw new Exception($"Unknown orientation '{s}'")
+      _ => throw new InvalidOperationException($"Unknown orientation '{s}'")
     });
     var renderOrder = reader.GetOptionalAttributeEnum<RenderOrder>("renderorder", s => s switch
     {
@@ -33,7 +33,7 @@ internal partial class Tmx
       "right-up" => RenderOrder.RightUp,
       "left-down" => RenderOrder.LeftDown,
       "left-up" => RenderOrder.LeftUp,
-      _ => throw new Exception($"Unknown render order '{s}'")
+      _ => throw new InvalidOperationException($"Unknown render order '{s}'")
     }) ?? RenderOrder.RightDown;
     var compressionLevel = reader.GetOptionalAttributeParseable<int>("compressionlevel") ?? -1;
     var width = reader.GetRequiredAttributeParseable<uint>("width");
@@ -45,13 +45,13 @@ internal partial class Tmx
     {
       "x" => StaggerAxis.X,
       "y" => StaggerAxis.Y,
-      _ => throw new Exception($"Unknown stagger axis '{s}'")
+      _ => throw new InvalidOperationException($"Unknown stagger axis '{s}'")
     });
     var staggerIndex = reader.GetOptionalAttributeEnum<StaggerIndex>("staggerindex", s => s switch
     {
       "odd" => StaggerIndex.Odd,
       "even" => StaggerIndex.Even,
-      _ => throw new Exception($"Unknown stagger index '{s}'")
+      _ => throw new InvalidOperationException($"Unknown stagger index '{s}'")
     });
     var parallaxOriginX = reader.GetOptionalAttributeParseable<float>("parallaxoriginx") ?? 0.0f;
     var parallaxOriginY = reader.GetOptionalAttributeParseable<float>("parallaxoriginy") ?? 0.0f;

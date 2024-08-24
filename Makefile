@@ -9,6 +9,10 @@ docs-build:
 	cp README.md docs/index.md
 	docfx docs/docfx.json
 
+lint:
+	dotnet format style --verify-no-changes src/DotTiled.sln
+	dotnet format analyzers --verify-no-changes src/DotTiled.sln
+
 BENCHMARK_SOURCES = DotTiled.Benchmark/Program.cs DotTiled.Benchmark/DotTiled.Benchmark.csproj
 BENCHMARK_OUTPUTDIR = DotTiled.Benchmark/BenchmarkDotNet.Artifacts
 .PHONY: benchmark

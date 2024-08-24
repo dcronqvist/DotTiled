@@ -1,9 +1,5 @@
 using System.Numerics;
 using DotTiled.Model;
-using DotTiled.Model;
-using DotTiled.Model;
-using DotTiled.Model;
-using DotTiled.Model;
 
 namespace DotTiled.Tests;
 

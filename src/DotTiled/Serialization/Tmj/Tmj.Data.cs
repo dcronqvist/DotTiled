@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using System.Text.Json;
 using DotTiled.Model;
 
@@ -69,7 +65,8 @@ internal partial class Tmj
       {
         DataCompression.GZip => Helpers.DecompressGZip(stream),
         DataCompression.ZLib => Helpers.DecompressZLib(stream),
-        _ => throw new JsonException($"Unsupported compression '{compression}'.")
+        DataCompression.ZStd => throw new NotSupportedException("ZStd compression is not supported."),
+        _ => throw new InvalidOperationException($"Unsupported compression '{compression}'.")
       };
 
       {

@@ -24,30 +24,15 @@ public static partial class DotTiledAssert
     AssertObject((dynamic)expected, (dynamic)actual);
   }
 
-  private static void AssertObject(RectangleObject expected, RectangleObject actual)
-  {
-    Assert.True(true); // A rectangle object is the same as the abstract Object
-  }
+  private static void AssertObject(RectangleObject _, RectangleObject __) => Assert.True(true); // A rectangle object is the same as the abstract Object
 
-  private static void AssertObject(EllipseObject expected, EllipseObject actual)
-  {
-    Assert.True(true); // An ellipse object is the same as the abstract Object
-  }
+  private static void AssertObject(EllipseObject _, EllipseObject __) => Assert.True(true); // An ellipse object is the same as the abstract Object
 
-  private static void AssertObject(PointObject expected, PointObject actual)
-  {
-    Assert.True(true); // A point object is the same as the abstract Object
-  }
+  private static void AssertObject(PointObject _, PointObject __) => Assert.True(true); // A point object is the same as the abstract Object
 
-  private static void AssertObject(PolygonObject expected, PolygonObject actual)
-  {
-    AssertEqual(expected.Points, actual.Points, nameof(PolygonObject.Points));
-  }
+  private static void AssertObject(PolygonObject expected, PolygonObject actual) => AssertEqual(expected.Points, actual.Points, nameof(PolygonObject.Points));
 
-  private static void AssertObject(PolylineObject expected, PolylineObject actual)
-  {
-    AssertEqual(expected.Points, actual.Points, nameof(PolylineObject.Points));
-  }
+  private static void AssertObject(PolylineObject expected, PolylineObject actual) => AssertEqual(expected.Points, actual.Points, nameof(PolylineObject.Points));
 
   private static void AssertObject(TextObject expected, TextObject actual)
   {
@@ -67,9 +52,5 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Text, actual.Text, nameof(TextObject.Text));
   }
 
-  private static void AssertObject(TileObject expected, TileObject actual)
-  {
-    // Attributes
-    AssertEqual(expected.GID, actual.GID, nameof(TileObject.GID));
-  }
+  private static void AssertObject(TileObject expected, TileObject actual) => AssertEqual(expected.GID, actual.GID, nameof(TileObject.GID));
 }

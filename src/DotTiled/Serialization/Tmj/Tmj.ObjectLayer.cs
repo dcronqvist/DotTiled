@@ -112,8 +112,8 @@ internal partial class Tmj
     var id = element.GetOptionalProperty<uint?>("id", idDefault);
     var name = element.GetOptionalProperty<string>("name", nameDefault);
     var point = element.GetOptionalProperty<bool>("point", pointDefault);
-    var polygon = element.GetOptionalPropertyCustom<List<Vector2>?>("polygon", e => ReadPoints(e), polygonDefault);
-    var polyline = element.GetOptionalPropertyCustom<List<Vector2>?>("polyline", e => ReadPoints(e), polylineDefault);
+    var polygon = element.GetOptionalPropertyCustom<List<Vector2>?>("polygon", ReadPoints, polygonDefault);
+    var polyline = element.GetOptionalPropertyCustom<List<Vector2>?>("polyline", ReadPoints, polylineDefault);
     var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), propertiesDefault);
     var rotation = element.GetOptionalProperty<float>("rotation", rotationDefault);
     var text = element.GetOptionalPropertyCustom<TextObject?>("text", ReadText, null);
@@ -249,12 +249,12 @@ internal partial class Tmj
   }
 
   internal static List<Vector2> ReadPoints(JsonElement element) =>
-  element.GetValueAsList<Vector2>(e =>
-  {
-    var x = e.GetRequiredProperty<float>("x");
-    var y = e.GetRequiredProperty<float>("y");
-    return new Vector2(x, y);
-  });
+    element.GetValueAsList<Vector2>(e =>
+    {
+      var x = e.GetRequiredProperty<float>("x");
+      var y = e.GetRequiredProperty<float>("y");
+      return new Vector2(x, y);
+    });
 
   internal static TextObject ReadText(JsonElement element)
   {
