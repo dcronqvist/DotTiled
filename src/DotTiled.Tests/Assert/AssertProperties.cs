@@ -45,4 +45,14 @@ public static partial class DotTiledAssert
     AssertEqual(expected.PropertyType, actual.PropertyType, "ClassProperty.PropertyType");
     AssertProperties(expected.Value, actual.Value);
   }
+
+  private static void AssertProperty(EnumProperty expected, EnumProperty actual)
+  {
+    AssertEqual(expected.PropertyType, actual.PropertyType, "EnumProperty.PropertyType");
+    AssertEqual(expected.Value.Count, actual.Value.Count, "EnumProperty.Value.Count");
+    foreach (var value in expected.Value)
+    {
+      Assert.Contains(actual.Value, v => v == value);
+    }
+  }
 }

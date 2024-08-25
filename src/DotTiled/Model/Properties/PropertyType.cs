@@ -43,5 +43,10 @@ public enum PropertyType
   /// <summary>
   /// A class property.
   /// </summary>
-  Class
+  Class,
+
+  /// <summary>
+  /// An enum property.
+  /// </summary>
+  Enum
 }
