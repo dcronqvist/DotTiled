@@ -22,8 +22,14 @@ public enum CustomEnumStorageType
 /// Represents a custom enum definition in Tiled. Refer to the
 /// <see href="https://doc.mapeditor.org/en/stable/manual/custom-properties/#custom-types">documentation of custom types to understand how they work</see>.
 /// </summary>
-public class CustomEnumDefinition : CustomTypeDefinition
+public class CustomEnumDefinition : ICustomTypeDefinition
 {
+  /// <inheritdoc/>
+  public uint ID { get; set; }
+
+  /// <inheritdoc/>
+  public required string Name { get; set; }
+
   /// <summary>
   /// The storage type of the custom enum.
   /// </summary>

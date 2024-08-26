@@ -1,27 +1,26 @@
-using System.Xml;
 using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 
-internal partial class Tmx
+public abstract partial class TmxReaderBase
 {
-  internal static Chunk ReadChunk(XmlReader reader, DataEncoding? encoding, DataCompression? compression)
+  internal Chunk ReadChunk(DataEncoding? encoding, DataCompression? compression)
   {
-    var x = reader.GetRequiredAttributeParseable<int>("x");
-    var y = reader.GetRequiredAttributeParseable<int>("y");
-    var width = reader.GetRequiredAttributeParseable<uint>("width");
-    var height = reader.GetRequiredAttributeParseable<uint>("height");
+    var x = _reader.GetRequiredAttributeParseable<int>("x");
+    var y = _reader.GetRequiredAttributeParseable<int>("y");
+    var width = _reader.GetRequiredAttributeParseable<uint>("width");
+    var height = _reader.GetRequiredAttributeParseable<uint>("height");
 
     var usesTileChildrenInsteadOfRawData = encoding is null;
     if (usesTileChildrenInsteadOfRawData)
     {
-      var globalTileIDsWithFlippingFlags = ReadTileChildrenInWrapper("chunk", reader);
+      var globalTileIDsWithFlippingFlags = ReadTileChildrenInWrapper("chunk", _reader);
       var (globalTileIDs, flippingFlags) = ReadAndClearFlippingFlagsFromGIDs(globalTileIDsWithFlippingFlags);
       return new Chunk { X = x, Y = y, Width = width, Height = height, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
     }
     else
     {
-      var globalTileIDsWithFlippingFlags = ReadRawData(reader, encoding!.Value, compression);
+      var globalTileIDsWithFlippingFlags = ReadRawData(_reader, encoding!.Value, compression);
       var (globalTileIDs, flippingFlags) = ReadAndClearFlippingFlagsFromGIDs(globalTileIDsWithFlippingFlags);
       return new Chunk { X = x, Y = y, Width = width, Height = height, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
     }

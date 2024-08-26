@@ -8,17 +8,17 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 
-internal partial class Tmx
+public abstract partial class TmxReaderBase
 {
-  internal static Data ReadData(XmlReader reader, bool usesChunks)
+  internal Data ReadData(bool usesChunks)
   {
-    var encoding = reader.GetOptionalAttributeEnum<DataEncoding>("encoding", e => e switch
+    var encoding = _reader.GetOptionalAttributeEnum<DataEncoding>("encoding", e => e switch
     {
       "csv" => DataEncoding.Csv,
       "base64" => DataEncoding.Base64,
       _ => throw new XmlException("Invalid encoding")
     });
-    var compression = reader.GetOptionalAttributeEnum<DataCompression>("compression", c => c switch
+    var compression = _reader.GetOptionalAttributeEnum<DataCompression>("compression", c => c switch
     {
       "gzip" => DataCompression.GZip,
       "zlib" => DataCompression.ZLib,
@@ -28,8 +28,8 @@ internal partial class Tmx
 
     if (usesChunks)
     {
-      var chunks = reader
-        .ReadList("data", "chunk", (r) => ReadChunk(r, encoding, compression))
+      var chunks = _reader
+        .ReadList("data", "chunk", (r) => ReadChunk(encoding, compression))
         .ToArray();
       return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = null, Chunks = chunks };
     }
@@ -37,12 +37,12 @@ internal partial class Tmx
     var usesTileChildrenInsteadOfRawData = encoding is null && compression is null;
     if (usesTileChildrenInsteadOfRawData)
     {
-      var tileChildrenGlobalTileIDsWithFlippingFlags = ReadTileChildrenInWrapper("data", reader);
+      var tileChildrenGlobalTileIDsWithFlippingFlags = ReadTileChildrenInWrapper("data", _reader);
       var (tileChildrenGlobalTileIDs, tileChildrenFlippingFlags) = ReadAndClearFlippingFlagsFromGIDs(tileChildrenGlobalTileIDsWithFlippingFlags);
       return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = tileChildrenGlobalTileIDs, FlippingFlags = tileChildrenFlippingFlags, Chunks = null };
     }
 
-    var rawDataGlobalTileIDsWithFlippingFlags = ReadRawData(reader, encoding!.Value, compression);
+    var rawDataGlobalTileIDsWithFlippingFlags = ReadRawData(_reader, encoding!.Value, compression);
     var (rawDataGlobalTileIDs, rawDataFlippingFlags) = ReadAndClearFlippingFlagsFromGIDs(rawDataGlobalTileIDsWithFlippingFlags);
     return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = rawDataGlobalTileIDs, FlippingFlags = rawDataFlippingFlags, Chunks = null };
   }

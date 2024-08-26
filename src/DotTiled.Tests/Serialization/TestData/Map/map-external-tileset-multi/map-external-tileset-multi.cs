@@ -49,16 +49,15 @@ public partial class TestData
           Width = 1,
           Height = 1
         },
-        Properties = new Dictionary<string, IProperty>
-        {
-          ["tilesetbool"] = new BoolProperty { Name = "tilesetbool", Value = true },
-          ["tilesetcolor"] = new ColorProperty { Name = "tilesetcolor", Value = Color.Parse("#ffff0000", CultureInfo.InvariantCulture) },
-          ["tilesetfile"] = new FileProperty { Name = "tilesetfile", Value = "" },
-          ["tilesetfloat"] = new FloatProperty { Name = "tilesetfloat", Value = 5.2f },
-          ["tilesetint"] = new IntProperty { Name = "tilesetint", Value = 9 },
-          ["tilesetobject"] = new ObjectProperty { Name = "tilesetobject", Value = 0 },
-          ["tilesetstring"] = new StringProperty { Name = "tilesetstring", Value = "hello world!" }
-        },
+        Properties = [
+          new BoolProperty { Name = "tilesetbool", Value = true },
+          new ColorProperty { Name = "tilesetcolor", Value = Color.Parse("#ffff0000", CultureInfo.InvariantCulture) },
+          new FileProperty { Name = "tilesetfile", Value = "" },
+          new FloatProperty { Name = "tilesetfloat", Value = 5.2f },
+          new IntProperty { Name = "tilesetint", Value = 9 },
+          new ObjectProperty { Name = "tilesetobject", Value = 0 },
+          new StringProperty { Name = "tilesetstring", Value = "hello world!" }
+        ],
         Tiles = [
           new Tile
           {

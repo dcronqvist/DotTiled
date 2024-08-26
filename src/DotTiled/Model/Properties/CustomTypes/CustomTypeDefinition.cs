@@ -3,7 +3,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Base class for custom type definitions.
 /// </summary>
-public abstract class CustomTypeDefinition
+public interface ICustomTypeDefinition
 {
   /// <summary>
   /// The ID of the custom type.
@@ -13,5 +13,5 @@ public abstract class CustomTypeDefinition
   /// <summary>
   /// The name of the custom type.
   /// </summary>
-  public string Name { get; set; } = "";
+  public string Name { get; set; }
 }

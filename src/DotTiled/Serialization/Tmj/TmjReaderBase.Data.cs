@@ -5,7 +5,7 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
-internal partial class Tmj
+public abstract partial class TmjReaderBase
 {
   internal static Data ReadDataAsChunks(JsonElement element, DataCompression? compression, DataEncoding encoding)
   {

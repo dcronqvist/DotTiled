@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
@@ -7,12 +6,9 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
-internal partial class Tmj
+public abstract partial class TmjReaderBase
 {
-  internal static ObjectLayer ReadObjectLayer(
-      JsonElement element,
-      Func<string, Template> externalTemplateResolver,
-      IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  internal ObjectLayer ReadObjectLayer(JsonElement element)
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
@@ -24,7 +20,7 @@ internal partial class Tmj
     var offsetY = element.GetOptionalProperty<float>("offsety", 0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx", 1.0f);
     var parallaxY = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, []);
 
     var x = element.GetOptionalProperty<uint>("x", 0);
     var y = element.GetOptionalProperty<uint>("y", 0);
@@ -38,7 +34,7 @@ internal partial class Tmj
       _ => throw new JsonException($"Unknown draw order '{s}'.")
     }, DrawOrder.TopDown);
 
-    var objects = element.GetOptionalPropertyCustom<List<Model.Object>>("objects", e => e.GetValueAsList<Model.Object>(el => ReadObject(el, externalTemplateResolver, customTypeDefinitions)), []);
+    var objects = element.GetOptionalPropertyCustom<List<Model.Object>>("objects", e => e.GetValueAsList<Model.Object>(el => ReadObject(el)), []);
 
     return new ObjectLayer
     {
@@ -63,10 +59,7 @@ internal partial class Tmj
     };
   }
 
-  internal static Model.Object ReadObject(
-    JsonElement element,
-    Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  internal Model.Object ReadObject(JsonElement element)
   {
     uint? idDefault = null;
     string nameDefault = "";
@@ -82,12 +75,12 @@ internal partial class Tmj
     bool pointDefault = false;
     List<Vector2>? polygonDefault = null;
     List<Vector2>? polylineDefault = null;
-    Dictionary<string, IProperty>? propertiesDefault = null;
+    List<IProperty> propertiesDefault = [];
 
     var template = element.GetOptionalProperty<string?>("template", null);
     if (template is not null)
     {
-      var resolvedTemplate = externalTemplateResolver(template);
+      var resolvedTemplate = _externalTemplateResolver(template);
       var templObj = resolvedTemplate.Object;
 
       idDefault = templObj.ID;
@@ -114,7 +107,7 @@ internal partial class Tmj
     var point = element.GetOptionalProperty<bool>("point", pointDefault);
     var polygon = element.GetOptionalPropertyCustom<List<Vector2>?>("polygon", ReadPoints, polygonDefault);
     var polyline = element.GetOptionalPropertyCustom<List<Vector2>?>("polyline", ReadPoints, polylineDefault);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), propertiesDefault);
+    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, propertiesDefault);
     var rotation = element.GetOptionalProperty<float>("rotation", rotationDefault);
     var text = element.GetOptionalPropertyCustom<TextObject?>("text", ReadText, null);
     var type = element.GetOptionalProperty<string>("type", typeDefault);

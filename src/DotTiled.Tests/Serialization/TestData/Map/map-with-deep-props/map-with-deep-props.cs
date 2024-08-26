@@ -5,7 +5,7 @@ namespace DotTiled.Tests;
 
 public partial class TestData
 {
-  public static Map MapWithCustomTypeProps() => new Map
+  public static Map MapWithDeepProps() => new Map
   {
     Class = "",
     Orientation = MapOrientation.Orthogonal,
@@ -58,47 +58,50 @@ public partial class TestData
     Properties = [
       new ClassProperty
       {
-        Name = "customclassprop",
-        PropertyType = "CustomClass",
+        Name = "customouterclassprop",
+        PropertyType = "CustomOuterClass",
         Value = [
-          new BoolProperty { Name = "boolinclass", Value = true },
-          new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
-          new FileProperty { Name = "fileinclass", Value = "" },
-          new FloatProperty { Name = "floatinclass", Value = 13.37f },
-          new IntProperty { Name = "intinclass", Value = 0 },
-          new ObjectProperty { Name = "objectinclass", Value = 0 },
-          new StringProperty { Name = "stringinclass", Value = "This is a set string" }
+          new ClassProperty
+          {
+            Name = "customclasspropinclass",
+            PropertyType = "CustomClass",
+            Value = [
+              new BoolProperty { Name = "boolinclass", Value = false },
+              new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
+              new FileProperty { Name = "fileinclass", Value = "" },
+              new FloatProperty { Name = "floatinclass", Value = 0f },
+              new IntProperty { Name = "intinclass", Value = 0 },
+              new ObjectProperty { Name = "objectinclass", Value = 0 },
+              new StringProperty { Name = "stringinclass", Value = "" }
+            ]
+          }
         ]
       },
-      new EnumProperty
+      new ClassProperty
       {
-        Name = "customenumstringprop",
-        PropertyType = "CustomEnumString",
-        Value = new HashSet<string> { "CustomEnumString_2" }
-      },
-      new EnumProperty
-      {
-        Name = "customenumstringflagsprop",
-        PropertyType = "CustomEnumStringFlags",
-        Value = new HashSet<string> { "CustomEnumStringFlags_1", "CustomEnumStringFlags_2" }
-      },
-      new EnumProperty
-      {
-        Name = "customenumintprop",
-        PropertyType = "CustomEnumInt",
-        Value = new HashSet<string> { "CustomEnumInt_4" }
-      },
-      new EnumProperty
-      {
-        Name = "customenumintflagsprop",
-        PropertyType = "CustomEnumIntFlags",
-        Value = new HashSet<string> { "CustomEnumIntFlags_2", "CustomEnumIntFlags_3" }
+        Name = "customouterclasspropset",
+        PropertyType = "CustomOuterClass",
+        Value = [
+          new ClassProperty
+          {
+            Name = "customclasspropinclass",
+            PropertyType = "CustomClass",
+            Value = [
+              new BoolProperty { Name = "boolinclass", Value = true },
+              new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
+              new FileProperty { Name = "fileinclass", Value = "" },
+              new FloatProperty { Name = "floatinclass", Value = 13.37f },
+              new IntProperty { Name = "intinclass", Value = 0 },
+              new ObjectProperty { Name = "objectinclass", Value = 0 },
+              new StringProperty { Name = "stringinclass", Value = "" }
+            ]
+          }
+        ]
       }
     ]
   };
 
-  // This comes from map-with-custom-type-props/propertytypes.json
-  public static IReadOnlyCollection<ICustomTypeDefinition> MapWithCustomTypePropsCustomTypeDefinitions() => [
+  public static IReadOnlyCollection<ICustomTypeDefinition> MapWithDeepPropsCustomTypeDefinitions() => [
     new CustomClassDefinition
     {
       Name = "CustomClass",
@@ -141,48 +144,17 @@ public partial class TestData
         }
       ]
     },
-    new CustomEnumDefinition
+    new CustomClassDefinition
     {
-      Name = "CustomEnumString",
-      StorageType = CustomEnumStorageType.String,
-      ValueAsFlags = false,
-      Values = [
-        "CustomEnumString_1",
-        "CustomEnumString_2",
-        "CustomEnumString_3"
-      ]
-    },
-    new CustomEnumDefinition
-    {
-      Name = "CustomEnumStringFlags",
-      StorageType = CustomEnumStorageType.String,
-      ValueAsFlags = true,
-      Values = [
-        "CustomEnumStringFlags_1",
-        "CustomEnumStringFlags_2"
-      ]
-    },
-    new CustomEnumDefinition
-    {
-      Name = "CustomEnumInt",
-      StorageType = CustomEnumStorageType.Int,
-      ValueAsFlags = false,
-      Values = [
-        "CustomEnumInt_1",
-        "CustomEnumInt_2",
-        "CustomEnumInt_3",
-        "CustomEnumInt_4",
-      ]
-    },
-    new CustomEnumDefinition
-    {
-      Name = "CustomEnumIntFlags",
-      StorageType = CustomEnumStorageType.Int,
-      ValueAsFlags = true,
-      Values = [
-        "CustomEnumIntFlags_1",
-        "CustomEnumIntFlags_2",
-        "CustomEnumIntFlags_3"
+      Name = "CustomOuterClass",
+      UseAs = CustomClassUseAs.Property,
+      Members = [
+        new ClassProperty
+        {
+          Name = "customclasspropinclass",
+          PropertyType = "CustomClass",
+          Value = [] // So no overrides of defaults in CustomClass
+        }
       ]
     }
   ];

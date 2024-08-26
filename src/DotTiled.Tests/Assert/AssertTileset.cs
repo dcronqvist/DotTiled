@@ -141,9 +141,9 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Height, actual.Height, nameof(Tile.Height));
 
     // Elements
-    AssertProperties(actual.Properties, expected.Properties);
-    AssertImage(actual.Image, expected.Image);
-    AssertLayer((BaseLayer?)actual.ObjectLayer, (BaseLayer?)expected.ObjectLayer);
+    AssertProperties(expected.Properties, actual.Properties);
+    AssertImage(expected.Image, actual.Image);
+    AssertLayer((BaseLayer?)expected.ObjectLayer, (BaseLayer?)actual.ObjectLayer);
     if (expected.Animation is not null)
     {
       Assert.NotNull(actual.Animation);

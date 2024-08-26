@@ -3,7 +3,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Represents a boolean property.
 /// </summary>
-public class BoolProperty : IProperty
+public class BoolProperty : IProperty<bool>
 {
   /// <inheritdoc/>
   public required string Name { get; set; }

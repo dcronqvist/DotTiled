@@ -5,11 +5,9 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
-internal partial class Tmj
+public abstract partial class TmjReaderBase
 {
-  internal static ImageLayer ReadImageLayer(
-    JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  internal Group ReadGroup(JsonElement element)
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
@@ -21,25 +19,10 @@ internal partial class Tmj
     var offsetY = element.GetOptionalProperty<float>("offsety", 0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx", 1.0f);
     var parallaxY = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, []);
+    var layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(ReadLayer), []);
 
-    var image = element.GetRequiredProperty<string>("image");
-    var repeatX = element.GetOptionalProperty<bool>("repeatx", false);
-    var repeatY = element.GetOptionalProperty<bool>("repeaty", false);
-    var transparentColor = element.GetOptionalPropertyParseable<Color?>("transparentcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
-    var x = element.GetOptionalProperty<uint>("x", 0);
-    var y = element.GetOptionalProperty<uint>("y", 0);
-
-    var imgModel = new Image
-    {
-      Format = Helpers.ParseImageFormatFromSource(image),
-      Height = 0,
-      Width = 0,
-      Source = image,
-      TransparentColor = transparentColor
-    };
-
-    return new ImageLayer
+    return new Group
     {
       ID = id,
       Name = name,
@@ -52,11 +35,7 @@ internal partial class Tmj
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
       Properties = properties,
-      Image = imgModel,
-      RepeatX = repeatX,
-      RepeatY = repeatY,
-      X = x,
-      Y = y
+      Layers = layers
     };
   }
 }

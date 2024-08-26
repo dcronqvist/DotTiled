@@ -32,6 +32,30 @@
              "floatinclass":13.37,
              "stringinclass":"This is a set string"
             }
+        }, 
+        {
+         "name":"customenumintflagsprop",
+         "propertytype":"CustomEnumIntFlags",
+         "type":"int",
+         "value":6
+        }, 
+        {
+         "name":"customenumintprop",
+         "propertytype":"CustomEnumInt",
+         "type":"int",
+         "value":3
+        }, 
+        {
+         "name":"customenumstringflagsprop",
+         "propertytype":"CustomEnumStringFlags",
+         "type":"string",
+         "value":"CustomEnumStringFlags_1,CustomEnumStringFlags_2"
+        }, 
+        {
+         "name":"customenumstringprop",
+         "propertytype":"CustomEnumString",
+         "type":"string",
+         "value":"CustomEnumString_2"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.11.0",

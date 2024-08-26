@@ -39,7 +39,7 @@ namespace DotTiled.Benchmark
     {
       using var stringReader = new StringReader(_tmxContents);
       using var xmlReader = XmlReader.Create(stringReader);
-      using var mapReader = new DotTiled.Serialization.Tmx.TmxMapReader(xmlReader, _ => throw new NotSupportedException(), _ => throw new NotSupportedException(), []);
+      using var mapReader = new DotTiled.Serialization.Tmx.TmxMapReader(xmlReader, _ => throw new NotSupportedException(), _ => throw new NotSupportedException(), _ => throw new NotSupportedException());
       return mapReader.ReadMap();
     }
 
@@ -47,7 +47,7 @@ namespace DotTiled.Benchmark
     [Benchmark(Baseline = true, Description = "DotTiled")]
     public DotTiled.Model.Map LoadWithDotTiledFromInMemoryTmjString()
     {
-      using var mapReader = new DotTiled.Serialization.Tmj.TmjMapReader(_tmjContents, _ => throw new NotSupportedException(), _ => throw new NotSupportedException(), []);
+      using var mapReader = new DotTiled.Serialization.Tmj.TmjMapReader(_tmjContents, _ => throw new NotSupportedException(), _ => throw new NotSupportedException(), _ => throw new NotSupportedException());
       return mapReader.ReadMap();
     }
 

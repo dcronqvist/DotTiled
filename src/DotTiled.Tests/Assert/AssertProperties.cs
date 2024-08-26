@@ -4,7 +4,7 @@ namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertProperties(Dictionary<string, IProperty>? expected, Dictionary<string, IProperty>? actual)
+  internal static void AssertProperties(IList<IProperty>? expected, IList<IProperty>? actual)
   {
     if (expected is null)
     {
@@ -14,18 +14,16 @@ public static partial class DotTiledAssert
 
     Assert.NotNull(actual);
     AssertEqual(expected.Count, actual.Count, "Properties.Count");
-    foreach (var kvp in expected)
+    foreach (var prop in expected)
     {
-      Assert.Contains(kvp.Key, actual.Keys);
-      AssertProperty((dynamic)kvp.Value, (dynamic)actual[kvp.Key]);
-    }
-  }
+      Assert.Contains(actual, p => p.Name == prop.Name);
 
-  private static void AssertProperty(IProperty expected, IProperty actual)
-  {
-    AssertEqual(expected.Type, actual.Type, "Property.Type");
-    AssertEqual(expected.Name, actual.Name, "Property.Name");
-    AssertProperties((dynamic)actual, (dynamic)expected);
+      var actualProp = actual.First(p => p.Name == prop.Name);
+      AssertEqual(prop.Type, actualProp.Type, "Property.Type");
+      AssertEqual(prop.Name, actualProp.Name, "Property.Name");
+
+      AssertProperty((dynamic)prop, (dynamic)actualProp);
+    }
   }
 
   private static void AssertProperty(StringProperty expected, StringProperty actual) => AssertEqual(expected.Value, actual.Value, "StringProperty.Value");
@@ -45,6 +43,16 @@ public static partial class DotTiledAssert
   private static void AssertProperty(ClassProperty expected, ClassProperty actual)
   {
     AssertEqual(expected.PropertyType, actual.PropertyType, "ClassProperty.PropertyType");
-    AssertProperties(expected.Properties, actual.Properties);
+    AssertProperties(expected.Value, actual.Value);
+  }
+
+  private static void AssertProperty(EnumProperty expected, EnumProperty actual)
+  {
+    AssertEqual(expected.PropertyType, actual.PropertyType, "EnumProperty.PropertyType");
+    AssertEqual(expected.Value.Count, actual.Value.Count, "EnumProperty.Value.Count");
+    foreach (var value in expected.Value)
+    {
+      Assert.Contains(actual.Value, v => v == value);
+    }
   }
 }

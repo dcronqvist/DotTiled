@@ -3,35 +3,31 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Xml;
 using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 
-internal partial class Tmx
+public abstract partial class TmxReaderBase
 {
-  internal static ObjectLayer ReadObjectLayer(
-    XmlReader reader,
-    Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  internal ObjectLayer ReadObjectLayer()
   {
     // Attributes
-    var id = reader.GetRequiredAttributeParseable<uint>("id");
-    var name = reader.GetOptionalAttribute("name") ?? "";
-    var @class = reader.GetOptionalAttribute("class") ?? "";
-    var x = reader.GetOptionalAttributeParseable<uint>("x") ?? 0;
-    var y = reader.GetOptionalAttributeParseable<uint>("y") ?? 0;
-    var width = reader.GetOptionalAttributeParseable<uint>("width");
-    var height = reader.GetOptionalAttributeParseable<uint>("height");
-    var opacity = reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
-    var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
-    var tintColor = reader.GetOptionalAttributeClass<Color>("tintcolor");
-    var offsetX = reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
-    var offsetY = reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
-    var parallaxX = reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
-    var parallaxY = reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
-    var color = reader.GetOptionalAttributeClass<Color>("color");
-    var drawOrder = reader.GetOptionalAttributeEnum<DrawOrder>("draworder", s => s switch
+    var id = _reader.GetRequiredAttributeParseable<uint>("id");
+    var name = _reader.GetOptionalAttribute("name") ?? "";
+    var @class = _reader.GetOptionalAttribute("class") ?? "";
+    var x = _reader.GetOptionalAttributeParseable<uint>("x") ?? 0;
+    var y = _reader.GetOptionalAttributeParseable<uint>("y") ?? 0;
+    var width = _reader.GetOptionalAttributeParseable<uint>("width");
+    var height = _reader.GetOptionalAttributeParseable<uint>("height");
+    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
+    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
+    var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
+    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
+    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
+    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
+    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
+    var color = _reader.GetOptionalAttributeClass<Color>("color");
+    var drawOrder = _reader.GetOptionalAttributeEnum<DrawOrder>("draworder", s => s switch
     {
       "topdown" => DrawOrder.TopDown,
       "index" => DrawOrder.Index,
@@ -39,13 +35,13 @@ internal partial class Tmx
     }) ?? DrawOrder.TopDown;
 
     // Elements
-    Dictionary<string, IProperty>? properties = null;
+    List<IProperty>? properties = null;
     List<Model.Object> objects = [];
 
-    reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
+    _reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(r, customTypeDefinitions), "Properties"),
-      "object" => () => objects.Add(ReadObject(r, externalTemplateResolver, customTypeDefinitions)),
+      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "object" => () => objects.Add(ReadObject()),
       _ => r.Skip
     });
 
@@ -66,22 +62,19 @@ internal partial class Tmx
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
       Color = color,
-      Properties = properties,
+      Properties = properties ?? [],
       DrawOrder = drawOrder,
       Objects = objects
     };
   }
 
-  internal static Model.Object ReadObject(
-    XmlReader reader,
-    Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  internal Model.Object ReadObject()
   {
     // Attributes
-    var template = reader.GetOptionalAttribute("template");
+    var template = _reader.GetOptionalAttribute("template");
     Model.Object? obj = null;
     if (template is not null)
-      obj = externalTemplateResolver(template).Object;
+      obj = _externalTemplateResolver(template).Object;
 
     uint? idDefault = obj?.ID ?? null;
     string nameDefault = obj?.Name ?? "";
@@ -93,32 +86,32 @@ internal partial class Tmx
     float rotationDefault = obj?.Rotation ?? 0f;
     uint? gidDefault = obj is TileObject tileObj ? tileObj.GID : null;
     bool visibleDefault = obj?.Visible ?? true;
-    Dictionary<string, IProperty>? propertiesDefault = obj?.Properties ?? null;
+    List<IProperty>? propertiesDefault = obj?.Properties ?? null;
 
-    var id = reader.GetOptionalAttributeParseable<uint>("id") ?? idDefault;
-    var name = reader.GetOptionalAttribute("name") ?? nameDefault;
-    var type = reader.GetOptionalAttribute("type") ?? typeDefault;
-    var x = reader.GetOptionalAttributeParseable<float>("x") ?? xDefault;
-    var y = reader.GetOptionalAttributeParseable<float>("y") ?? yDefault;
-    var width = reader.GetOptionalAttributeParseable<float>("width") ?? widthDefault;
-    var height = reader.GetOptionalAttributeParseable<float>("height") ?? heightDefault;
-    var rotation = reader.GetOptionalAttributeParseable<float>("rotation") ?? rotationDefault;
-    var gid = reader.GetOptionalAttributeParseable<uint>("gid") ?? gidDefault;
-    var visible = reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
+    var id = _reader.GetOptionalAttributeParseable<uint>("id") ?? idDefault;
+    var name = _reader.GetOptionalAttribute("name") ?? nameDefault;
+    var type = _reader.GetOptionalAttribute("type") ?? typeDefault;
+    var x = _reader.GetOptionalAttributeParseable<float>("x") ?? xDefault;
+    var y = _reader.GetOptionalAttributeParseable<float>("y") ?? yDefault;
+    var width = _reader.GetOptionalAttributeParseable<float>("width") ?? widthDefault;
+    var height = _reader.GetOptionalAttributeParseable<float>("height") ?? heightDefault;
+    var rotation = _reader.GetOptionalAttributeParseable<float>("rotation") ?? rotationDefault;
+    var gid = _reader.GetOptionalAttributeParseable<uint>("gid") ?? gidDefault;
+    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
 
     // Elements
     Model.Object? foundObject = null;
     int propertiesCounter = 0;
-    Dictionary<string, IProperty>? properties = propertiesDefault;
+    List<IProperty>? properties = propertiesDefault;
 
-    reader.ProcessChildren("object", (r, elementName) => elementName switch
+    _reader.ProcessChildren("object", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties(r, customTypeDefinitions)), "Properties", ref propertiesCounter),
-      "ellipse" => () => Helpers.SetAtMostOnce(ref foundObject, ReadEllipseObject(r), "Object marker"),
-      "point" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPointObject(r), "Object marker"),
-      "polygon" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolygonObject(r), "Object marker"),
-      "polyline" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolylineObject(r), "Object marker"),
-      "text" => () => Helpers.SetAtMostOnce(ref foundObject, ReadTextObject(r), "Object marker"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
+      "ellipse" => () => Helpers.SetAtMostOnce(ref foundObject, ReadEllipseObject(), "Object marker"),
+      "point" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPointObject(), "Object marker"),
+      "polygon" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolygonObject(), "Object marker"),
+      "polyline" => () => Helpers.SetAtMostOnce(ref foundObject, ReadPolylineObject(), "Object marker"),
+      "text" => () => Helpers.SetAtMostOnce(ref foundObject, ReadTextObject(), "Object marker"),
       _ => throw new InvalidOperationException($"Unknown object marker '{elementName}'")
     });
 
@@ -139,7 +132,7 @@ internal partial class Tmx
     foundObject.Height = height;
     foundObject.Rotation = rotation;
     foundObject.Visible = visible;
-    foundObject.Properties = properties;
+    foundObject.Properties = properties ?? [];
     foundObject.Template = template;
 
     return OverrideObject(obj, foundObject);
@@ -161,7 +154,7 @@ internal partial class Tmx
       obj.Height = foundObject.Height;
       obj.Rotation = foundObject.Rotation;
       obj.Visible = foundObject.Visible;
-      obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties);
+      obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties).ToList();
       obj.Template = foundObject.Template;
       return obj;
     }
@@ -169,26 +162,26 @@ internal partial class Tmx
     return OverrideObject((dynamic)obj, (dynamic)foundObject);
   }
 
-  internal static EllipseObject ReadEllipseObject(XmlReader reader)
+  internal EllipseObject ReadEllipseObject()
   {
-    reader.Skip();
+    _reader.Skip();
     return new EllipseObject { };
   }
 
   internal static EllipseObject OverrideObject(EllipseObject obj, EllipseObject _) => obj;
 
-  internal static PointObject ReadPointObject(XmlReader reader)
+  internal PointObject ReadPointObject()
   {
-    reader.Skip();
+    _reader.Skip();
     return new PointObject { };
   }
 
   internal static PointObject OverrideObject(PointObject obj, PointObject _) => obj;
 
-  internal static PolygonObject ReadPolygonObject(XmlReader reader)
+  internal PolygonObject ReadPolygonObject()
   {
     // Attributes
-    var points = reader.GetRequiredAttributeParseable<List<Vector2>>("points", s =>
+    var points = _reader.GetRequiredAttributeParseable<List<Vector2>>("points", s =>
     {
       // Takes on format "x1,y1 x2,y2 x3,y3 ..."
       var coords = s.Split(' ');
@@ -199,7 +192,7 @@ internal partial class Tmx
       }).ToList();
     });
 
-    reader.ReadStartElement("polygon");
+    _reader.ReadStartElement("polygon");
     return new PolygonObject { Points = points };
   }
 
@@ -209,10 +202,10 @@ internal partial class Tmx
     return obj;
   }
 
-  internal static PolylineObject ReadPolylineObject(XmlReader reader)
+  internal PolylineObject ReadPolylineObject()
   {
     // Attributes
-    var points = reader.GetRequiredAttributeParseable<List<Vector2>>("points", s =>
+    var points = _reader.GetRequiredAttributeParseable<List<Vector2>>("points", s =>
     {
       // Takes on format "x1,y1 x2,y2 x3,y3 ..."
       var coords = s.Split(' ');
@@ -223,7 +216,7 @@ internal partial class Tmx
       }).ToList();
     });
 
-    reader.ReadStartElement("polyline");
+    _reader.ReadStartElement("polyline");
     return new PolylineObject { Points = points };
   }
 
@@ -233,19 +226,19 @@ internal partial class Tmx
     return obj;
   }
 
-  internal static TextObject ReadTextObject(XmlReader reader)
+  internal TextObject ReadTextObject()
   {
     // Attributes
-    var fontFamily = reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
-    var pixelSize = reader.GetOptionalAttributeParseable<int>("pixelsize") ?? 16;
-    var wrap = reader.GetOptionalAttributeParseable<bool>("wrap") ?? false;
-    var color = reader.GetOptionalAttributeClass<Color>("color") ?? Color.Parse("#000000", CultureInfo.InvariantCulture);
-    var bold = reader.GetOptionalAttributeParseable<bool>("bold") ?? false;
-    var italic = reader.GetOptionalAttributeParseable<bool>("italic") ?? false;
-    var underline = reader.GetOptionalAttributeParseable<bool>("underline") ?? false;
-    var strikeout = reader.GetOptionalAttributeParseable<bool>("strikeout") ?? false;
-    var kerning = reader.GetOptionalAttributeParseable<bool>("kerning") ?? true;
-    var hAlign = reader.GetOptionalAttributeEnum<TextHorizontalAlignment>("halign", s => s switch
+    var fontFamily = _reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
+    var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize") ?? 16;
+    var wrap = _reader.GetOptionalAttributeParseable<bool>("wrap") ?? false;
+    var color = _reader.GetOptionalAttributeClass<Color>("color") ?? Color.Parse("#000000", CultureInfo.InvariantCulture);
+    var bold = _reader.GetOptionalAttributeParseable<bool>("bold") ?? false;
+    var italic = _reader.GetOptionalAttributeParseable<bool>("italic") ?? false;
+    var underline = _reader.GetOptionalAttributeParseable<bool>("underline") ?? false;
+    var strikeout = _reader.GetOptionalAttributeParseable<bool>("strikeout") ?? false;
+    var kerning = _reader.GetOptionalAttributeParseable<bool>("kerning") ?? true;
+    var hAlign = _reader.GetOptionalAttributeEnum<TextHorizontalAlignment>("halign", s => s switch
     {
       "left" => TextHorizontalAlignment.Left,
       "center" => TextHorizontalAlignment.Center,
@@ -253,7 +246,7 @@ internal partial class Tmx
       "justify" => TextHorizontalAlignment.Justify,
       _ => throw new InvalidOperationException($"Unknown horizontal alignment '{s}'")
     }) ?? TextHorizontalAlignment.Left;
-    var vAlign = reader.GetOptionalAttributeEnum<TextVerticalAlignment>("valign", s => s switch
+    var vAlign = _reader.GetOptionalAttributeEnum<TextVerticalAlignment>("valign", s => s switch
     {
       "top" => TextVerticalAlignment.Top,
       "center" => TextVerticalAlignment.Center,
@@ -262,7 +255,7 @@ internal partial class Tmx
     }) ?? TextVerticalAlignment.Top;
 
     // Elements
-    var text = reader.ReadElementContentAsString("text", "");
+    var text = _reader.ReadElementContentAsString("text", "");
 
     return new TextObject
     {
@@ -304,11 +297,7 @@ internal partial class Tmx
     return obj;
   }
 
-  internal static Template ReadTemplate(
-    XmlReader reader,
-    Func<string, Tileset> externalTilesetResolver,
-    Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  internal Template ReadTemplate()
   {
     // No attributes
 
@@ -318,10 +307,10 @@ internal partial class Tmx
     // Should contain exactly one of
     Model.Object? obj = null;
 
-    reader.ProcessChildren("template", (r, elementName) => elementName switch
+    _reader.ProcessChildren("template", (r, elementName) => elementName switch
     {
-      "tileset" => () => Helpers.SetAtMostOnce(ref tileset, ReadTileset(r, externalTilesetResolver, externalTemplateResolver, customTypeDefinitions), "Tileset"),
-      "object" => () => Helpers.SetAtMostOnce(ref obj, ReadObject(r, externalTemplateResolver, customTypeDefinitions), "Object"),
+      "tileset" => () => Helpers.SetAtMostOnce(ref tileset, ReadTileset(), "Tileset"),
+      "object" => () => Helpers.SetAtMostOnce(ref obj, ReadObject(), "Object"),
       _ => r.Skip
     });
 

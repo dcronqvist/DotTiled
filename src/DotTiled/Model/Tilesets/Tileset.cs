@@ -8,7 +8,7 @@ namespace DotTiled.Model;
 public enum ObjectAlignment
 {
   /// <summary>
-  /// The alignment is unspecified. Tile objects will use <see cref="BottomLeft"/> in orthogonal maps, and <see cref="Bottom"/> in isometric maps. 
+  /// The alignment is unspecified. Tile objects will use <see cref="BottomLeft"/> in orthogonal maps, and <see cref="Bottom"/> in isometric maps.
   /// </summary>
   Unspecified,
 
@@ -93,7 +93,7 @@ public enum FillMode
 /// <summary>
 /// A tileset is a collection of tiles that can be used in a tile layer, or by tile objects.
 /// </summary>
-public class Tileset
+public class Tileset : HasPropertiesBase
 {
   /// <summary>
   /// The TMX format version. Is incremented to match minor Tiled releases.
@@ -161,7 +161,7 @@ public class Tileset
   public ObjectAlignment ObjectAlignment { get; set; } = ObjectAlignment.Unspecified;
 
   /// <summary>
-  /// The size to use when rendering tiles from thie tileset on a tile layer. When set to <see cref="TileRenderSize.Grid"/>, the tile is drawn at the tile grid size of the map. 
+  /// The size to use when rendering tiles from thie tileset on a tile layer. When set to <see cref="TileRenderSize.Grid"/>, the tile is drawn at the tile grid size of the map.
   /// </summary>
   public TileRenderSize RenderSize { get; set; } = TileRenderSize.Tile;
 
@@ -188,7 +188,10 @@ public class Tileset
   /// <summary>
   /// Tileset properties.
   /// </summary>
-  public Dictionary<string, IProperty>? Properties { get; set; }
+  public List<IProperty> Properties { get; set; } = [];
+
+  /// <inheritdoc/>
+  public override IList<IProperty> GetProperties() => Properties;
 
   // public List<Terrain>? TerrainTypes { get; set; } TODO: Implement Terrain -> Wangset conversion during deserialization
 

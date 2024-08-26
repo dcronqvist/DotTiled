@@ -3,7 +3,7 @@ namespace DotTiled.Model;
 /// <summary>
 /// Represents a float property.
 /// </summary>
-public class FloatProperty : IProperty
+public class FloatProperty : IProperty<float>
 {
   /// <inheritdoc/>
   public required string Name { get; set; }

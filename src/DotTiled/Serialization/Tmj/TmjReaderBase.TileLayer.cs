@@ -1,15 +1,12 @@
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
-internal partial class Tmj
+public abstract partial class TmjReaderBase
 {
-  internal static TileLayer ReadTileLayer(
-    JsonElement element,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+  internal TileLayer ReadTileLayer(JsonElement element)
   {
     var compression = element.GetOptionalPropertyParseable<DataCompression?>("compression", s => s switch
     {
@@ -35,7 +32,7 @@ internal partial class Tmj
     var opacity = element.GetOptionalProperty<float>("opacity", 1.0f);
     var parallaxx = element.GetOptionalProperty<float>("parallaxx", 1.0f);
     var parallaxy = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom<Dictionary<string, IProperty>?>("properties", e => ReadProperties(e, customTypeDefinitions), null);
+    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, []);
     var repeatX = element.GetOptionalProperty<bool>("repeatx", false);
     var repeatY = element.GetOptionalProperty<bool>("repeaty", false);
     var startX = element.GetOptionalProperty<int>("startx", 0);
