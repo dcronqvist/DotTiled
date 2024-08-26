@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
@@ -6,12 +5,9 @@ using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
-internal partial class Tmj
+public abstract partial class TmjReaderBase
 {
-  internal static Group ReadGroup(
-    JsonElement element,
-    Func<string, Template> externalTemplateResolver,
-    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
+  internal Group ReadGroup(JsonElement element)
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
@@ -23,8 +19,8 @@ internal partial class Tmj
     var offsetY = element.GetOptionalProperty<float>("offsety", 0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx", 1.0f);
     var parallaxY = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom("properties", e => ReadProperties(e, customTypeDefinitions), []);
-    var layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(el => ReadLayer(el, externalTemplateResolver, customTypeDefinitions)), []);
+    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, []);
+    var layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(ReadLayer), []);
 
     return new Group
     {

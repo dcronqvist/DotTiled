@@ -73,8 +73,25 @@ internal static partial class Helpers
     };
   }
 
-  internal static List<IProperty> CreateInstanceOfCustomClass(CustomClassDefinition customClassDefinition) =>
-    customClassDefinition.Members.Select(x => x.Clone()).ToList();
+  internal static List<IProperty> CreateInstanceOfCustomClass(
+    CustomClassDefinition customClassDefinition,
+    Func<string, ICustomTypeDefinition> customTypeResolver)
+  {
+    return customClassDefinition.Members.Select(x =>
+    {
+      if (x is ClassProperty cp)
+      {
+        return new ClassProperty
+        {
+          Name = cp.Name,
+          PropertyType = cp.PropertyType,
+          Value = CreateInstanceOfCustomClass((CustomClassDefinition)customTypeResolver(cp.PropertyType), customTypeResolver)
+        };
+      }
+
+      return x.Clone();
+    }).ToList();
+  }
 
   internal static IList<IProperty> MergeProperties(IList<IProperty>? baseProperties, IList<IProperty>? overrideProperties)
   {

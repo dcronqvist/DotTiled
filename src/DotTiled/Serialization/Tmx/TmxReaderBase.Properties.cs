@@ -9,6 +9,9 @@ public abstract partial class TmxReaderBase
 {
   internal List<IProperty> ReadProperties()
   {
+    if (!_reader.IsStartElement("properties"))
+      return [];
+
     return _reader.ReadList("properties", "property", (r) =>
     {
       var name = r.GetRequiredAttribute("name");
@@ -39,7 +42,8 @@ public abstract partial class TmxReaderBase
         PropertyType.Color => new ColorProperty { Name = name, Value = r.GetRequiredAttributeParseable<Color>("value") },
         PropertyType.File => new FileProperty { Name = name, Value = r.GetRequiredAttribute("value") },
         PropertyType.Object => new ObjectProperty { Name = name, Value = r.GetRequiredAttributeParseable<uint>("value") },
-        PropertyType.Class => ReadClassProperty(),
+        PropertyType.Class => throw new XmlException("Class property must have a property type"),
+        PropertyType.Enum => throw new XmlException("Enum property must have a property type"),
         _ => throw new XmlException("Invalid property type")
       };
       return property;
@@ -49,7 +53,6 @@ public abstract partial class TmxReaderBase
   internal IProperty ReadPropertyWithCustomType()
   {
     var isClass = _reader.GetOptionalAttribute("type") == "class";
-
     if (isClass)
     {
       return ReadClassProperty();
@@ -62,17 +65,24 @@ public abstract partial class TmxReaderBase
   {
     var name = _reader.GetRequiredAttribute("name");
     var propertyType = _reader.GetRequiredAttribute("propertytype");
-
     var customTypeDef = _customTypeResolver(propertyType);
+
     if (customTypeDef is CustomClassDefinition ccd)
     {
-      _reader.ReadStartElement("property");
-      var propsInType = Helpers.CreateInstanceOfCustomClass(ccd);
-      var props = ReadProperties();
-      var mergedProps = Helpers.MergeProperties(propsInType, props);
-
-      _reader.ReadEndElement();
-      return new ClassProperty { Name = name, PropertyType = propertyType, Value = mergedProps };
+      if (!_reader.IsEmptyElement)
+      {
+        _reader.ReadStartElement("property");
+        var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
+        var props = ReadProperties();
+        var mergedProps = Helpers.MergeProperties(propsInType, props);
+        _reader.ReadEndElement();
+        return new ClassProperty { Name = name, PropertyType = propertyType, Value = mergedProps };
+      }
+      else
+      {
+        var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
+        return new ClassProperty { Name = name, PropertyType = propertyType, Value = propsInType };
+      }
     }
 
     throw new XmlException($"Unkonwn custom class definition: {propertyType}");

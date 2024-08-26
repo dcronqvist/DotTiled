@@ -1,15 +1,12 @@
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
-internal partial class Tmj
+public abstract partial class TmjReaderBase
 {
-  internal static ImageLayer ReadImageLayer(
-    JsonElement element,
-    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
+  internal ImageLayer ReadImageLayer(JsonElement element)
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
@@ -21,7 +18,7 @@ internal partial class Tmj
     var offsetY = element.GetOptionalProperty<float>("offsety", 0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx", 1.0f);
     var parallaxY = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom("properties", e => ReadProperties(e, customTypeDefinitions), []);
+    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, []);
 
     var image = element.GetRequiredProperty<string>("image");
     var repeatX = element.GetOptionalProperty<bool>("repeatx", false);
