@@ -6,4 +6,25 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>DotTiled</PackageId>
+    <Authors>dcronqvist</Authors>
+    <Title>DotTiled</Title>
+    <Description>DotTiled is a general-purpose Tiled map parser for all your .NET needs.</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/dcronqvist/DotTiled</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>gamedev;window;parser;tiled;mapeditor</PackageTags>
+    <PackageProjectUrl>https://github.com/dcronqvist/DotTiled</PackageProjectUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright © 2024 dcronqvist</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="" />
+    <None Include="../../LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+
 </Project>
