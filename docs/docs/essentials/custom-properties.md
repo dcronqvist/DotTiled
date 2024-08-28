@@ -78,7 +78,7 @@ Whenever DotTiled encounters a property that is of type `class` in a Tiled file,
 
 For example, if you have a `class` property in Tiled that looks like this:
 
-![MonsterSpawner class in Tiled UI](../images/monster-spawner-class.png)
+![MonsterSpawner class in Tiled UI](../../images/monster-spawner-class.png)
 
 The equivalent definition in DotTiled would look like the following:
 
@@ -102,7 +102,7 @@ Tiled also allows you to define custom property types that work as enums. Simila
 
 For example, if you have a custom property type in Tiled that looks like this:
 
-![EntityType enum in Tiled UI](../images/entity-type-enum.png)
+![EntityType enum in Tiled UI](../../images/entity-type-enum.png)
 
 The equivalent definition in DotTiled would look like the following:
 
