@@ -151,4 +151,6 @@ internal static partial class Helpers
     field = value;
     counter++;
   }
+
+  internal static bool StringIsXml(string s) => s.StartsWith("<?xml", StringComparison.InvariantCulture);
 }
