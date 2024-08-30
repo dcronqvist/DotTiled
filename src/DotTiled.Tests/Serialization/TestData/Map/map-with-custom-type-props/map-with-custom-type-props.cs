@@ -1,8 +1,4 @@
 using System.Globalization;
-using DotTiled.Model;
-using DotTiled.Model.Layers;
-using DotTiled.Model.Properties;
-using DotTiled.Model.Properties.CustomTypes;
 
 namespace DotTiled.Tests;
 
@@ -58,28 +54,50 @@ public partial class TestData
         }
       }
     ],
-    Properties = new Dictionary<string, IProperty>
-    {
-      ["customclassprop"] = new ClassProperty
+    Properties = [
+      new ClassProperty
       {
         Name = "customclassprop",
         PropertyType = "CustomClass",
-        Properties = new Dictionary<string, IProperty>
-        {
-          ["boolinclass"] = new BoolProperty { Name = "boolinclass", Value = true },
-          ["colorinclass"] = new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
-          ["fileinclass"] = new FileProperty { Name = "fileinclass", Value = "" },
-          ["floatinclass"] = new FloatProperty { Name = "floatinclass", Value = 13.37f },
-          ["intinclass"] = new IntProperty { Name = "intinclass", Value = 0 },
-          ["objectinclass"] = new ObjectProperty { Name = "objectinclass", Value = 0 },
-          ["stringinclass"] = new StringProperty { Name = "stringinclass", Value = "This is a set string" }
-        }
+        Value = [
+          new BoolProperty { Name = "boolinclass", Value = true },
+          new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
+          new FileProperty { Name = "fileinclass", Value = "" },
+          new FloatProperty { Name = "floatinclass", Value = 13.37f },
+          new IntProperty { Name = "intinclass", Value = 0 },
+          new ObjectProperty { Name = "objectinclass", Value = 0 },
+          new StringProperty { Name = "stringinclass", Value = "This is a set string" }
+        ]
+      },
+      new EnumProperty
+      {
+        Name = "customenumstringprop",
+        PropertyType = "CustomEnumString",
+        Value = new HashSet<string> { "CustomEnumString_2" }
+      },
+      new EnumProperty
+      {
+        Name = "customenumstringflagsprop",
+        PropertyType = "CustomEnumStringFlags",
+        Value = new HashSet<string> { "CustomEnumStringFlags_1", "CustomEnumStringFlags_2" }
+      },
+      new EnumProperty
+      {
+        Name = "customenumintprop",
+        PropertyType = "CustomEnumInt",
+        Value = new HashSet<string> { "CustomEnumInt_4" }
+      },
+      new EnumProperty
+      {
+        Name = "customenumintflagsprop",
+        PropertyType = "CustomEnumIntFlags",
+        Value = new HashSet<string> { "CustomEnumIntFlags_2", "CustomEnumIntFlags_3" }
       }
-    }
+    ]
   };
 
   // This comes from map-with-custom-type-props/propertytypes.json
-  public static IReadOnlyCollection<CustomTypeDefinition> MapWithCustomTypePropsCustomTypeDefinitions() => [
+  public static IReadOnlyCollection<ICustomTypeDefinition> MapWithCustomTypePropsCustomTypeDefinitions() => [
     new CustomClassDefinition
     {
       Name = "CustomClass",
@@ -120,6 +138,50 @@ public partial class TestData
           Name = "stringinclass",
           Value = ""
         }
+      ]
+    },
+    new CustomEnumDefinition
+    {
+      Name = "CustomEnumString",
+      StorageType = CustomEnumStorageType.String,
+      ValueAsFlags = false,
+      Values = [
+        "CustomEnumString_1",
+        "CustomEnumString_2",
+        "CustomEnumString_3"
+      ]
+    },
+    new CustomEnumDefinition
+    {
+      Name = "CustomEnumStringFlags",
+      StorageType = CustomEnumStorageType.String,
+      ValueAsFlags = true,
+      Values = [
+        "CustomEnumStringFlags_1",
+        "CustomEnumStringFlags_2"
+      ]
+    },
+    new CustomEnumDefinition
+    {
+      Name = "CustomEnumInt",
+      StorageType = CustomEnumStorageType.Int,
+      ValueAsFlags = false,
+      Values = [
+        "CustomEnumInt_1",
+        "CustomEnumInt_2",
+        "CustomEnumInt_3",
+        "CustomEnumInt_4",
+      ]
+    },
+    new CustomEnumDefinition
+    {
+      Name = "CustomEnumIntFlags",
+      StorageType = CustomEnumStorageType.Int,
+      ValueAsFlags = true,
+      Values = [
+        "CustomEnumIntFlags_1",
+        "CustomEnumIntFlags_2",
+        "CustomEnumIntFlags_3"
       ]
     }
   ];

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using DotTiled.Model.Layers;
-using DotTiled.Model.Properties;
-using DotTiled.Model.Tilesets;
 
 namespace DotTiled.Serialization;
 
@@ -75,36 +72,66 @@ internal static partial class Helpers
     };
   }
 
-  internal static Dictionary<string, IProperty> MergeProperties(Dictionary<string, IProperty>? baseProperties, Dictionary<string, IProperty>? overrideProperties)
+  internal static List<IProperty> CreateInstanceOfCustomClass(
+    CustomClassDefinition customClassDefinition,
+    Func<string, ICustomTypeDefinition> customTypeResolver)
+  {
+    return customClassDefinition.Members.Select(x =>
+    {
+      if (x is ClassProperty cp)
+      {
+        return new ClassProperty
+        {
+          Name = cp.Name,
+          PropertyType = cp.PropertyType,
+          Value = CreateInstanceOfCustomClass((CustomClassDefinition)customTypeResolver(cp.PropertyType), customTypeResolver)
+        };
+      }
+
+      return x.Clone();
+    }).ToList();
+  }
+
+  internal static IList<IProperty> MergeProperties(IList<IProperty>? baseProperties, IList<IProperty>? overrideProperties)
   {
     if (baseProperties is null)
-      return overrideProperties ?? new Dictionary<string, IProperty>();
+      return overrideProperties ?? [];
 
     if (overrideProperties is null)
       return baseProperties;
 
-    var result = baseProperties.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Clone());
-    foreach (var (key, value) in overrideProperties)
+    var result = baseProperties.Select(x => x.Clone()).ToList();
+    foreach (var overrideProp in overrideProperties)
     {
-      if (!result.TryGetValue(key, out var baseProp))
+      if (!result.Any(x => x.Name == overrideProp.Name))
       {
-        result[key] = value;
+        result.Add(overrideProp);
         continue;
       }
       else
       {
-        if (value is ClassProperty classProp)
+        var existingProp = result.First(x => x.Name == overrideProp.Name);
+        if (existingProp is ClassProperty classProp)
         {
-          ((ClassProperty)baseProp).Properties = MergeProperties(((ClassProperty)baseProp).Properties, classProp.Properties);
+          classProp.Value = MergeProperties(classProp.Value, ((ClassProperty)overrideProp).Value);
         }
         else
         {
-          result[key] = value;
+          ReplacePropertyInList(result, overrideProp);
         }
       }
     }
 
     return result;
+  }
+
+  internal static void ReplacePropertyInList(List<IProperty> properties, IProperty property)
+  {
+    var index = properties.FindIndex(p => p.Name == property.Name);
+    if (index == -1)
+      properties.Add(property);
+    else
+      properties[index] = property;
   }
 
   internal static void SetAtMostOnce<T>(ref T? field, T value, string fieldName)
@@ -123,4 +150,6 @@ internal static partial class Helpers
     field = value;
     counter++;
   }
+
+  internal static bool StringIsXml(string s) => s.StartsWith("<?xml", StringComparison.InvariantCulture);
 }

@@ -31,10 +31,8 @@ internal static class ExtensionsXmlReader
     return enumParser(value);
   }
 
-  internal static string? GetOptionalAttribute(this XmlReader reader, string attribute, string? defaultValue = default)
-  {
-    return reader.GetAttribute(attribute) ?? defaultValue;
-  }
+  internal static string? GetOptionalAttribute(this XmlReader reader, string attribute, string? defaultValue = default) =>
+    reader.GetAttribute(attribute) ?? defaultValue;
 
   internal static T? GetOptionalAttributeParseable<T>(this XmlReader reader, string attribute) where T : struct, IParsable<T>
   {
@@ -84,7 +82,7 @@ internal static class ExtensionsXmlReader
       if (reader.NodeType == XmlNodeType.EndElement)
         continue; // At end of list, no need to read again
 
-      reader.Read();
+      _ = reader.Read();
     }
     reader.ReadEndElement();
 
@@ -135,6 +133,6 @@ internal static class ExtensionsXmlReader
   internal static void SkipXmlDeclaration(this XmlReader reader)
   {
     if (reader.NodeType == XmlNodeType.XmlDeclaration)
-      reader.Read();
+      _ = reader.Read();
   }
 }

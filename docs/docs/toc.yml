@@ -3,4 +3,5 @@
 - href: quickstart.md
 
 - name: Essentials
-- href: loading-a-map.md
+- href: essentials/loading-maps.md
+- href: essentials/custom-properties.md

@@ -1,7 +1,4 @@
 using System.Globalization;
-using DotTiled.Model;
-using DotTiled.Model.Layers;
-using DotTiled.Model.Properties;
 
 namespace DotTiled.Tests;
 
@@ -57,15 +54,15 @@ public partial class TestData
         }
       }
     ],
-    Properties = new Dictionary<string, IProperty>
-    {
-      ["boolprop"] = new BoolProperty { Name = "boolprop", Value = true },
-      ["colorprop"] = new ColorProperty { Name = "colorprop", Value = Color.Parse("#ff55ffff", CultureInfo.InvariantCulture) },
-      ["fileprop"] = new FileProperty { Name = "fileprop", Value = "file.txt" },
-      ["floatprop"] = new FloatProperty { Name = "floatprop", Value = 4.2f },
-      ["intprop"] = new IntProperty { Name = "intprop", Value = 8 },
-      ["objectprop"] = new ObjectProperty { Name = "objectprop", Value = 5 },
-      ["stringprop"] = new StringProperty { Name = "stringprop", Value = "This is a string, hello world!" }
-    }
+    Properties =
+    [
+      new BoolProperty { Name = "boolprop", Value = true },
+      new ColorProperty { Name = "colorprop", Value = Color.Parse("#ff55ffff", CultureInfo.InvariantCulture) },
+      new FileProperty { Name = "fileprop", Value = "file.txt" },
+      new FloatProperty { Name = "floatprop", Value = 4.2f },
+      new IntProperty { Name = "intprop", Value = 8 },
+      new ObjectProperty { Name = "objectprop", Value = 5 },
+      new StringProperty { Name = "stringprop", Value = "This is a string, hello world!" }
+    ]
   };
 }

@@ -1,7 +1,3 @@
-using System.Xml;
-using DotTiled.Model;
-using DotTiled.Model.Properties.CustomTypes;
-using DotTiled.Model.Tilesets;
 using DotTiled.Serialization.Tmx;
 
 namespace DotTiled.Tests;
@@ -14,7 +10,7 @@ public partial class TmxMapReaderTests
   public void TmxMapReaderReadMap_ValidXmlExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(
     string testDataFile,
     Func<string, Map> expectedMap,
-    IReadOnlyCollection<CustomTypeDefinition> customTypeDefinitions)
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
   {
     // Arrange
     testDataFile += ".tmx";
@@ -23,16 +19,20 @@ public partial class TmxMapReaderTests
     Template ResolveTemplate(string source)
     {
       using var xmlTemplateReader = TestData.GetXmlReaderFor($"{fileDir}/{source}");
-      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
+      using var templateReader = new TxTemplateReader(xmlTemplateReader, ResolveTileset, ResolveTemplate, ResolveCustomType);
       return templateReader.ReadTemplate();
     }
     Tileset ResolveTileset(string source)
     {
       using var xmlTilesetReader = TestData.GetXmlReaderFor($"{fileDir}/{source}");
-      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTemplate, customTypeDefinitions);
+      using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTileset, ResolveTemplate, ResolveCustomType);
       return tilesetReader.ReadTileset();
     }
-    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate, customTypeDefinitions);
+    ICustomTypeDefinition ResolveCustomType(string name)
+    {
+      return customTypeDefinitions.FirstOrDefault(ctd => ctd.Name == name)!;
+    }
+    using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate, ResolveCustomType);
 
     // Act
     var map = mapReader.ReadMap();

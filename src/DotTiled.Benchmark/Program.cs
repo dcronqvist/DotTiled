@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Order;
-using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
-namespace MyBenchmarks
+namespace DotTiled.Benchmark
 {
   [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
   [CategoriesColumn]
@@ -19,11 +15,11 @@ namespace MyBenchmarks
   [HideColumns(["StdDev", "Error", "RatioSD"])]
   public class MapLoading
   {
-    private string _tmxPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmx";
-    private string _tmxContents = "";
+    private readonly string _tmxPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmx";
+    private readonly string _tmxContents = "";
 
-    private string _tmjPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmj";
-    private string _tmjContents = "";
+    private readonly string _tmjPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmj";
+    private readonly string _tmjContents = "";
 
     public MapLoading()
     {
@@ -31,27 +27,27 @@ namespace MyBenchmarks
       var tmxPath = Path.Combine(basePath, $"../{_tmxPath}");
       var tmjPath = Path.Combine(basePath, $"../{_tmjPath}");
 
-      _tmxContents = System.IO.File.ReadAllText(tmxPath);
-      _tmjContents = System.IO.File.ReadAllText(tmjPath);
+      _tmxContents = File.ReadAllText(tmxPath);
+      _tmjContents = File.ReadAllText(tmjPath);
     }
 
-    static string WhereAmI([CallerFilePath] string callerFilePath = "") => callerFilePath;
+    private static string WhereAmI([CallerFilePath] string callerFilePath = "") => callerFilePath;
 
     [BenchmarkCategory("MapFromInMemoryTmxString")]
     [Benchmark(Baseline = true, Description = "DotTiled")]
-    public DotTiled.Model.Map LoadWithDotTiledFromInMemoryTmxString()
+    public DotTiled.Map LoadWithDotTiledFromInMemoryTmxString()
     {
       using var stringReader = new StringReader(_tmxContents);
       using var xmlReader = XmlReader.Create(stringReader);
-      using var mapReader = new DotTiled.Serialization.Tmx.TmxMapReader(xmlReader, _ => throw new Exception(), _ => throw new Exception(), []);
+      using var mapReader = new DotTiled.Serialization.Tmx.TmxMapReader(xmlReader, _ => throw new NotSupportedException(), _ => throw new NotSupportedException(), _ => throw new NotSupportedException());
       return mapReader.ReadMap();
     }
 
     [BenchmarkCategory("MapFromInMemoryTmjString")]
     [Benchmark(Baseline = true, Description = "DotTiled")]
-    public DotTiled.Model.Map LoadWithDotTiledFromInMemoryTmjString()
+    public DotTiled.Map LoadWithDotTiledFromInMemoryTmjString()
     {
-      using var mapReader = new DotTiled.Serialization.Tmj.TmjMapReader(_tmjContents, _ => throw new Exception(), _ => throw new Exception(), []);
+      using var mapReader = new DotTiled.Serialization.Tmj.TmjMapReader(_tmjContents, _ => throw new NotSupportedException(), _ => throw new NotSupportedException(), _ => throw new NotSupportedException());
       return mapReader.ReadMap();
     }
 
@@ -84,11 +80,11 @@ namespace MyBenchmarks
   {
     public static void Main(string[] args)
     {
-      var config = BenchmarkDotNet.Configs.DefaultConfig.Instance
+      var config = DefaultConfig.Instance
         .WithArtifactsPath(args[0])
         .WithOptions(ConfigOptions.DisableOptimizationsValidator)
         .AddDiagnoser(BenchmarkDotNet.Diagnosers.MemoryDiagnoser.Default);
-      var summary = BenchmarkRunner.Run<MapLoading>(config);
+      _ = BenchmarkRunner.Run<MapLoading>(config);
     }
   }
 }
