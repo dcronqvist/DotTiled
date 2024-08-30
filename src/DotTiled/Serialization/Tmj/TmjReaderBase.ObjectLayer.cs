@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
 using System.Text.Json;
-using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 
@@ -34,7 +33,7 @@ public abstract partial class TmjReaderBase
       _ => throw new JsonException($"Unknown draw order '{s}'.")
     }, DrawOrder.TopDown);
 
-    var objects = element.GetOptionalPropertyCustom<List<Model.Object>>("objects", e => e.GetValueAsList<Model.Object>(el => ReadObject(el)), []);
+    var objects = element.GetOptionalPropertyCustom<List<DotTiled.Object>>("objects", e => e.GetValueAsList<DotTiled.Object>(el => ReadObject(el)), []);
 
     return new ObjectLayer
     {
@@ -59,7 +58,7 @@ public abstract partial class TmjReaderBase
     };
   }
 
-  internal Model.Object ReadObject(JsonElement element)
+  internal DotTiled.Object ReadObject(JsonElement element)
   {
     uint? idDefault = null;
     string nameDefault = "";

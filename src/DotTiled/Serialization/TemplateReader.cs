@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Xml;
-using DotTiled.Model;
 using DotTiled.Serialization.Tmj;
 using DotTiled.Serialization.Tmx;
 

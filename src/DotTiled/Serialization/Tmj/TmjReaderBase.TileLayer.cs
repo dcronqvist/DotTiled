@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Text.Json;
-using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 

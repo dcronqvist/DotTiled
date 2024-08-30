@@ -1,22 +1,22 @@
-using DotTiled.Model;
-
 namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertObject(Model.Object expected, Model.Object actual)
+  internal static void AssertObject(DotTiled.Object expected, DotTiled.Object actual)
   {
     // Attributes
-    AssertEqual(expected.ID, actual.ID, nameof(Model.Object.ID));
-    AssertEqual(expected.Name, actual.Name, nameof(Model.Object.Name));
-    AssertEqual(expected.Type, actual.Type, nameof(Model.Object.Type));
-    AssertEqual(expected.X, actual.X, nameof(Model.Object.X));
-    AssertEqual(expected.Y, actual.Y, nameof(Model.Object.Y));
-    AssertEqual(expected.Width, actual.Width, nameof(Model.Object.Width));
-    AssertEqual(expected.Height, actual.Height, nameof(Model.Object.Height));
-    AssertEqual(expected.Rotation, actual.Rotation, nameof(Model.Object.Rotation));
-    AssertEqual(expected.Visible, actual.Visible, nameof(Model.Object.Visible));
-    AssertEqual(expected.Template, actual.Template, nameof(Model.Object.Template));
+#pragma warning disable IDE0002
+    AssertEqual(expected.ID, actual.ID, nameof(DotTiled.Object.ID));
+    AssertEqual(expected.Name, actual.Name, nameof(DotTiled.Object.Name));
+    AssertEqual(expected.Type, actual.Type, nameof(DotTiled.Object.Type));
+    AssertEqual(expected.X, actual.X, nameof(DotTiled.Object.X));
+    AssertEqual(expected.Y, actual.Y, nameof(DotTiled.Object.Y));
+    AssertEqual(expected.Width, actual.Width, nameof(DotTiled.Object.Width));
+    AssertEqual(expected.Height, actual.Height, nameof(DotTiled.Object.Height));
+    AssertEqual(expected.Rotation, actual.Rotation, nameof(DotTiled.Object.Rotation));
+    AssertEqual(expected.Visible, actual.Visible, nameof(DotTiled.Object.Visible));
+    AssertEqual(expected.Template, actual.Template, nameof(DotTiled.Object.Template));
+#pragma warning restore IDE0002
 
     AssertProperties(expected.Properties, actual.Properties);
 

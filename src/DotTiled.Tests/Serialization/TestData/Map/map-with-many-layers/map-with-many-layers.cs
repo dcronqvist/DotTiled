@@ -1,5 +1,4 @@
 using System.Numerics;
-using DotTiled.Model;
 
 namespace DotTiled.Tests;
 

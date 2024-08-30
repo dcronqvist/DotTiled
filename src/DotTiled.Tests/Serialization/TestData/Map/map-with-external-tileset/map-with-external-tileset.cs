@@ -1,5 +1,4 @@
 using System.Globalization;
-using DotTiled.Model;
 
 namespace DotTiled.Tests;
 
