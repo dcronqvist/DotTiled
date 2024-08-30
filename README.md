@@ -4,11 +4,11 @@
 
 DotTiled is a simple and easy-to-use library for loading, saving, and managing [Tiled maps and tilesets](https://mapeditor.org) in your .NET projects. After [TiledCS](https://github.com/TheBoneJarmer/TiledCS) unfortunately became unmaintained (since 2022), I aimed to create a new library that could fill its shoes. DotTiled is the result of that effort.
 
-DotTiled is designed to be a lightweight and efficient library that provides a simple API for loading and managing Tiled maps and tilesets. It is built with performance in mind and aims to be as fast and memory-efficient as possible. Targeting `netstandard2.0` and `net8.0` allows DotTiled to be used in popular game engines like Unity and Godot, as well as in popular game development frameworks like MonoGame.
+DotTiled is designed to be a lightweight and efficient library that provides a simple API for loading and managing Tiled maps and tilesets. It is built with performance in mind and aims to be as fast and memory-efficient as possible.
 
 - [Alternative libraries and comparison + benchmarks](#alternative-libraries-and-comparison)
 - [Feature coverage comparison](#feature-coverage-comparison)
-- [Installing DotTiled](#installing-dottiled)
+- [Quick Start](#quick-start)
 
 # Alternative libraries and comparison
 
@@ -20,7 +20,7 @@ Other similar libraries exist, and you may want to consider them for your projec
 | Benchmark (time)*               |           1.00          |   1.83   |     2.16    |      -     |    -    |    -   |
 | Benchmark (memory)*             |           1.00          |   1.43   |     2.03    |      -     |    -    |    -   |
 | .NET Targets                    | `net8.0` |`net6.0`<br>`net7.0`|`netstandard2.1`|`netstandard2.0`|`netstandard2.0`|`net45`|
-| Docs                            |Usage,<br>XML Docs|Usage|Usage, API,<br>XML Docs|Usage, API|Usage, XML Docs|Usage, XML Docs|
+| Docs                            |Usage, API,<br>XML Docs|Usage|Usage, API,<br>XML Docs|Usage, API|Usage, XML Docs|Usage, XML Docs|
 | License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
 
 > [!NOTE]
@@ -73,10 +73,12 @@ Below is a comparison of the feature coverage of DotTiled and other similar libr
 > [!NOTE]
 > ✅ Full support. ⚠️ Partial support, see respective library for details about supported features. ❌ No support.
 
-# Installing DotTiled
+# Quick Start
 
 DotTiled is available as a NuGet package. You can install it by using the NuGet Package Manager UI in Visual Studio, or equivalent, or using the following command for the .NET CLI:
 
 ```pwsh
 dotnet add package DotTiled
 ```
+
+Then head to the detailed [documentation](https://dcronqvist.github.io/DotTiled/docs/quickstart.html) for more information on how to use DotTiled in your project.
