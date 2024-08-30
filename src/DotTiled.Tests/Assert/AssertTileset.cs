@@ -1,5 +1,3 @@
-using DotTiled.Model;
-
 namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert

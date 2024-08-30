@@ -1,4 +1,3 @@
-using DotTiled.Model;
 using DotTiled.Serialization.Tmx;
 
 namespace DotTiled.Tests;

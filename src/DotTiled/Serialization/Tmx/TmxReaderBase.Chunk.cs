@@ -1,5 +1,3 @@
-using DotTiled.Model;
-
 namespace DotTiled.Serialization.Tmx;
 
 public abstract partial class TmxReaderBase

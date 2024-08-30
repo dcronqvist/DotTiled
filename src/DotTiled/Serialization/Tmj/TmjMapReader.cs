@@ -1,5 +1,4 @@
 using System;
-using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmj;
 

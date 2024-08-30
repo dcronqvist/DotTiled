@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using DotTiled.Model;
 
 namespace DotTiled.Serialization.Tmx;
 
@@ -36,7 +35,7 @@ public abstract partial class TmxReaderBase
 
     // Elements
     List<IProperty>? properties = null;
-    List<Model.Object> objects = [];
+    List<DotTiled.Object> objects = [];
 
     _reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
     {
@@ -68,11 +67,11 @@ public abstract partial class TmxReaderBase
     };
   }
 
-  internal Model.Object ReadObject()
+  internal DotTiled.Object ReadObject()
   {
     // Attributes
     var template = _reader.GetOptionalAttribute("template");
-    Model.Object? obj = null;
+    DotTiled.Object? obj = null;
     if (template is not null)
       obj = _externalTemplateResolver(template).Object;
 
@@ -100,7 +99,7 @@ public abstract partial class TmxReaderBase
     var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
 
     // Elements
-    Model.Object? foundObject = null;
+    DotTiled.Object? foundObject = null;
     int propertiesCounter = 0;
     List<IProperty>? properties = propertiesDefault;
 
@@ -138,7 +137,7 @@ public abstract partial class TmxReaderBase
     return OverrideObject(obj, foundObject);
   }
 
-  internal static Model.Object OverrideObject(Model.Object? obj, Model.Object foundObject)
+  internal static DotTiled.Object OverrideObject(DotTiled.Object? obj, DotTiled.Object foundObject)
   {
     if (obj is null)
       return foundObject;
@@ -305,7 +304,7 @@ public abstract partial class TmxReaderBase
     Tileset? tileset = null;
 
     // Should contain exactly one of
-    Model.Object? obj = null;
+    DotTiled.Object? obj = null;
 
     _reader.ProcessChildren("template", (r, elementName) => elementName switch
     {
