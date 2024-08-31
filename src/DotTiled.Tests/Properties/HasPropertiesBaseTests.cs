@@ -21,7 +21,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void GetMappedProperty_PropertyNotFound_ThrowsKeyNotFoundException()
+  public void MapClassPropertyTo_PropertyNotFound_ThrowsKeyNotFoundException()
   {
     // Arrange
     List<IProperty> props = [
@@ -35,15 +35,25 @@ public class HasPropertiesBaseTests
     ];
     var hasProperties = new TestHasProperties(props);
 
-    // Act
-    var act = () => hasProperties.GetMappedProperty<MapTo>("ClassInObject");
-
-    // Assert
-    Assert.Throws<KeyNotFoundException>(act);
+    // Act & Assert
+    _ = Assert.Throws<KeyNotFoundException>(() => hasProperties.MapClassPropertyTo<MapTo>("ClassInObject"));
   }
 
   [Fact]
-  public void GetMappedProperty_AllBasicValidProperties_ReturnsMappedProperty()
+  public void MapClassPropertyTo_PropertyIsNotClassProperty_ThrowsInvalidCastException()
+  {
+    // Arrange
+    List<IProperty> props = [
+      new StringProperty { Name = "ClassInObject", Value = "Test" }
+    ];
+    var hasProperties = new TestHasProperties(props);
+
+    // Act & Assert
+    _ = Assert.Throws<InvalidCastException>(() => hasProperties.MapClassPropertyTo<MapTo>("ClassInObject"));
+  }
+
+  [Fact]
+  public void MapClassPropertyTo_AllBasicValidProperties_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
@@ -64,7 +74,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.GetMappedProperty<MapTo>("ClassInObject");
+    var mappedProperty = hasProperties.MapClassPropertyTo<MapTo>("ClassInObject");
 
     // Assert
     Assert.True(mappedProperty.MapToBool);
@@ -83,7 +93,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void GetMappedProperty_NestedMapTo_ReturnsMappedProperty()
+  public void MapClassPropertyTo_NestedMapTo_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
@@ -111,7 +121,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.GetMappedProperty<NestedMapTo>("ClassInObject");
+    var mappedProperty = hasProperties.MapClassPropertyTo<NestedMapTo>("ClassInObject");
 
     // Assert
     Assert.Equal("Test", mappedProperty.NestedMapToString);
@@ -137,7 +147,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void GetMappedProperty_EnumProperty_ReturnsMappedProperty()
+  public void MapClassPropertyTo_EnumProperty_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
@@ -152,7 +162,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.GetMappedProperty<EnumMapTo>("ClassInObject");
+    var mappedProperty = hasProperties.MapClassPropertyTo<EnumMapTo>("ClassInObject");
 
     // Assert
     Assert.Equal(TestEnum.TestValue1, mappedProperty.EnumMapToEnum);
@@ -171,7 +181,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void GetMappedProperty_EnumWithFlagsProperty_ReturnsMappedProperty()
+  public void MapClassPropertyTo_EnumWithFlagsProperty_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
@@ -186,9 +196,37 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.GetMappedProperty<EnumWithFlagsMapTo>("ClassInObject");
+    var mappedProperty = hasProperties.MapClassPropertyTo<EnumWithFlagsMapTo>("ClassInObject");
 
     // Assert
     Assert.Equal(TestEnumWithFlags.TestValue1 | TestEnumWithFlags.TestValue2, mappedProperty.EnumWithFlagsMapToEnum);
+  }
+
+  [Fact]
+  public void MapPropertiesTo_WithProperties_ReturnsMappedProperty()
+  {
+    // Arrange
+    List<IProperty> props = [
+      new BoolProperty { Name = "MapToBool", Value = true },
+      new ColorProperty { Name = "MapToColor", Value = Color.Parse("#FF0000FF", CultureInfo.InvariantCulture) },
+      new FloatProperty { Name = "MapToFloat", Value = 1.0f },
+      new StringProperty { Name = "MapToFile", Value = "Test" },
+      new IntProperty { Name = "MapToInt", Value = 1 },
+      new IntProperty { Name = "MapToObject", Value = 1 },
+      new StringProperty { Name = "MapToString", Value = "Test" },
+    ];
+    var hasProperties = new TestHasProperties(props);
+
+    // Act
+    var mappedProperty = hasProperties.MapPropertiesTo<MapTo>();
+
+    // Assert
+    Assert.True(mappedProperty.MapToBool);
+    Assert.Equal(Color.Parse("#FF0000FF", CultureInfo.InvariantCulture), mappedProperty.MapToColor);
+    Assert.Equal(1.0f, mappedProperty.MapToFloat);
+    Assert.Equal("Test", mappedProperty.MapToFile);
+    Assert.Equal(1, mappedProperty.MapToInt);
+    Assert.Equal(1, mappedProperty.MapToObject);
+    Assert.Equal("Test", mappedProperty.MapToString);
   }
 }

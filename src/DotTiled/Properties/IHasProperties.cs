@@ -32,7 +32,20 @@ public interface IHasProperties
   /// <returns>The property with the specified name.</returns>
   T GetProperty<T>(string name) where T : IProperty;
 
-  T GetMappedProperty<T>(string name) where T : new();
+  /// <summary>
+  /// Maps a class property to a new instance of the specified type using reflection.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  /// <param name="name">The property which you want to map to a class</param>
+  /// <returns></returns>
+  T MapClassPropertyTo<T>(string name) where T : new();
+
+  /// <summary>
+  /// Maps all properties in this object to a new instance of the specified type using reflection.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  /// <returns></returns>
+  T MapPropertiesTo<T>() where T : new();
 }
 
 /// <summary>
@@ -72,17 +85,25 @@ public abstract class HasPropertiesBase : IHasProperties
     return false;
   }
 
-  public T GetMappedProperty<T>(string name) where T : new()
+  /// <inheritdoc/>
+  public T MapClassPropertyTo<T>(string name) where T : new()
   {
-    var property = GetProperty<ClassProperty>(name);
-    return CreateMappedInstance<T>(property);
+    var classProperty = GetProperty<ClassProperty>(name);
+    return CreateMappedInstance<T>(classProperty.GetProperties());
   }
 
-  private static object CreatedMappedInstance(Type type, ClassProperty classProperty)
+  /// <inheritdoc/>
+  public T MapPropertiesTo<T>() where T : new()
   {
-    var instance = Activator.CreateInstance(type);
+    var properties = GetProperties();
+    return CreateMappedInstance<T>(properties);
+  }
 
-    foreach (var prop in classProperty.Value)
+  private static object CreatedMappedInstance(Type type, IList<IProperty> properties)
+  {
+    var instance = Activator.CreateInstance(type) ?? throw new InvalidOperationException($"Failed to create instance of '{type.Name}'.");
+
+    foreach (var prop in properties)
     {
       if (type.GetProperty(prop.Name) == null)
         throw new KeyNotFoundException($"Property '{prop.Name}' not found in '{type.Name}'.");
@@ -112,7 +133,7 @@ public abstract class HasPropertiesBase : IHasProperties
           break;
         case ClassProperty classProp:
           var subClassProp = type.GetProperty(prop.Name);
-          subClassProp?.SetValue(instance, CreatedMappedInstance(subClassProp.PropertyType, classProp));
+          subClassProp?.SetValue(instance, CreatedMappedInstance(subClassProp.PropertyType, classProp.GetProperties()));
           break;
         case EnumProperty enumProp:
           var enumPropInClass = type.GetProperty(prop.Name);
@@ -127,5 +148,5 @@ public abstract class HasPropertiesBase : IHasProperties
     return instance;
   }
 
-  private static T CreateMappedInstance<T>(ClassProperty classProperty) where T : new() => (T)CreatedMappedInstance(typeof(T), classProperty);
+  private static T CreateMappedInstance<T>(IList<IProperty> properties) where T : new() => (T)CreatedMappedInstance(typeof(T), properties);
 }
