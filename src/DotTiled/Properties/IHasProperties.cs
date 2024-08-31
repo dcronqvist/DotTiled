@@ -31,6 +31,8 @@ public interface IHasProperties
   /// <param name="name">The name of the property to get.</param>
   /// <returns>The property with the specified name.</returns>
   T GetProperty<T>(string name) where T : IProperty;
+
+  T GetMappedProperty<T>(string name) where T : new();
 }
 
 /// <summary>
@@ -69,4 +71,61 @@ public abstract class HasPropertiesBase : IHasProperties
     property = default;
     return false;
   }
+
+  public T GetMappedProperty<T>(string name) where T : new()
+  {
+    var property = GetProperty<ClassProperty>(name);
+    return CreateMappedInstance<T>(property);
+  }
+
+  private static object CreatedMappedInstance(Type type, ClassProperty classProperty)
+  {
+    var instance = Activator.CreateInstance(type);
+
+    foreach (var prop in classProperty.Value)
+    {
+      if (type.GetProperty(prop.Name) == null)
+        throw new KeyNotFoundException($"Property '{prop.Name}' not found in '{type.Name}'.");
+
+      switch (prop)
+      {
+        case BoolProperty boolProp:
+          type.GetProperty(prop.Name)?.SetValue(instance, boolProp.Value);
+          break;
+        case ColorProperty colorProp:
+          type.GetProperty(prop.Name)?.SetValue(instance, colorProp.Value);
+          break;
+        case FloatProperty floatProp:
+          type.GetProperty(prop.Name)?.SetValue(instance, floatProp.Value);
+          break;
+        case FileProperty fileProp:
+          type.GetProperty(prop.Name)?.SetValue(instance, fileProp.Value);
+          break;
+        case IntProperty intProp:
+          type.GetProperty(prop.Name)?.SetValue(instance, intProp.Value);
+          break;
+        case ObjectProperty objectProp:
+          type.GetProperty(prop.Name)?.SetValue(instance, objectProp.Value);
+          break;
+        case StringProperty stringProp:
+          type.GetProperty(prop.Name)?.SetValue(instance, stringProp.Value);
+          break;
+        case ClassProperty classProp:
+          var subClassProp = type.GetProperty(prop.Name);
+          subClassProp?.SetValue(instance, CreatedMappedInstance(subClassProp.PropertyType, classProp));
+          break;
+        case EnumProperty enumProp:
+          var enumPropInClass = type.GetProperty(prop.Name);
+          var enumType = enumPropInClass?.PropertyType;
+          enumPropInClass?.SetValue(instance, Enum.Parse(enumType!, string.Join(", ", enumProp.Value)));
+          break;
+        default:
+          throw new ArgumentOutOfRangeException($"Unknown property type {prop.GetType().Name}");
+      }
+    }
+
+    return instance;
+  }
+
+  private static T CreateMappedInstance<T>(ClassProperty classProperty) where T : new() => (T)CreatedMappedInstance(typeof(T), classProperty);
 }
