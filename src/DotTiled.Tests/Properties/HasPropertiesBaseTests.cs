@@ -21,7 +21,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void MapClassPropertyTo_PropertyNotFound_ThrowsKeyNotFoundException()
+  public void MapPropertiesTo_NestedPropertyNotFound_ThrowsKeyNotFoundException()
   {
     // Arrange
     List<IProperty> props = [
@@ -40,7 +40,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void MapClassPropertyTo_PropertyIsNotClassProperty_ThrowsInvalidCastException()
+  public void MapPropertiesTo_NestedPropertyIsNotClassProperty_ThrowsInvalidCastException()
   {
     // Arrange
     List<IProperty> props = [
@@ -53,7 +53,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void MapClassPropertyTo_AllBasicValidProperties_ReturnsMappedProperty()
+  public void MapPropertiesTo_NestedAllBasicValidProperties_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
@@ -93,7 +93,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void MapClassPropertyTo_NestedMapTo_ReturnsMappedProperty()
+  public void MapPropertiesTo_NestedNestedMapTo_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
@@ -147,7 +147,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void MapClassPropertyTo_EnumProperty_ReturnsMappedProperty()
+  public void MapPropertiesTo_NestedEnumProperty_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
@@ -181,7 +181,7 @@ public class HasPropertiesBaseTests
   }
 
   [Fact]
-  public void MapClassPropertyTo_EnumWithFlagsProperty_ReturnsMappedProperty()
+  public void MapPropertiesTo_NestedEnumWithFlagsProperty_ReturnsMappedProperty()
   {
     // Arrange
     List<IProperty> props = [
