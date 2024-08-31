@@ -36,7 +36,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act & Assert
-    _ = Assert.Throws<KeyNotFoundException>(() => hasProperties.MapClassPropertyTo<MapTo>("ClassInObject"));
+    _ = Assert.Throws<KeyNotFoundException>(() => hasProperties.GetProperty<ClassProperty>("ClassInObject").MapPropertiesTo<MapTo>());
   }
 
   [Fact]
@@ -49,7 +49,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act & Assert
-    _ = Assert.Throws<InvalidCastException>(() => hasProperties.MapClassPropertyTo<MapTo>("ClassInObject"));
+    _ = Assert.Throws<InvalidCastException>(() => hasProperties.GetProperty<ClassProperty>("ClassInObject").MapPropertiesTo<MapTo>());
   }
 
   [Fact]
@@ -74,7 +74,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.MapClassPropertyTo<MapTo>("ClassInObject");
+    var mappedProperty = hasProperties.GetProperty<ClassProperty>("ClassInObject").MapPropertiesTo<MapTo>();
 
     // Assert
     Assert.True(mappedProperty.MapToBool);
@@ -121,7 +121,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.MapClassPropertyTo<NestedMapTo>("ClassInObject");
+    var mappedProperty = hasProperties.GetProperty<ClassProperty>("ClassInObject").MapPropertiesTo<NestedMapTo>();
 
     // Assert
     Assert.Equal("Test", mappedProperty.NestedMapToString);
@@ -162,7 +162,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.MapClassPropertyTo<EnumMapTo>("ClassInObject");
+    var mappedProperty = hasProperties.GetProperty<ClassProperty>("ClassInObject").MapPropertiesTo<EnumMapTo>();
 
     // Assert
     Assert.Equal(TestEnum.TestValue1, mappedProperty.EnumMapToEnum);
@@ -196,7 +196,7 @@ public class HasPropertiesBaseTests
     var hasProperties = new TestHasProperties(props);
 
     // Act
-    var mappedProperty = hasProperties.MapClassPropertyTo<EnumWithFlagsMapTo>("ClassInObject");
+    var mappedProperty = hasProperties.GetProperty<ClassProperty>("ClassInObject").MapPropertiesTo<EnumWithFlagsMapTo>();
 
     // Assert
     Assert.Equal(TestEnumWithFlags.TestValue1 | TestEnumWithFlags.TestValue2, mappedProperty.EnumWithFlagsMapToEnum);

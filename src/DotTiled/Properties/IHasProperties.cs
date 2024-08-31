@@ -33,14 +33,6 @@ public interface IHasProperties
   T GetProperty<T>(string name) where T : IProperty;
 
   /// <summary>
-  /// Maps a class property to a new instance of the specified type using reflection.
-  /// </summary>
-  /// <typeparam name="T"></typeparam>
-  /// <param name="name">The property which you want to map to a class</param>
-  /// <returns></returns>
-  T MapClassPropertyTo<T>(string name) where T : new();
-
-  /// <summary>
   /// Maps all properties in this object to a new instance of the specified type using reflection.
   /// </summary>
   /// <typeparam name="T"></typeparam>
@@ -83,13 +75,6 @@ public abstract class HasPropertiesBase : IHasProperties
 
     property = default;
     return false;
-  }
-
-  /// <inheritdoc/>
-  public T MapClassPropertyTo<T>(string name) where T : new()
-  {
-    var classProperty = GetProperty<ClassProperty>(name);
-    return CreateMappedInstance<T>(classProperty.GetProperties());
   }
 
   /// <inheritdoc/>
