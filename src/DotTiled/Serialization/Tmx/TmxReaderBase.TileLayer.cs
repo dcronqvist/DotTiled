@@ -15,7 +15,7 @@ public abstract partial class TmxReaderBase
     var width = _reader.GetRequiredAttributeParseable<uint>("width");
     var height = _reader.GetRequiredAttributeParseable<uint>("height");
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
+    var visible = (_reader.GetOptionalAttributeParseable<uint>("visible") ?? 1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
@@ -107,7 +107,7 @@ public abstract partial class TmxReaderBase
     var name = _reader.GetOptionalAttribute("name") ?? "";
     var @class = _reader.GetOptionalAttribute("class") ?? "";
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
+    var visible = (_reader.GetOptionalAttributeParseable<uint>("visible") ?? 1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
