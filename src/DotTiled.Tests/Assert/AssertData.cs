@@ -19,12 +19,11 @@ public static partial class DotTiledAssert
     AssertEqual(expected.GlobalTileIDs, actual.GlobalTileIDs, nameof(Data.GlobalTileIDs));
     AssertEqual(expected.FlippingFlags, actual.FlippingFlags, nameof(Data.FlippingFlags));
 
-    if (expected.Chunks is not null)
+    if (expected.Chunks.HasValue)
     {
-      Assert.NotNull(actual.Chunks);
-      AssertEqual(expected.Chunks.Length, actual.Chunks.Length, "Chunks.Length");
-      for (var i = 0; i < expected.Chunks.Length; i++)
-        AssertChunk(expected.Chunks[i], actual.Chunks[i]);
+      AssertEqual(expected.Chunks.Value.Length, actual.Chunks.Value.Length, "Chunks.Length");
+      for (var i = 0; i < expected.Chunks.Value.Length; i++)
+        AssertChunk(expected.Chunks.Value[i], actual.Chunks.Value[i]);
     }
   }
 

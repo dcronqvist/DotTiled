@@ -28,5 +28,5 @@ public class TileLayer : BaseLayer
   /// <summary>
   /// The tile layer data.
   /// </summary>
-  public Data? Data { get; set; }
+  public Optional<Data> Data { get; set; } = Optional<Data>.Empty;
 }

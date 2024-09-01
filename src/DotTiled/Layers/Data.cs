@@ -118,27 +118,27 @@ public class Data
   /// <summary>
   /// The encoding used to encode the tile layer data.
   /// </summary>
-  public DataEncoding? Encoding { get; set; }
+  public Optional<DataEncoding> Encoding { get; set; } = Optional<DataEncoding>.Empty;
 
   /// <summary>
   /// The compression method used to compress the tile layer data.
   /// </summary>
-  public DataCompression? Compression { get; set; }
+  public Optional<DataCompression> Compression { get; set; } = Optional<DataCompression>.Empty;
 
   /// <summary>
   /// The parsed tile layer data, as a list of tile GIDs.
   /// To get an actual tile ID, you map it to a local tile ID using the correct tileset. Please refer to
   /// <see href="https://doc.mapeditor.org/en/stable/reference/global-tile-ids/#mapping-a-gid-to-a-local-tile-id">the documentation on how to do this</see>.
   /// </summary>
-  public uint[]? GlobalTileIDs { get; set; }
+  public uint[] GlobalTileIDs { get; set; }
 
   /// <summary>
   /// The parsed flipping flags for each tile in the layer. Appear in the same order as the tiles in the layer in <see cref="GlobalTileIDs"/>.
   /// </summary>
-  public FlippingFlags[]? FlippingFlags { get; set; }
+  public FlippingFlags[] FlippingFlags { get; set; }
 
   /// <summary>
   /// If the map is infinite, it will instead contain a list of chunks.
   /// </summary>
-  public Chunk[]? Chunks { get; set; }
+  public Optional<Chunk[]> Chunks { get; set; } = Optional<Chunk[]>.Empty;
 }

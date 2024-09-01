@@ -34,25 +34,25 @@ public class Image
   /// <summary>
   /// The format of the image.
   /// </summary>
-  public ImageFormat? Format { get; set; }
+  public Optional<ImageFormat> Format { get; set; } = Optional<ImageFormat>.Empty;
 
   /// <summary>
   /// The reference to the image file.
   /// </summary>
-  public string? Source { get; set; }
+  public Optional<string> Source { get; set; } = Optional<string>.Empty;
 
   /// <summary>
   /// Defines a specific color that is treated as transparent.
   /// </summary>
-  public Color? TransparentColor { get; set; }
+  public Optional<Color> TransparentColor { get; set; } = Optional<Color>.Empty;
 
   /// <summary>
   /// The image width in pixels, used for tile index correction when the image changes.
   /// </summary>
-  public uint? Width { get; set; }
+  public Optional<uint> Width { get; set; } = Optional<uint>.Empty;
 
   /// <summary>
   /// The image height in pixels, used for tile index correction when the image changes.
   /// </summary>
-  public uint? Height { get; set; }
+  public Optional<uint> Height { get; set; } = Optional<uint>.Empty;
 }

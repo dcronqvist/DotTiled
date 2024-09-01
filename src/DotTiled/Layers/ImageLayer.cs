@@ -13,20 +13,20 @@ public class ImageLayer : BaseLayer
   /// <summary>
   /// The Y position of the image layer in pixels.
   /// </summary>
-  public uint Y { get; set; } = 0;
+  public Optional<uint> Y { get; set; } = 0;
 
   /// <summary>
   /// Whether the image drawn by this layer is repeated along the X axis.
   /// </summary>
-  public bool RepeatX { get; set; } = false;
+  public Optional<bool> RepeatX { get; set; } = false;
 
   /// <summary>
   /// Whether the image drawn by this layer is repeated along the Y axis.
   /// </summary>
-  public bool RepeatY { get; set; } = false;
+  public Optional<bool> RepeatY { get; set; } = false;
 
   /// <summary>
   /// The image to be drawn by this image layer.
   /// </summary>
-  public Image? Image { get; set; }
+  public Optional<Image> Image { get; set; }
 }

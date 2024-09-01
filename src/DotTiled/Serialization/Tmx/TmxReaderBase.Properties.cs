@@ -25,9 +25,9 @@ public abstract partial class TmxReaderBase
         "object" => PropertyType.Object,
         "class" => PropertyType.Class,
         _ => throw new XmlException("Invalid property type")
-      }) ?? PropertyType.String;
+      }).GetValueOr(PropertyType.String);
       var propertyType = r.GetOptionalAttribute("propertytype");
-      if (propertyType is not null)
+      if (propertyType.HasValue)
       {
         return ReadPropertyWithCustomType();
       }

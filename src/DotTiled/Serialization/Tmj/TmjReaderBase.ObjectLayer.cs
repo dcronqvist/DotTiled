@@ -50,8 +50,8 @@ public abstract partial class TmjReaderBase
       Properties = properties,
       X = x,
       Y = y,
-      Width = width,
-      Height = height,
+      Width = width ?? 0,
+      Height = height ?? 0,
       Color = color,
       DrawOrder = drawOrder,
       Objects = objects

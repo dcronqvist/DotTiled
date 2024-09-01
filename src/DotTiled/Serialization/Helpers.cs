@@ -8,6 +8,20 @@ namespace DotTiled.Serialization;
 
 internal static partial class Helpers
 {
+  internal static Func<string, T> CreateMapper<T>(Func<string, Exception> noMatch, params (string, T)[] mappings)
+  {
+    return s =>
+    {
+      foreach (var (key, value) in mappings)
+      {
+        if (key == s)
+          return value;
+      }
+
+      throw noMatch(s);
+    };
+  }
+
   internal static uint[] ReadMemoryStreamAsInt32Array(Stream stream)
   {
     var finalValues = new List<uint>();

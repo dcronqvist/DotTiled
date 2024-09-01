@@ -33,7 +33,7 @@ public abstract partial class TmxReaderBase
       return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = null, Chunks = chunks };
     }
 
-    var usesTileChildrenInsteadOfRawData = encoding is null && compression is null;
+    var usesTileChildrenInsteadOfRawData = !encoding.HasValue && !compression.HasValue;
     if (usesTileChildrenInsteadOfRawData)
     {
       var tileChildrenGlobalTileIDsWithFlippingFlags = ReadTileChildrenInWrapper("data", _reader);
@@ -41,7 +41,7 @@ public abstract partial class TmxReaderBase
       return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = tileChildrenGlobalTileIDs, FlippingFlags = tileChildrenFlippingFlags, Chunks = null };
     }
 
-    var rawDataGlobalTileIDsWithFlippingFlags = ReadRawData(_reader, encoding!.Value, compression);
+    var rawDataGlobalTileIDsWithFlippingFlags = ReadRawData(_reader, encoding, compression);
     var (rawDataGlobalTileIDs, rawDataFlippingFlags) = ReadAndClearFlippingFlagsFromGIDs(rawDataGlobalTileIDsWithFlippingFlags);
     return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = rawDataGlobalTileIDs, FlippingFlags = rawDataFlippingFlags, Chunks = null };
   }
@@ -62,19 +62,19 @@ public abstract partial class TmxReaderBase
   }
 
   internal static uint[] ReadTileChildrenInWrapper(string wrapper, XmlReader reader) =>
-    reader.ReadList(wrapper, "tile", (r) => r.GetOptionalAttributeParseable<uint>("gid") ?? 0).ToArray();
+    reader.ReadList(wrapper, "tile", (r) => r.GetOptionalAttributeParseable<uint>("gid").GetValueOr(0)).ToArray();
 
-  internal static uint[] ReadRawData(XmlReader reader, DataEncoding encoding, DataCompression? compression)
+  internal static uint[] ReadRawData(XmlReader reader, DataEncoding encoding, Optional<DataCompression> compression)
   {
     var data = reader.ReadElementContentAsString();
     if (encoding == DataEncoding.Csv)
       return ParseCsvData(data);
 
     using var bytes = new MemoryStream(Convert.FromBase64String(data));
-    if (compression is null)
+    if (!compression.HasValue)
       return ReadMemoryStreamAsInt32Array(bytes);
 
-    var decompressed = compression switch
+    var decompressed = compression.Value switch
     {
       DataCompression.GZip => DecompressGZip(bytes),
       DataCompression.ZLib => DecompressZLib(bytes),

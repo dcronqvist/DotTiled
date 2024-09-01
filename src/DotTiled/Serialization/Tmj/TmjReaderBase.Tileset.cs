@@ -76,31 +76,32 @@ public abstract partial class TmjReaderBase
       TransparentColor = transparentColor
     } : null;
 
-    return new Tileset
-    {
-      Class = @class,
-      Columns = columns,
-      FillMode = fillMode,
-      FirstGID = firstGID,
-      Grid = grid,
-      Image = imageModel,
-      Margin = margin,
-      Name = name,
-      ObjectAlignment = objectAlignment,
-      Properties = properties,
-      Source = source,
-      Spacing = spacing,
-      TileCount = tileCount,
-      TiledVersion = tiledVersion,
-      TileHeight = tileHeight,
-      TileOffset = tileOffset,
-      RenderSize = tileRenderSize,
-      Tiles = tiles,
-      TileWidth = tileWidth,
-      Version = version,
-      Wangsets = wangsets,
-      Transformations = transformations
-    };
+    return null;
+    // return new Tileset
+    // {
+    //   Class = @class,
+    //   Columns = columns,
+    //   FillMode = fillMode,
+    //   FirstGID = firstGID,
+    //   Grid = grid,
+    //   Image = imageModel,
+    //   Margin = margin,
+    //   Name = name,
+    //   ObjectAlignment = objectAlignment,
+    //   Properties = properties,
+    //   Source = source,
+    //   Spacing = spacing,
+    //   TileCount = tileCount,
+    //   TiledVersion = tiledVersion,
+    //   TileHeight = tileHeight,
+    //   TileOffset = tileOffset,
+    //   RenderSize = tileRenderSize,
+    //   Tiles = tiles,
+    //   TileWidth = tileWidth,
+    //   Version = version,
+    //   Wangsets = wangsets,
+    //   Transformations = transformations
+    // };
   }
 
   internal static Transformations ReadTransformations(JsonElement element)

@@ -36,17 +36,17 @@ public class ObjectLayer : BaseLayer
   /// <summary>
   /// The width of the object layer in tiles. Meaningless.
   /// </summary>
-  public uint? Width { get; set; }
+  public uint Width { get; set; } = 0;
 
   /// <summary>
   /// The height of the object layer in tiles. Meaningless.
   /// </summary>
-  public uint? Height { get; set; }
+  public uint Height { get; set; } = 0;
 
   /// <summary>
   /// A color that is multiplied with any tile objects drawn by this layer.
   /// </summary>
-  public Color? Color { get; set; }
+  public Optional<Color> Color { get; set; } = Optional<Color>.Empty;
 
   /// <summary>
   /// Whether the objects are drawn according to the order of appearance (<see cref="DrawOrder.Index"/>) or sorted by their Y coordinate (<see cref="DrawOrder.TopDown"/>).
