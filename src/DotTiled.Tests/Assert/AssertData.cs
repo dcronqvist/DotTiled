@@ -2,7 +2,7 @@ namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertData(Data? expected, Data? actual)
+  internal static void AssertData(Data expected, Data actual)
   {
     if (expected is null)
     {

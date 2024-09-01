@@ -6,7 +6,7 @@ namespace DotTiled.Serialization.Tmj;
 
 public abstract partial class TmjReaderBase
 {
-  internal static Data ReadDataAsChunks(JsonElement element, DataCompression? compression, DataEncoding encoding)
+  internal static Data ReadDataAsChunks(JsonElement element, Optional<DataCompression> compression, DataEncoding encoding)
   {
     var chunks = element.GetValueAsList<Chunk>(e => ReadChunk(e, compression, encoding)).ToArray();
     return new Data
@@ -19,7 +19,7 @@ public abstract partial class TmjReaderBase
     };
   }
 
-  internal static Chunk ReadChunk(JsonElement element, DataCompression? compression, DataEncoding encoding)
+  internal static Chunk ReadChunk(JsonElement element, Optional<DataCompression> compression, DataEncoding encoding)
   {
     var data = ReadDataWithoutChunks(element, compression, encoding);
 
@@ -39,7 +39,7 @@ public abstract partial class TmjReaderBase
     };
   }
 
-  internal static Data ReadDataWithoutChunks(JsonElement element, DataCompression? compression, DataEncoding encoding)
+  internal static Data ReadDataWithoutChunks(JsonElement element, Optional<DataCompression> compression, DataEncoding encoding)
   {
     if (encoding == DataEncoding.Csv)
     {
@@ -52,7 +52,7 @@ public abstract partial class TmjReaderBase
     {
       var base64Data = element.GetBytesFromBase64();
 
-      if (compression == null)
+      if (!compression.HasValue)
       {
         var data = Helpers.ReadBytesAsInt32Array(base64Data);
         var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(data);
@@ -60,7 +60,7 @@ public abstract partial class TmjReaderBase
       }
 
       using var stream = new MemoryStream(base64Data);
-      var decompressed = compression switch
+      var decompressed = compression.Value switch
       {
         DataCompression.GZip => Helpers.DecompressGZip(stream),
         DataCompression.ZLib => Helpers.DecompressZLib(stream),

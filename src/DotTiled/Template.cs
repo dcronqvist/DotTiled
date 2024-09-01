@@ -8,7 +8,7 @@ public class Template
   /// <summary>
   /// If the template represents a tile object, this property will contain the tileset that the tile belongs to.
   /// </summary>
-  public Tileset? Tileset { get; set; }
+  public Optional<Tileset> Tileset { get; set; } = Optional<Tileset>.Empty;
 
   /// <summary>
   /// The object that this template represents.

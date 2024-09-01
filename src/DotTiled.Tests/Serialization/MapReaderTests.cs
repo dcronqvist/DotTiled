@@ -5,7 +5,7 @@ namespace DotTiled.Tests;
 public partial class MapReaderTests
 {
   public static IEnumerable<object[]> Maps => TestData.MapTests;
-  [Theory(Skip = "Skipped for now")]
+  [Theory]
   [MemberData(nameof(Maps))]
   public void MapReaderReadMap_ValidFilesExternalTilesetsAndTemplates_ReturnsMapThatEqualsExpected(
     string testDataFile,

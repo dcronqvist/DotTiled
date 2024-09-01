@@ -301,10 +301,10 @@ public abstract partial class TmxReaderBase
     // No attributes
 
     // At most one of
-    Tileset? tileset = null;
+    Tileset tileset = null;
 
     // Should contain exactly one of
-    DotTiled.Object? obj = null;
+    DotTiled.Object obj = null;
 
     _reader.ProcessChildren("template", (r, elementName) => elementName switch
     {

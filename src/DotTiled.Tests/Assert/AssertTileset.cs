@@ -43,7 +43,7 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Y, actual.Y, nameof(TileOffset.Y));
   }
 
-  private static void AssertGrid(Grid? expected, Grid? actual)
+  private static void AssertGrid(Grid expected, Grid actual)
   {
     if (expected is null)
     {
@@ -86,7 +86,7 @@ public static partial class DotTiledAssert
     AssertEqual(expected.WangID, actual.WangID, nameof(WangTile.WangID));
   }
 
-  private static void AssertTransformations(Transformations? expected, Transformations? actual)
+  private static void AssertTransformations(Transformations expected, Transformations actual)
   {
     if (expected is null)
     {
