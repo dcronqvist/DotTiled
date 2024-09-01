@@ -30,7 +30,7 @@ public abstract partial class TmxReaderBase
       var chunks = _reader
         .ReadList("data", "chunk", (r) => ReadChunk(encoding, compression))
         .ToArray();
-      return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = null, Chunks = chunks };
+      return new Data { Encoding = encoding, Compression = compression, Chunks = chunks };
     }
 
     var usesTileChildrenInsteadOfRawData = !encoding.HasValue && !compression.HasValue;
@@ -38,12 +38,12 @@ public abstract partial class TmxReaderBase
     {
       var tileChildrenGlobalTileIDsWithFlippingFlags = ReadTileChildrenInWrapper("data", _reader);
       var (tileChildrenGlobalTileIDs, tileChildrenFlippingFlags) = ReadAndClearFlippingFlagsFromGIDs(tileChildrenGlobalTileIDsWithFlippingFlags);
-      return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = tileChildrenGlobalTileIDs, FlippingFlags = tileChildrenFlippingFlags, Chunks = null };
+      return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = tileChildrenGlobalTileIDs, FlippingFlags = tileChildrenFlippingFlags };
     }
 
     var rawDataGlobalTileIDsWithFlippingFlags = ReadRawData(_reader, encoding, compression);
     var (rawDataGlobalTileIDs, rawDataFlippingFlags) = ReadAndClearFlippingFlagsFromGIDs(rawDataGlobalTileIDsWithFlippingFlags);
-    return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = rawDataGlobalTileIDs, FlippingFlags = rawDataFlippingFlags, Chunks = null };
+    return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = rawDataGlobalTileIDs, FlippingFlags = rawDataFlippingFlags };
   }
 
   internal static (uint[] GlobalTileIDs, FlippingFlags[] FlippingFlags) ReadAndClearFlippingFlagsFromGIDs(uint[] globalTileIDs)

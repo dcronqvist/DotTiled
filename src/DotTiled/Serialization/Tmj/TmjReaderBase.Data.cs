@@ -13,9 +13,7 @@ public abstract partial class TmjReaderBase
     {
       Chunks = chunks,
       Compression = compression,
-      Encoding = encoding,
-      FlippingFlags = null,
-      GlobalTileIDs = null
+      Encoding = encoding
     };
   }
 
@@ -34,8 +32,8 @@ public abstract partial class TmjReaderBase
       Y = y,
       Width = width,
       Height = height,
-      GlobalTileIDs = data.GlobalTileIDs!,
-      FlippingFlags = data.FlippingFlags!
+      GlobalTileIDs = data.GlobalTileIDs,
+      FlippingFlags = data.FlippingFlags
     };
   }
 
@@ -46,7 +44,7 @@ public abstract partial class TmjReaderBase
       // Array of uint
       var data = element.GetValueAsList<uint>(e => e.GetValueAs<uint>()).ToArray();
       var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(data);
-      return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
+      return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
     }
     else if (encoding == DataEncoding.Base64)
     {
@@ -56,7 +54,7 @@ public abstract partial class TmjReaderBase
       {
         var data = Helpers.ReadBytesAsInt32Array(base64Data);
         var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(data);
-        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
+        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
       }
 
       using var stream = new MemoryStream(base64Data);
@@ -70,7 +68,7 @@ public abstract partial class TmjReaderBase
 
       {
         var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(decompressed);
-        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
+        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
       }
     }
 

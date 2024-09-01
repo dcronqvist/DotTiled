@@ -130,12 +130,12 @@ public class Data
   /// To get an actual tile ID, you map it to a local tile ID using the correct tileset. Please refer to
   /// <see href="https://doc.mapeditor.org/en/stable/reference/global-tile-ids/#mapping-a-gid-to-a-local-tile-id">the documentation on how to do this</see>.
   /// </summary>
-  public uint[] GlobalTileIDs { get; set; }
+  public Optional<uint[]> GlobalTileIDs { get; set; } = Optional<uint[]>.Empty;
 
   /// <summary>
   /// The parsed flipping flags for each tile in the layer. Appear in the same order as the tiles in the layer in <see cref="GlobalTileIDs"/>.
   /// </summary>
-  public FlippingFlags[] FlippingFlags { get; set; }
+  public Optional<FlippingFlags[]> FlippingFlags { get; set; } = Optional<FlippingFlags[]>.Empty;
 
   /// <summary>
   /// If the map is infinite, it will instead contain a list of chunks.
