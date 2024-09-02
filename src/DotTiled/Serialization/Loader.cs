@@ -32,11 +32,26 @@ public class Loader
   }
 
   /// <summary>
-  /// Creates a new instance of a <see cref="Loader"/> with the default <see cref="FileSystemResourceReader"/> and <see cref="DefaultResourceCache"/>.
+  /// Creates a new instance of a <see cref="Loader"/> with the default <see cref="FileSystemResourceReader"/> and <see cref="DefaultResourceCache"/>, and no available custom type definitions.
   /// </summary>
-  /// <param name="customTypeDefinitions">An optional collection of custom type definitions that can be used to resolve custom types in Tiled resources.</param>
   /// <returns>A new instance of a <see cref="Loader"/>.</returns>
-  public static Loader Default(IEnumerable<ICustomTypeDefinition> customTypeDefinitions = null) => new Loader(new FileSystemResourceReader(), new DefaultResourceCache(), customTypeDefinitions ?? []);
+  public static Loader Default() => new Loader(new FileSystemResourceReader(), new DefaultResourceCache(), []);
+
+  /// <summary>
+  /// Creates a new instance of a <see cref="Loader"/> with the ability to override the default <see cref="FileSystemResourceReader"/>, <see cref="DefaultResourceCache"/>, and custom type definitions.
+  /// </summary>
+  /// <param name="resourceReader">A reader that is able to read Tiled resources from a given path.</param>
+  /// <param name="resourceCache">A cache that stores Tiled resources for faster retrieval and reuse.</param>
+  /// <param name="customTypeDefinitions">A collection of custom type definitions that can be used to resolve custom types in Tiled resources.</param>
+  /// <returns></returns>
+  public static Loader DefaultWith(
+    IResourceReader resourceReader = null,
+    IResourceCache resourceCache = null,
+    IEnumerable<ICustomTypeDefinition> customTypeDefinitions = null) =>
+    new Loader(
+      resourceReader ?? new FileSystemResourceReader(),
+      resourceCache ?? new DefaultResourceCache(),
+      customTypeDefinitions ?? Array.Empty<ICustomTypeDefinition>());
 
   /// <summary>
   /// Loads a map from the given <paramref name="mapPath"/>.
