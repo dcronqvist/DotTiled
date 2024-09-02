@@ -1,4 +1,4 @@
-namespace DotTiled;
+namespace DotTiled.Serialization;
 
 /// <summary>
 /// Interface for a cache that stores Tiled resources for faster retrieval and reuse.

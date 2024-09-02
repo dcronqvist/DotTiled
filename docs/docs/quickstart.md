@@ -6,41 +6,53 @@ Install DotTiled from NuGet:
 dotnet add package DotTiled
 ```
 
-Load a map from file system:
+## Loading a map from the file system
+
+This will create a loader that will load files from the underlying file system using <xref:DotTiled.Serialization.FileSystemResourceReader>. It will also be configured to use an in-memory cache to avoid loading the same tileset or template multiple times using <xref:DotTiled.Serialization.DefaultResourceCache>.
 
 ```csharp
-string mapPath = "path/to/map.tmx";
-string mapDirectory = Path.GetDirectoryName(mapPath);
+using DotTiled;
 
-Tileset ResolveTileset(string source)
-{
-  string tilesetPath = Path.Combine(mapDirectory, source);
-  using var tilesetFileReader = new StreamReader(tilesetPath);
-  var tilesetString = tilesetReader.ReadToEnd();
-  using var tilesetReader = new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType);
-  return tilesetReader.ReadTileset();
-}
-
-Template ResolveTemplate(string source)
-{
-  string templatePath = Path.Combine(mapDirectory, source);
-  using var templateFileReader = new StreamReader(templatePath);
-  var templateString = templateReader.ReadToEnd();
-  using var templateReader = new TemplateReader(templateString, ResolveTileset, ResolveTemplate, ResolveCustomType);
-  return templateReader.ReadTemplate();
-}
-
-ICustomTypeDefinition ResolveCustomType(string name)
-{
-  var allDefinedTypes = [ ... ];
-  return allDefinedTypes.FirstOrDefault(type => type.Name == name);
-}
-
-using var mapFileReader = new StreamReader(mapPath);
-var mapString = mapFileReader.ReadToEnd();
-using var mapReader = new MapReader(mapString, ResolveTileset, ResolveTemplate, ResolveCustomType);
-
-var map = mapReader.ReadMap();
+var loader = Loader.Default();
+var map = loader.LoadMap("path/to/map.tmx");
 ```
 
-If the above looks intimidating, don't worry! DotTiled is designed to be flexible and allow you to load maps from any source, such as a database or a custom file format. The above example is just one way to load a map from a file system. Please look at [Loading Maps](essentials/loading-maps.md) for more information on how to load maps from different sources.
+## Loading a map from a different source
+
+If you want to load resources (maps, tilesets, templates) from a different source than the underlying file system, you can override the <xref:DotTiled.Serialization.FileSystemResourceReader> that is being used with your own implementation of <xref:DotTiled.Serialization.IResourceReader>.
+
+```csharp	
+using DotTiled;
+
+var loader = Loader.DefaultWith(
+  resourceReader: new MyCustomResourceReader());
+var map = loader.LoadMap("path/to/map.tmx");
+```
+
+## Caching resources
+
+Similarly, you can override the <xref:DotTiled.Serialization.DefaultResourceCache> that is being used with your own implementation of <xref:DotTiled.Serialization.IResourceCache>.
+
+```csharp
+using DotTiled;
+
+var loader = Loader.DefaultWith(
+  resourceReader: new MyCustomResourceReader(),
+  resourceCache: new MyCustomResourceCache());
+var map = loader.LoadMap("path/to/map.tmx");
+```
+
+## Custom types
+
+If you have custom types in your map, you can provide any `IEnumerable<ICustomTypeDefinition>` to the loader. This will allow the loader to deserialize the custom types in your map.
+
+```csharp
+using DotTiled;
+
+var monsterSpawnerDef = new CustomClassDefinition { ... };
+var chestDef = new CustomClassDefinition { ... };
+
+var loader = Loader.DefaultWith(
+  customTypeDefinitions: [monsterSpawnerDef, chestDef]);
+var map = loader.LoadMap("path/to/map.tmx");
+```

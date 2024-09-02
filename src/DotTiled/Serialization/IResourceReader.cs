@@ -1,4 +1,4 @@
-namespace DotTiled;
+namespace DotTiled.Serialization;
 
 /// <summary>
 /// Able to read resources from a given path.
