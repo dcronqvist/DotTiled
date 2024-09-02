@@ -19,7 +19,7 @@ Other similar libraries exist, and you may want to consider them for your projec
 | Actively maintained             |            ✅          |     ✅   |     ✅      |      ❌   |    ❌  |   ❌   |
 | Benchmark (time)*               |           1.00          |   1.83   |     2.16    |      -     |    -    |    -   |
 | Benchmark (memory)*             |           1.00          |   1.43   |     2.03    |      -     |    -    |    -   |
-| .NET Targets                    | `net8.0` |`net6.0`<br>`net7.0`|`netstandard2.1`|`netstandard2.0`|`netstandard2.0`|`net45`|
+| .NET Targets                    | `net8.0` | `net8.0` |`netstandard2.1`|`netstandard2.0`|`netstandard2.0`|`net45`|
 | Docs                            |Usage, API,<br>XML Docs|Usage|Usage, API,<br>XML Docs|Usage, API|Usage, XML Docs|Usage, XML Docs|
 | License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
 
