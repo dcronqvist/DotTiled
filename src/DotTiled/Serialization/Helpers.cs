@@ -106,7 +106,7 @@ internal static partial class Helpers
     }).ToList();
   }
 
-  internal static IList<IProperty> MergeProperties(IList<IProperty>? baseProperties, IList<IProperty>? overrideProperties)
+  internal static IList<IProperty> MergeProperties(IList<IProperty> baseProperties, IList<IProperty> overrideProperties)
   {
     if (baseProperties is null)
       return overrideProperties ?? [];
@@ -148,7 +148,7 @@ internal static partial class Helpers
       properties[index] = property;
   }
 
-  internal static void SetAtMostOnce<T>(ref T? field, T value, string fieldName)
+  internal static void SetAtMostOnce<T>(ref T field, T value, string fieldName)
   {
     if (field is not null)
       throw new InvalidOperationException($"{fieldName} already set");
@@ -156,7 +156,7 @@ internal static partial class Helpers
     field = value;
   }
 
-  internal static void SetAtMostOnceUsingCounter<T>(ref T? field, T value, string fieldName, ref int counter)
+  internal static void SetAtMostOnceUsingCounter<T>(ref T field, T value, string fieldName, ref int counter)
   {
     if (counter > 0)
       throw new InvalidOperationException($"{fieldName} already set");

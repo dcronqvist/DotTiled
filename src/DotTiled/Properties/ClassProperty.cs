@@ -51,7 +51,7 @@ public class ClassProperty : IHasProperties, IProperty<IList<IProperty>>
   }
 
   /// <inheritdoc/>
-  public bool TryGetProperty<T>(string name, [NotNullWhen(true)] out T? property) where T : IProperty
+  public bool TryGetProperty<T>(string name, [NotNullWhen(true)] out T property) where T : IProperty
   {
     if (Value.FirstOrDefault(_properties => _properties.Name == name) is T prop)
     {
