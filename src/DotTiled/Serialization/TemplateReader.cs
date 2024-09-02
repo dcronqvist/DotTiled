@@ -16,8 +16,8 @@ public class TemplateReader : ITemplateReader
   private readonly Func<string, Template> _externalTemplateResolver;
   private readonly Func<string, ICustomTypeDefinition> _customTypeResolver;
 
-  private readonly StringReader? _templateStringReader;
-  private readonly XmlReader? _xmlReader;
+  private readonly StringReader _templateStringReader;
+  private readonly XmlReader _xmlReader;
   private readonly ITemplateReader _templateReader;
   private bool disposedValue;
 

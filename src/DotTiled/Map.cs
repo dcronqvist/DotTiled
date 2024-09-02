@@ -100,7 +100,7 @@ public class Map : HasPropertiesBase
   /// <summary>
   /// The Tiled version used to save the file.
   /// </summary>
-  public required string TiledVersion { get; set; }
+  public Optional<string> TiledVersion { get; set; } = Optional<string>.Empty;
 
   /// <summary>
   /// The class of this map.
@@ -146,17 +146,17 @@ public class Map : HasPropertiesBase
   /// <summary>
   /// Only for hexagonal maps. Determines the width or height (depending on the staggered axis) of the tile's edge, in pixels.
   /// </summary>
-  public uint? HexSideLength { get; set; }
+  public Optional<uint> HexSideLength { get; set; } = Optional<uint>.Empty;
 
   /// <summary>
   /// For staggered and hexagonal maps, determines which axis (X or Y) is staggered.
   /// </summary>
-  public StaggerAxis? StaggerAxis { get; set; }
+  public Optional<StaggerAxis> StaggerAxis { get; set; } = Optional<StaggerAxis>.Empty;
 
   /// <summary>
   /// For staggered and hexagonal maps, determines whether the "even" or "odd" indexes along the staggered axis are shifted.
   /// </summary>
-  public StaggerIndex? StaggerIndex { get; set; }
+  public Optional<StaggerIndex> StaggerIndex { get; set; } = Optional<StaggerIndex>.Empty;
 
   /// <summary>
   /// X coordinate of the parallax origin in pixels.

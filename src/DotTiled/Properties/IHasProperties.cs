@@ -22,7 +22,7 @@ public interface IHasProperties
   /// <param name="name">The name of the property to get.</param>
   /// <param name="property">The property with the specified name, if found.</param>
   /// <returns>True if a property with the specified name was found; otherwise, false.</returns>
-  bool TryGetProperty<T>(string name, out T? property) where T : IProperty;
+  bool TryGetProperty<T>(string name, out T property) where T : IProperty;
 
   /// <summary>
   /// Gets a property of the specified type with the specified name.
@@ -57,7 +57,7 @@ public abstract class HasPropertiesBase : IHasProperties
   }
 
   /// <inheritdoc/>
-  public bool TryGetProperty<T>(string name, [NotNullWhen(true)] out T? property) where T : IProperty
+  public bool TryGetProperty<T>(string name, [NotNullWhen(true)] out T property) where T : IProperty
   {
     var properties = GetProperties();
     if (properties.FirstOrDefault(_properties => _properties.Name == name) is T prop)

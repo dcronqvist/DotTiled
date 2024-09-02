@@ -5,6 +5,68 @@ namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
+  private static void AssertListOrdered<T>(IList<T> expected, IList<T> actual, string nameof, Action<T, T> assertEqual = null)
+  {
+    if (expected is null)
+    {
+      Assert.Null(actual);
+      return;
+    }
+
+    Assert.NotNull(actual);
+    AssertEqual(expected.Count, actual.Count, $"{nameof}.Count");
+
+    for (var i = 0; i < expected.Count; i++)
+    {
+      if (assertEqual is not null)
+      {
+        assertEqual(expected[i], actual[i]);
+        continue;
+      }
+      AssertEqual(expected[i], actual[i], $"{nameof}[{i}]");
+    }
+  }
+
+  private static void AssertOptionalsEqual<T>(
+    Optional<T> expected,
+    Optional<T> actual,
+    string nameof,
+    Action<T, T> assertEqual)
+  {
+    if (expected is null)
+    {
+      Assert.Null(actual);
+      return;
+    }
+
+    if (expected.HasValue)
+    {
+      Assert.True(actual.HasValue, $"Expected {nameof} to have a value");
+      assertEqual(expected.Value, actual.Value);
+      return;
+    }
+
+    Assert.False(actual.HasValue, $"Expected {nameof} to not have a value");
+  }
+
+  private static void AssertEqual<T>(Optional<T> expected, Optional<T> actual, string nameof)
+  {
+    if (expected is null)
+    {
+      Assert.Null(actual);
+      return;
+    }
+
+    if (expected.HasValue)
+    {
+      Assert.True(actual.HasValue, $"Expected {nameof} to have a value");
+      AssertEqual(expected.Value, actual.Value, nameof);
+      return;
+    }
+
+    Assert.False(actual.HasValue, $"Expected {nameof} to not have a value");
+  }
+
   private static void AssertEqual<T>(T expected, T actual, string nameof)
   {
     if (expected == null)

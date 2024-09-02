@@ -12,29 +12,29 @@ public abstract partial class TmxReaderBase
   {
     // Attributes
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
-    var name = _reader.GetOptionalAttribute("name") ?? "";
-    var @class = _reader.GetOptionalAttribute("class") ?? "";
-    var x = _reader.GetOptionalAttributeParseable<uint>("x") ?? 0;
-    var y = _reader.GetOptionalAttributeParseable<uint>("y") ?? 0;
-    var width = _reader.GetOptionalAttributeParseable<uint>("width");
-    var height = _reader.GetOptionalAttributeParseable<uint>("height");
-    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
-    var visible = (_reader.GetOptionalAttributeParseable<uint>("visible") ?? 1) == 1;
+    var name = _reader.GetOptionalAttribute("name").GetValueOr("");
+    var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
+    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
+    var width = _reader.GetOptionalAttributeParseable<uint>("width").GetValueOr(0);
+    var height = _reader.GetOptionalAttributeParseable<uint>("height").GetValueOr(0);
+    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
+    var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
-    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
-    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
-    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
-    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
+    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
+    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);
+    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
+    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1.0f);
     var color = _reader.GetOptionalAttributeClass<Color>("color");
     var drawOrder = _reader.GetOptionalAttributeEnum<DrawOrder>("draworder", s => s switch
     {
       "topdown" => DrawOrder.TopDown,
       "index" => DrawOrder.Index,
       _ => throw new InvalidOperationException($"Unknown draw order '{s}'")
-    }) ?? DrawOrder.TopDown;
+    }).GetValueOr(DrawOrder.TopDown);
 
     // Elements
-    List<IProperty>? properties = null;
+    List<IProperty> properties = null;
     List<DotTiled.Object> objects = [];
 
     _reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
@@ -71,11 +71,11 @@ public abstract partial class TmxReaderBase
   {
     // Attributes
     var template = _reader.GetOptionalAttribute("template");
-    DotTiled.Object? obj = null;
-    if (template is not null)
+    DotTiled.Object obj = null;
+    if (template.HasValue)
       obj = _externalTemplateResolver(template).Object;
 
-    uint? idDefault = obj?.ID ?? null;
+    uint idDefault = obj?.ID.GetValueOr(0) ?? 0;
     string nameDefault = obj?.Name ?? "";
     string typeDefault = obj?.Type ?? "";
     float xDefault = obj?.X ?? 0f;
@@ -83,25 +83,25 @@ public abstract partial class TmxReaderBase
     float widthDefault = obj?.Width ?? 0f;
     float heightDefault = obj?.Height ?? 0f;
     float rotationDefault = obj?.Rotation ?? 0f;
-    uint? gidDefault = obj is TileObject tileObj ? tileObj.GID : null;
+    Optional<uint> gidDefault = obj is TileObject tileObj ? tileObj.GID : Optional<uint>.Empty;
     bool visibleDefault = obj?.Visible ?? true;
-    List<IProperty>? propertiesDefault = obj?.Properties ?? null;
+    List<IProperty> propertiesDefault = obj?.Properties ?? null;
 
-    var id = _reader.GetOptionalAttributeParseable<uint>("id") ?? idDefault;
-    var name = _reader.GetOptionalAttribute("name") ?? nameDefault;
-    var type = _reader.GetOptionalAttribute("type") ?? typeDefault;
-    var x = _reader.GetOptionalAttributeParseable<float>("x") ?? xDefault;
-    var y = _reader.GetOptionalAttributeParseable<float>("y") ?? yDefault;
-    var width = _reader.GetOptionalAttributeParseable<float>("width") ?? widthDefault;
-    var height = _reader.GetOptionalAttributeParseable<float>("height") ?? heightDefault;
-    var rotation = _reader.GetOptionalAttributeParseable<float>("rotation") ?? rotationDefault;
-    var gid = _reader.GetOptionalAttributeParseable<uint>("gid") ?? gidDefault;
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? visibleDefault;
+    var id = _reader.GetOptionalAttributeParseable<uint>("id").GetValueOr(idDefault);
+    var name = _reader.GetOptionalAttribute("name").GetValueOr(nameDefault);
+    var type = _reader.GetOptionalAttribute("type").GetValueOr(typeDefault);
+    var x = _reader.GetOptionalAttributeParseable<float>("x").GetValueOr(xDefault);
+    var y = _reader.GetOptionalAttributeParseable<float>("y").GetValueOr(yDefault);
+    var width = _reader.GetOptionalAttributeParseable<float>("width").GetValueOr(widthDefault);
+    var height = _reader.GetOptionalAttributeParseable<float>("height").GetValueOr(heightDefault);
+    var rotation = _reader.GetOptionalAttributeParseable<float>("rotation").GetValueOr(rotationDefault);
+    var gid = _reader.GetOptionalAttributeParseable<uint>("gid").GetValueOrOptional(gidDefault);
+    var visible = _reader.GetOptionalAttributeParseable<bool>("visible").GetValueOr(visibleDefault);
 
     // Elements
-    DotTiled.Object? foundObject = null;
+    DotTiled.Object foundObject = null;
     int propertiesCounter = 0;
-    List<IProperty>? properties = propertiesDefault;
+    List<IProperty> properties = propertiesDefault;
 
     _reader.ProcessChildren("object", (r, elementName) => elementName switch
     {
@@ -116,7 +116,7 @@ public abstract partial class TmxReaderBase
 
     if (foundObject is null)
     {
-      if (gid is not null)
+      if (gid.HasValue)
         foundObject = new TileObject { ID = id, GID = gid.Value };
       else
         foundObject = new RectangleObject { ID = id };
@@ -137,7 +137,7 @@ public abstract partial class TmxReaderBase
     return OverrideObject(obj, foundObject);
   }
 
-  internal static DotTiled.Object OverrideObject(DotTiled.Object? obj, DotTiled.Object foundObject)
+  internal static DotTiled.Object OverrideObject(DotTiled.Object obj, DotTiled.Object foundObject)
   {
     if (obj is null)
       return foundObject;
@@ -301,10 +301,10 @@ public abstract partial class TmxReaderBase
     // No attributes
 
     // At most one of
-    Tileset? tileset = null;
+    Tileset tileset = null;
 
     // Should contain exactly one of
-    DotTiled.Object? obj = null;
+    DotTiled.Object obj = null;
 
     _reader.ProcessChildren("template", (r, elementName) => elementName switch
     {

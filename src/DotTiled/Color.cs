@@ -37,7 +37,7 @@ public class Color : IParsable<Color>, IEquatable<Color>
   /// <param name="provider">An object that supplies culture-specific information about the format of s.</param>
   /// <returns>The parsed <see cref="Color"/></returns>
   /// <exception cref="FormatException">Thrown in case the provided string <paramref name="s"/> is not in a valid format.</exception>
-  public static Color Parse(string s, IFormatProvider? provider)
+  public static Color Parse(string s, IFormatProvider provider)
   {
     _ = TryParse(s, provider, out var result);
     return result ?? throw new FormatException($"Invalid format for TiledColor: {s}");
@@ -52,8 +52,8 @@ public class Color : IParsable<Color>, IEquatable<Color>
   /// <param name="result">When this method returns, contains the parsed <see cref="Color"/> or <c>null</c> on failure.</param>
   /// <returns><c>true</c> if <paramref name="s"/> was successfully parsed; otherwise, <c>false</c>.</returns>
   public static bool TryParse(
-    [NotNullWhen(true)] string? s,
-    IFormatProvider? provider,
+    [NotNullWhen(true)] string s,
+    IFormatProvider provider,
     [MaybeNullWhen(false)] out Color result)
   {
     if (s is not null && !s.StartsWith('#'))
@@ -90,7 +90,7 @@ public class Color : IParsable<Color>, IEquatable<Color>
   }
 
   /// <inheritdoc/>
-  public bool Equals(Color? other)
+  public bool Equals(Color other)
   {
     if (other is null)
       return false;
@@ -99,7 +99,7 @@ public class Color : IParsable<Color>, IEquatable<Color>
   }
 
   /// <inheritdoc/>
-  public override bool Equals(object? obj) => obj is Color other && Equals(other);
+  public override bool Equals(object obj) => obj is Color other && Equals(other);
 
   /// <inheritdoc/>
   public override int GetHashCode() => HashCode.Combine(R, G, B, A);

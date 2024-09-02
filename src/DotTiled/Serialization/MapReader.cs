@@ -16,8 +16,8 @@ public class MapReader : IMapReader
   private readonly Func<string, Template> _externalTemplateResolver;
   private readonly Func<string, ICustomTypeDefinition> _customTypeResolver;
 
-  private readonly StringReader? _mapStringReader;
-  private readonly XmlReader? _xmlReader;
+  private readonly StringReader _mapStringReader;
+  private readonly XmlReader _xmlReader;
   private readonly IMapReader _mapReader;
   private bool disposedValue;
 

@@ -54,15 +54,15 @@ public class Tile : HasPropertiesBase
   /// <summary>
   /// The image representing this tile. Only used for tilesets that composed of a collection of images.
   /// </summary>
-  public Image? Image { get; set; }
+  public Optional<Image> Image { get; set; } = Optional<Image>.Empty;
 
   /// <summary>
-  /// Unclear what this is for.
+  /// Used when the tile contains e.g. collision information.
   /// </summary>
-  public ObjectLayer? ObjectLayer { get; set; }
+  public Optional<ObjectLayer> ObjectLayer { get; set; } = Optional<ObjectLayer>.Empty;
 
   /// <summary>
   /// The animation frames for this tile.
   /// </summary>
-  public List<Frame>? Animation { get; set; }
+  public List<Frame> Animation { get; set; } = [];
 }

@@ -13,9 +13,6 @@ public partial class TestData
     TileWidth = 24,
     TileHeight = 24,
     Infinite = false,
-    HexSideLength = null,
-    StaggerAxis = null,
-    StaggerIndex = null,
     ParallaxOriginX = 0,
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
@@ -56,7 +53,59 @@ public partial class TestData
           Source = "tileset.png",
           Width = 256,
           Height = 96,
-        }
+        },
+        Wangsets = [
+          new Wangset
+          {
+            Name = "test-terrain",
+            Tile = -1,
+            WangColors = [
+              new WangColor
+              {
+                Name = "Water",
+                Color = Color.Parse("#ff0000", CultureInfo.InvariantCulture),
+                Tile = 0,
+                Probability = 1
+              },
+              new WangColor
+              {
+                Name = "Grass",
+                Color = Color.Parse("#00ff00", CultureInfo.InvariantCulture),
+                Tile = -1,
+                Probability = 1
+              },
+              new WangColor
+              {
+                Name = "Stone",
+                Color = Color.Parse("#0000ff", CultureInfo.InvariantCulture),
+                Tile = 29,
+                Probability = 1
+              }
+            ],
+            WangTiles = [
+              new WangTile
+              {
+                TileID = 0,
+                WangID = [1,1,0,0,0,1,1,1]
+              },
+              new WangTile
+              {
+                TileID = 1,
+                WangID = [1,1,1,1,0,0,0,1]
+              },
+              new WangTile
+              {
+                TileID = 10,
+                WangID = [0,0,0,1,1,1,1,1]
+              },
+              new WangTile
+              {
+                TileID = 11,
+                WangID = [0,1,1,1,1,1,0,0]
+              }
+            ]
+          }
+        ]
       }
     ],
     Layers = [
@@ -69,22 +118,20 @@ public partial class TestData
         Data = new Data
         {
           Encoding = DataEncoding.Csv,
-          Chunks = null,
-          Compression = null,
-          GlobalTileIDs = [
+          GlobalTileIDs = new Optional<uint[]>([
             2, 2, 12, 11, 0,
             1, 12, 1, 11, 0,
             2, 1, 0, 1, 0,
             12, 11, 12, 2, 0,
             0, 0, 0, 0, 0
-          ],
-          FlippingFlags = [
+          ]),
+          FlippingFlags = new Optional<FlippingFlags[]>([
             FlippingFlags.FlippedHorizontally, FlippingFlags.None, FlippingFlags.FlippedHorizontally, FlippingFlags.FlippedHorizontally, FlippingFlags.None,
             FlippingFlags.FlippedVertically, FlippingFlags.None, FlippingFlags.None, FlippingFlags.FlippedVertically | FlippingFlags.FlippedHorizontally, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.FlippedVertically | FlippingFlags.FlippedHorizontally, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.FlippedHorizontally, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None
-          ]
+          ])
         }
       }
     ]

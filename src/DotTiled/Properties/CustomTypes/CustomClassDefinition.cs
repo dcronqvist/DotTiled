@@ -76,7 +76,7 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   /// <summary>
   /// The color of the custom class inside the Tiled editor.
   /// </summary>
-  public Color? Color { get; set; }
+  public Color Color { get; set; }
 
   /// <summary>
   /// Whether the custom class should be drawn with a fill color.

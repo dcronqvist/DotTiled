@@ -16,8 +16,8 @@ public class TilesetReader : ITilesetReader
   private readonly Func<string, Template> _externalTemplateResolver;
   private readonly Func<string, ICustomTypeDefinition> _customTypeResolver;
 
-  private readonly StringReader? _tilesetStringReader;
-  private readonly XmlReader? _xmlReader;
+  private readonly StringReader _tilesetStringReader;
+  private readonly XmlReader _xmlReader;
   private readonly ITilesetReader _tilesetReader;
   private bool disposedValue;
 

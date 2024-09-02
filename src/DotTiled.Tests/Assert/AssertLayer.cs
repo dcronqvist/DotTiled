@@ -2,7 +2,7 @@ namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertLayer(BaseLayer? expected, BaseLayer? actual)
+  internal static void AssertLayer(BaseLayer expected, BaseLayer actual)
   {
     if (expected is null)
     {

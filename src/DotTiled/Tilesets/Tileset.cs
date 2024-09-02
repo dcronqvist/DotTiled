@@ -98,27 +98,27 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// The TMX format version. Is incremented to match minor Tiled releases.
   /// </summary>
-  public string? Version { get; set; }
+  public Optional<string> Version { get; set; }
 
   /// <summary>
   /// The Tiled version used to save the file in case it was loaded from an external tileset file.
   /// </summary>
-  public string? TiledVersion { get; set; }
+  public Optional<string> TiledVersion { get; set; } = Optional<string>.Empty;
 
   /// <summary>
   /// The first global tile ID of this tileset (this global ID maps to the first tile in this tileset).
   /// </summary>
-  public uint? FirstGID { get; set; }
+  public Optional<uint> FirstGID { get; set; } = Optional<uint>.Empty;
 
   /// <summary>
   /// If this tileset is stored in an external TSX (Tile Set XML) file, this attribute refers to that file.
   /// </summary>
-  public string? Source { get; set; }
+  public Optional<string> Source { get; set; } = Optional<string>.Empty;
 
   /// <summary>
   /// The name of this tileset.
   /// </summary>
-  public string? Name { get; set; }
+  public required string Name { get; set; }
 
   /// <summary>
   /// The class of this tileset.
@@ -128,32 +128,32 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// The width of the tiles in this tileset, which should be at least 1 (non-zero) except in the case of image collection tilesets (in which case it stores the maximum tile width).
   /// </summary>
-  public uint? TileWidth { get; set; }
+  public required uint TileWidth { get; set; }
 
   /// <summary>
   /// The height of the tiles in this tileset, which should be at least 1 (non-zero) except in the case of image collection tilesets (in which case it stores the maximum tile height).
   /// </summary>
-  public uint? TileHeight { get; set; }
+  public required uint TileHeight { get; set; }
 
   /// <summary>
   /// The spacing in pixels between the tiles in this tileset (applies to the tileset image). Irrelevant for image collection tilesets.
   /// </summary>
-  public float? Spacing { get; set; } = 0f;
+  public uint Spacing { get; set; } = 0;
 
   /// <summary>
   /// The margin around the tiles in this tileset (applies to the tileset image). Irrelevant for image collection tilesets.
   /// </summary>
-  public float? Margin { get; set; } = 0f;
+  public uint Margin { get; set; } = 0;
 
   /// <summary>
   /// The number of tiles in this tileset.
   /// </summary>
-  public uint? TileCount { get; set; }
+  public required uint TileCount { get; set; }
 
   /// <summary>
   /// The number of tile columns in the tileset.
   /// </summary>
-  public uint? Columns { get; set; }
+  public required uint Columns { get; set; }
 
   /// <summary>
   /// Controls the aligntment for tile objects.
@@ -173,17 +173,17 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// If the tileset is based on a single image, which is cut into tiles based on the given attributes of the tileset, then this is that image.
   /// </summary>
-  public Image? Image { get; set; }
+  public Optional<Image> Image { get; set; } = Optional<Image>.Empty;
 
   /// <summary>
   /// This is used to specify an offset in pixels, to be applied when drawing a tile from the related tileset. When not present, no offset is applied.
   /// </summary>
-  public TileOffset? TileOffset { get; set; }
+  public Optional<TileOffset> TileOffset { get; set; } = Optional<TileOffset>.Empty;
 
   /// <summary>
   /// Ths is only used in case of isometric orientation, and determines how tile overlays for terrain and collision information are rendered.
   /// </summary>
-  public Grid? Grid { get; set; }
+  public Optional<Grid> Grid { get; set; } = Optional<Grid>.Empty;
 
   /// <summary>
   /// Tileset properties.
@@ -198,12 +198,12 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// Contains the list of Wang sets defined for this tileset.
   /// </summary>
-  public List<Wangset>? Wangsets { get; set; }
+  public List<Wangset> Wangsets { get; set; } = [];
 
   /// <summary>
   /// Used to describe which transformations can be applied to the tiles (e.g. to extend a Wang set by transforming existing tiles).
   /// </summary>
-  public Transformations? Transformations { get; set; }
+  public Optional<Transformations> Transformations { get; set; } = Optional<Transformations>.Empty;
 
   /// <summary>
   /// If this tileset is based on a collection of images, then this list of tiles will contain the individual images that make up the tileset.

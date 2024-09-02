@@ -15,13 +15,13 @@ internal static class ExtensionsJsonElement
     return property.GetValueAs<T>();
   }
 
-  internal static T GetOptionalProperty<T>(this JsonElement element, string propertyName, T defaultValue)
+  internal static Optional<T> GetOptionalProperty<T>(this JsonElement element, string propertyName)
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return defaultValue;
+      return Optional<T>.Empty;
 
     if (property.ValueKind == JsonValueKind.Null)
-      return defaultValue;
+      return Optional<T>.Empty;
 
     return property.GetValueAs<T>();
   }
@@ -64,18 +64,18 @@ internal static class ExtensionsJsonElement
     return parser(property.GetString()!);
   }
 
-  internal static T GetOptionalPropertyParseable<T>(this JsonElement element, string propertyName, T defaultValue) where T : IParsable<T>
+  internal static Optional<T> GetOptionalPropertyParseable<T>(this JsonElement element, string propertyName) where T : IParsable<T>
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return defaultValue;
+      return Optional<T>.Empty;
 
     return T.Parse(property.GetString()!, CultureInfo.InvariantCulture);
   }
 
-  internal static T GetOptionalPropertyParseable<T>(this JsonElement element, string propertyName, Func<string, T> parser, T defaultValue)
+  internal static Optional<T> GetOptionalPropertyParseable<T>(this JsonElement element, string propertyName, Func<string, T> parser)
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return defaultValue;
+      return Optional<T>.Empty;
 
     return parser(property.GetString()!);
   }
@@ -88,10 +88,10 @@ internal static class ExtensionsJsonElement
     return parser(property);
   }
 
-  internal static T GetOptionalPropertyCustom<T>(this JsonElement element, string propertyName, Func<JsonElement, T> parser, T defaultValue)
+  internal static Optional<T> GetOptionalPropertyCustom<T>(this JsonElement element, string propertyName, Func<JsonElement, T> parser)
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return defaultValue;
+      return Optional<T>.Empty;
 
     return parser(property);
   }

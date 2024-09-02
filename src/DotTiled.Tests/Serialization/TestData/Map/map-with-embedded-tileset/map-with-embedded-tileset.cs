@@ -13,9 +13,6 @@ public partial class TestData
     TileWidth = 32,
     TileHeight = 32,
     Infinite = false,
-    HexSideLength = null,
-    StaggerAxis = null,
-    StaggerIndex = null,
     ParallaxOriginX = 0,
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
@@ -28,6 +25,8 @@ public partial class TestData
     Tilesets = [
       new Tileset
       {
+        Version = "1.10",
+        TiledVersion = "1.11.0",
         FirstGID = 1,
         Name = "tileset",
         TileWidth = 32,
@@ -53,22 +52,20 @@ public partial class TestData
         Data = new Data
         {
           Encoding = DataEncoding.Csv,
-          Chunks = null,
-          Compression = null,
-          GlobalTileIDs = [
+          GlobalTileIDs = new Optional<uint[]>([
             1, 1, 0, 0, 7,
             1, 1, 0, 0, 7,
             0, 0, 0, 0, 7,
             9, 10, 0, 0, 7,
             17, 18, 0, 0, 0
-          ],
-          FlippingFlags = [
+          ]),
+          FlippingFlags = new Optional<FlippingFlags[]>([
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None,
             FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None, FlippingFlags.None
-          ]
+          ])
         }
       }
     ]

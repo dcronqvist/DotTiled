@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 
@@ -31,40 +30,43 @@ internal static class ExtensionsXmlReader
     return enumParser(value);
   }
 
-  internal static string? GetOptionalAttribute(this XmlReader reader, string attribute, string? defaultValue = default) =>
-    reader.GetAttribute(attribute) ?? defaultValue;
+  internal static Optional<string> GetOptionalAttribute(this XmlReader reader, string attribute)
+  {
+    var value = reader.GetAttribute(attribute);
+    return value is null ? new Optional<string>() : new Optional<string>(value);
+  }
 
-  internal static T? GetOptionalAttributeParseable<T>(this XmlReader reader, string attribute) where T : struct, IParsable<T>
+  internal static Optional<T> GetOptionalAttributeParseable<T>(this XmlReader reader, string attribute) where T : struct, IParsable<T>
   {
     var value = reader.GetAttribute(attribute);
     if (value is null)
-      return null;
+      return new Optional<T>();
 
     return T.Parse(value, CultureInfo.InvariantCulture);
   }
 
-  internal static T? GetOptionalAttributeParseable<T>(this XmlReader reader, string attribute, Func<string, T> parser) where T : struct
+  internal static Optional<T> GetOptionalAttributeParseable<T>(this XmlReader reader, string attribute, Func<string, T> parser) where T : struct
   {
     var value = reader.GetAttribute(attribute);
     if (value is null)
-      return null;
+      return new Optional<T>();
 
     return parser(value);
   }
 
-  internal static T? GetOptionalAttributeClass<T>(this XmlReader reader, string attribute) where T : class, IParsable<T>
+  internal static Optional<T> GetOptionalAttributeClass<T>(this XmlReader reader, string attribute) where T : class, IParsable<T>
   {
     var value = reader.GetAttribute(attribute);
     if (value is null)
-      return null;
+      return new Optional<T>();
 
     return T.Parse(value, CultureInfo.InvariantCulture);
   }
 
-  internal static T? GetOptionalAttributeEnum<T>(this XmlReader reader, string attribute, Func<string, T> enumParser) where T : struct, Enum
+  internal static Optional<T> GetOptionalAttributeEnum<T>(this XmlReader reader, string attribute, Func<string, T> enumParser) where T : struct, Enum
   {
     var value = reader.GetAttribute(attribute);
-    return value != null ? enumParser(value) : null;
+    return value != null ? enumParser(value) : new Optional<T>();
   }
 
   internal static List<T> ReadList<T>(this XmlReader reader, string wrapper, string elementName, Func<XmlReader, T> readElement)
@@ -107,7 +109,6 @@ internal static class ExtensionsXmlReader
     reader.ReadEndElement();
   }
 
-  [return: NotNull]
   internal static List<T> ProcessChildren<T>(this XmlReader reader, string wrapper, Func<XmlReader, string, T> getProcessAction)
   {
     var list = new List<T>();
