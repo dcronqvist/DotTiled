@@ -79,39 +79,41 @@ public class Loader
     return tilesetReader.ReadTileset();
   }
 
-  private Func<string, Tileset> GetTilesetResolver(string basePath)
+  private Func<string, T> GetResolverFunc<T>(
+    string basePath,
+    Func<string, Optional<T>> cacheResolver,
+    Action<string, T> cacheInsert,
+    Func<string, T> resolveFromContent)
   {
     return source =>
     {
-      var tilesetPath = Path.Combine(basePath, source);
-      var cachedTileset = _resourceCache.GetTileset(source);
-      if (cachedTileset.HasValue)
-        return cachedTileset.Value;
+      var resourcePath = Path.Combine(basePath, source);
+      var cachedResource = cacheResolver(resourcePath);
+      if (cachedResource.HasValue)
+        return cachedResource.Value;
 
-      string tilesetContent = _resourceReader.Read(tilesetPath);
-      using var tilesetReader = new TilesetReader(tilesetContent, GetTilesetResolver(basePath), GetTemplateResolver(basePath), CustomTypeResolver);
-      var tileset = tilesetReader.ReadTileset();
-      _resourceCache.InsertTileset(source, tileset);
-      return tileset;
+      string tilesetContent = _resourceReader.Read(resourcePath);
+      var resource = resolveFromContent(tilesetContent);
+      cacheInsert(resourcePath, resource);
+      return resource;
     };
   }
 
-  private Func<string, Template> GetTemplateResolver(string basePath)
-  {
-    return source =>
-    {
-      var templatePath = Path.Combine(basePath, source);
-      var cachedTemplate = _resourceCache.GetTemplate(source);
-      if (cachedTemplate.HasValue)
-        return cachedTemplate.Value;
+  private Func<string, Tileset> GetTilesetResolver(string basePath) =>
+    GetResolverFunc<Tileset>(basePath, _resourceCache.GetTileset, _resourceCache.InsertTileset,
+      tilesetContent =>
+      {
+        using var tilesetReader = new TilesetReader(tilesetContent, GetTilesetResolver(basePath), GetTemplateResolver(basePath), CustomTypeResolver);
+        return tilesetReader.ReadTileset();
+      });
 
-      string templateContent = _resourceReader.Read(templatePath);
-      using var templateReader = new TemplateReader(templateContent, GetTilesetResolver(basePath), GetTemplateResolver(basePath), CustomTypeResolver);
-      var template = templateReader.ReadTemplate();
-      _resourceCache.InsertTemplate(source, template);
-      return template;
-    };
-  }
+  private Func<string, Template> GetTemplateResolver(string basePath) =>
+    GetResolverFunc<Template>(basePath, _resourceCache.GetTemplate, _resourceCache.InsertTemplate,
+      templateContent =>
+      {
+        using var templateReader = new TemplateReader(templateContent, GetTilesetResolver(basePath), GetTemplateResolver(basePath), CustomTypeResolver);
+        return templateReader.ReadTemplate();
+      });
 
   private ICustomTypeDefinition CustomTypeResolver(string name) => _customTypeDefinitions[name];
 }

@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using DotTiled.Serialization;
 using NSubstitute;
 
 namespace DotTiled.Tests;
