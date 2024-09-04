@@ -86,6 +86,18 @@ internal static partial class Helpers
     };
   }
 
+  internal static List<IProperty> ResolveClassProperties(string className, Func<string, ICustomTypeDefinition> customTypeResolver)
+  {
+    if (string.IsNullOrWhiteSpace(className))
+      return null;
+
+    var customType = customTypeResolver(className) ?? throw new InvalidOperationException($"Could not resolve custom type '{className}'.");
+    if (customType is not CustomClassDefinition ccd)
+      throw new InvalidOperationException($"Custom type '{className}' is not a class.");
+
+    return CreateInstanceOfCustomClass(ccd, customTypeResolver);
+  }
+
   internal static List<IProperty> CreateInstanceOfCustomClass(
     CustomClassDefinition customClassDefinition,
     Func<string, ICustomTypeDefinition> customTypeResolver)

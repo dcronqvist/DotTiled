@@ -56,7 +56,7 @@ public abstract partial class TmxReaderBase
     var infinite = _reader.GetOptionalAttributeParseable<uint>("infinite").GetValueOr(0) == 1;
 
     // At most one of
-    List<IProperty> properties = null;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
 
     // Any number of
     List<BaseLayer> layers = [];
