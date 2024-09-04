@@ -244,7 +244,7 @@ dotnet_diagnostic.CA1720.severity = silent
 dotnet_diagnostic.CA1711.severity = silent
 dotnet_diagnostic.CA1716.severity = silent
 
-[.github/**/*.yml]
+[*.(yml|json|js)]
 charset = utf-8
 end_of_line = lf
 indent_size = 2

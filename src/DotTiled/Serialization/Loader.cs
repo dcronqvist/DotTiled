@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DotTiled.Serialization;
 
-namespace DotTiled;
+namespace DotTiled.Serialization;
 
 /// <summary>
 /// Able to load Tiled resources from a given path.

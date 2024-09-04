@@ -41,7 +41,7 @@
       "_appName": "DotTiled",
       "_appTitle": "DotTiled",
       "_enableSearch": true,
-      "pdf": true
+      "pdf": false
     }
   }
 }
