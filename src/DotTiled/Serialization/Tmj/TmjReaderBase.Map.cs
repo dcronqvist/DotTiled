@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.Json;
 
 namespace DotTiled.Serialization.Tmj;
@@ -53,8 +52,7 @@ public abstract partial class TmjReaderBase
     var nextObjectID = element.GetRequiredProperty<uint>("nextobjectid");
     var infinite = element.GetOptionalProperty<bool>("infinite").GetValueOr(false);
 
-    var classProps = Helpers.ResolveClassProperties(@class, _customTypeResolver);
-    var properties = Helpers.MergeProperties(element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]), classProps).ToList();
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
 
     List<BaseLayer> layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(el => ReadLayer(el))).GetValueOr([]);
     List<Tileset> tilesets = element.GetOptionalPropertyCustom<List<Tileset>>("tilesets", e => e.GetValueAsList<Tileset>(el => ReadTileset(el, version, tiledVersion))).GetValueOr([]);

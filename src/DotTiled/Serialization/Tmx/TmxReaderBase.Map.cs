@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace DotTiled.Serialization.Tmx;
 
@@ -56,6 +57,7 @@ public abstract partial class TmxReaderBase
     var infinite = _reader.GetOptionalAttributeParseable<uint>("infinite").GetValueOr(0) == 1;
 
     // At most one of
+    var propertiesCounter = 0;
     List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
 
     // Any number of
@@ -64,7 +66,7 @@ public abstract partial class TmxReaderBase
 
     _reader.ProcessChildren("map", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       "tileset" => () => tilesets.Add(ReadTileset(version, tiledVersion)),
       "layer" => () => layers.Add(ReadTileLayer(infinite)),
       "objectgroup" => () => layers.Add(ReadObjectLayer()),

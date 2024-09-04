@@ -2,7 +2,7 @@ namespace DotTiled.Tests;
 
 public partial class TestData
 {
-  public static Map MapWithClass() => new Map
+  public static Map MapWithClassAndProps() => new Map
   {
     Class = "TestClass",
     Orientation = MapOrientation.Orthogonal,
@@ -56,12 +56,12 @@ public partial class TestData
       new StringProperty
       {
         Name = "classstring",
-        Value = "Hello there default value"
+        Value = "I am not default value"
       }
     ]
   };
 
-  public static IReadOnlyCollection<ICustomTypeDefinition> MapWithClassCustomTypeDefinitions() => [
+  public static IReadOnlyCollection<ICustomTypeDefinition> MapWithClassAndPropsCustomTypeDefinitions() => [
     new CustomClassDefinition
     {
       Name = "TestClass",
