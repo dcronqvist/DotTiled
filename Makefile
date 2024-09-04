@@ -2,12 +2,14 @@ test:
 	dotnet build src/DotTiled.sln
 	dotnet test src/DotTiled.sln
 
-docs-serve:
+docs-serve: docs/index.md
 	docfx docs/docfx.json --serve
 
-docs-build:
-	cp README.md docs/index.md
+docs-build: docs/index.md
 	docfx docs/docfx.json
+
+docs/index.md: 
+	cp README.md docs/index.md
 
 lint:
 	dotnet format style --verify-no-changes src/DotTiled.sln

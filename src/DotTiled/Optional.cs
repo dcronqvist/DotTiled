@@ -89,6 +89,11 @@ public class Optional<T>
   /// <returns></returns>
   public T GetValueOr(T defaultValue) => HasValue ? _value : defaultValue;
 
+  /// <summary>
+  /// Returns the current <see cref="Optional{T}"/> object if it has a value; otherwise, returns the specified default value.
+  /// </summary>
+  /// <param name="defaultValue">The <see cref="Optional{T}"/> object to be returned if the current <see cref="Optional{T}"/> object has no value.</param>
+  /// <returns></returns>
   public Optional<T> GetValueOrOptional(Optional<T> defaultValue) => HasValue ? this : defaultValue;
 
   /// <inheritdoc />
