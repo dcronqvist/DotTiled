@@ -5,7 +5,7 @@ namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  private static void AssertListOrdered<T>(IList<T> expected, IList<T> actual, string nameof, Action<T, T> assertEqual = null)
+  internal static void AssertListOrdered<T>(IList<T> expected, IList<T> actual, string nameof, Action<T, T> assertEqual = null)
   {
     if (expected is null)
     {
@@ -27,7 +27,7 @@ public static partial class DotTiledAssert
     }
   }
 
-  private static void AssertOptionalsEqual<T>(
+  internal static void AssertOptionalsEqual<T>(
     Optional<T> expected,
     Optional<T> actual,
     string nameof,
@@ -49,7 +49,7 @@ public static partial class DotTiledAssert
     Assert.False(actual.HasValue, $"Expected {nameof} to not have a value");
   }
 
-  private static void AssertEqual<T>(Optional<T> expected, Optional<T> actual, string nameof)
+  internal static void AssertEqual<T>(Optional<T> expected, Optional<T> actual, string nameof)
   {
     if (expected is null)
     {
@@ -67,7 +67,7 @@ public static partial class DotTiledAssert
     Assert.False(actual.HasValue, $"Expected {nameof} to not have a value");
   }
 
-  private static void AssertEqual<T>(T expected, T actual, string nameof)
+  internal static void AssertEqual<T>(T expected, T actual, string nameof)
   {
     if (expected == null)
     {
