@@ -34,12 +34,13 @@ public abstract partial class TmxReaderBase
     }).GetValueOr(DrawOrder.TopDown);
 
     // Elements
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
     List<DotTiled.Object> objects = [];
 
     _reader.ProcessChildren("objectgroup", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       "object" => () => objects.Add(ReadObject()),
       _ => r.Skip
     });
@@ -101,7 +102,7 @@ public abstract partial class TmxReaderBase
     // Elements
     DotTiled.Object foundObject = null;
     int propertiesCounter = 0;
-    List<IProperty> properties = propertiesDefault;
+    List<IProperty> properties = Helpers.ResolveClassProperties(type, _customTypeResolver) ?? propertiesDefault;
 
     _reader.ProcessChildren("object", (r, elementName) => elementName switch
     {

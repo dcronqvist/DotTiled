@@ -41,5 +41,7 @@ public static partial class TestData
     ["Serialization/TestData/Map/map_external_tileset_wangset/map-external-tileset-wangset", (string f) => MapExternalTilesetWangset(f), Array.Empty<ICustomTypeDefinition>()],
     ["Serialization/TestData/Map/map_with_many_layers/map-with-many-layers", (string f) => MapWithManyLayers(f), Array.Empty<ICustomTypeDefinition>()],
     ["Serialization/TestData/Map/map_with_deep_props/map-with-deep-props", (string f) => MapWithDeepProps(), MapWithDeepPropsCustomTypeDefinitions()],
+    ["Serialization/TestData/Map/map_with_class/map-with-class", (string f) => MapWithClass(), MapWithClassCustomTypeDefinitions()],
+    ["Serialization/TestData/Map/map_with_class_and_props/map-with-class-and-props", (string f) => MapWithClassAndProps(), MapWithClassAndPropsCustomTypeDefinitions()],
   ];
 }

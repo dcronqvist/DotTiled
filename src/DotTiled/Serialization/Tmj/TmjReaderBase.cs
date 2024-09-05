@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace DotTiled.Serialization.Tmj;
@@ -38,6 +40,12 @@ public abstract partial class TmjReaderBase : IDisposable
     _externalTilesetResolver = externalTilesetResolver ?? throw new ArgumentNullException(nameof(externalTilesetResolver));
     _externalTemplateResolver = externalTemplateResolver ?? throw new ArgumentNullException(nameof(externalTemplateResolver));
     _customTypeResolver = customTypeResolver ?? throw new ArgumentNullException(nameof(customTypeResolver));
+  }
+
+  private List<IProperty> ResolveAndMergeProperties(string className, List<IProperty> readProperties)
+  {
+    var classProps = Helpers.ResolveClassProperties(className, _customTypeResolver);
+    return Helpers.MergeProperties(classProps, readProperties).ToList();
   }
 
   /// <inheritdoc/>
