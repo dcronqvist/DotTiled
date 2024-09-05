@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DotTiled;
@@ -72,7 +71,7 @@ public abstract class HasPropertiesBase : IHasProperties
   }
 
   /// <inheritdoc/>
-  public bool TryGetProperty<T>(string name, [NotNullWhen(true)] out T property) where T : IProperty
+  public bool TryGetProperty<T>(string name, out T property) where T : IProperty
   {
     var properties = GetProperties();
     if (properties.FirstOrDefault(_properties => _properties.Name == name) is T prop)

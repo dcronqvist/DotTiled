@@ -9,6 +9,74 @@ public class HasPropertiesBaseTests
     public override IList<IProperty> GetProperties() => props;
   }
 
+  [Fact]
+  public void TryGetProperty_PropertyNotFound_ReturnsFalseAndOutIsNull()
+  {
+    // Arrange
+    var hasProperties = new TestHasProperties([]);
+
+    // Act
+    var result = hasProperties.TryGetProperty<BoolProperty>("Test", out var property);
+
+    // Assert
+    Assert.False(result);
+    Assert.Null(property);
+  }
+
+  [Fact]
+  public void TryGetProperty_PropertyFound_ReturnsTrueAndOutIsProperty()
+  {
+    // Arrange
+    List<IProperty> props = [new BoolProperty { Name = "Test", Value = true }];
+    var hasProperties = new TestHasProperties(props);
+
+    // Act
+    var result = hasProperties.TryGetProperty<BoolProperty>("Test", out var property);
+
+    // Assert
+    Assert.True(result);
+    Assert.NotNull(property);
+    Assert.Equal("Test", property.Name);
+    Assert.True(property.Value);
+  }
+
+  [Fact]
+  public void GetProperty_PropertyNotFound_ThrowsKeyNotFoundException()
+  {
+    // Arrange
+    var hasProperties = new TestHasProperties([]);
+
+    // Act & Assert
+    _ = Assert.Throws<KeyNotFoundException>(() => hasProperties.GetProperty<BoolProperty>("Test"));
+  }
+
+  [Fact]
+  public void GetProperty_PropertyFound_ReturnsProperty()
+  {
+    // Arrange
+    List<IProperty> props = [new BoolProperty { Name = "Test", Value = true }];
+    var hasProperties = new TestHasProperties(props);
+
+    // Act
+    var property = hasProperties.GetProperty<BoolProperty>("Test");
+
+    // Assert
+    Assert.NotNull(property);
+    Assert.Equal("Test", property.Name);
+    Assert.True(property.Value);
+  }
+
+  [Fact]
+  public void GetProperty_PropertyIsWrongType_ThrowsInvalidCastException()
+  {
+    // Arrange
+    List<IProperty> props = [new BoolProperty { Name = "Test", Value = true }];
+    var hasProperties = new TestHasProperties(props);
+
+    // Act & Assert
+    _ = Assert.Throws<InvalidCastException>(() => hasProperties.GetProperty<IntProperty>("Test"));
+  }
+
   private sealed class MapTo
   {
     public bool MapToBool { get; set; } = false;
