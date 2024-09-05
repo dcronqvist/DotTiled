@@ -38,6 +38,14 @@ public interface IHasProperties
   /// <typeparam name="T"></typeparam>
   /// <returns></returns>
   T MapPropertiesTo<T>() where T : new();
+
+  /// <summary>
+  /// Maps all properties in this object to a new instance of the specified type using reflection.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  /// <param name="initializer"></param>
+  /// <returns></returns>
+  T MapPropertiesTo<T>(Func<T> initializer);
 }
 
 /// <summary>
@@ -78,15 +86,14 @@ public abstract class HasPropertiesBase : IHasProperties
   }
 
   /// <inheritdoc/>
-  public T MapPropertiesTo<T>() where T : new()
-  {
-    var properties = GetProperties();
-    return CreateMappedInstance<T>(properties);
-  }
+  public T MapPropertiesTo<T>() where T : new() => CreateMappedInstance<T>(GetProperties());
 
-  private static object CreatedMappedInstance(Type type, IList<IProperty> properties)
+  /// <inheritdoc/>
+  public T MapPropertiesTo<T>(Func<T> initializer) => CreateMappedInstance(GetProperties(), initializer);
+
+  private static object CreatedMappedInstance(object instance, IList<IProperty> properties)
   {
-    var instance = Activator.CreateInstance(type) ?? throw new InvalidOperationException($"Failed to create instance of '{type.Name}'.");
+    var type = instance.GetType();
 
     foreach (var prop in properties)
     {
@@ -118,7 +125,7 @@ public abstract class HasPropertiesBase : IHasProperties
           break;
         case ClassProperty classProp:
           var subClassProp = type.GetProperty(prop.Name);
-          subClassProp?.SetValue(instance, CreatedMappedInstance(subClassProp.PropertyType, classProp.GetProperties()));
+          subClassProp?.SetValue(instance, CreatedMappedInstance(Activator.CreateInstance(subClassProp.PropertyType), classProp.GetProperties()));
           break;
         case EnumProperty enumProp:
           var enumPropInClass = type.GetProperty(prop.Name);
@@ -133,5 +140,8 @@ public abstract class HasPropertiesBase : IHasProperties
     return instance;
   }
 
-  private static T CreateMappedInstance<T>(IList<IProperty> properties) where T : new() => (T)CreatedMappedInstance(typeof(T), properties);
+  private static T CreateMappedInstance<T>(IList<IProperty> properties) where T : new() =>
+    (T)CreatedMappedInstance(Activator.CreateInstance<T>() ?? throw new InvalidOperationException($"Failed to create instance of '{typeof(T).Name}'."), properties);
+
+  private static T CreateMappedInstance<T>(IList<IProperty> properties, Func<T> initializer) => (T)CreatedMappedInstance(initializer(), properties);
 }
