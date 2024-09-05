@@ -17,7 +17,7 @@ public abstract partial class TmjReaderBase
     var offsetY = element.GetOptionalProperty<float>("offsety").GetValueOr(0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
     var parallaxY = element.GetOptionalProperty<float>("parallaxy").GetValueOr(1.0f);
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]);
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
     var layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(ReadLayer)).GetValueOr([]);
 
     return new Group

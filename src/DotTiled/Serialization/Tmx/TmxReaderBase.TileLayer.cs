@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotTiled.Serialization.Tmx;
 
@@ -21,13 +22,14 @@ public abstract partial class TmxReaderBase
     var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
     var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1.0f);
 
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
     Data data = null;
 
     _reader.ProcessChildren("layer", (r, elementName) => elementName switch
     {
       "data" => () => Helpers.SetAtMostOnce(ref data, ReadData(dataUsesChunks), "Data"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       _ => r.Skip
     });
 
@@ -69,13 +71,14 @@ public abstract partial class TmxReaderBase
     var repeatX = _reader.GetOptionalAttributeParseable<uint>("repeatx").GetValueOr(0) == 1;
     var repeatY = _reader.GetOptionalAttributeParseable<uint>("repeaty").GetValueOr(0) == 1;
 
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
     Image image = null;
 
     _reader.ProcessChildren("imagelayer", (r, elementName) => elementName switch
     {
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(), "Image"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       _ => r.Skip
     });
 
@@ -113,12 +116,13 @@ public abstract partial class TmxReaderBase
     var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1f);
     var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1f);
 
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
     List<BaseLayer> layers = [];
 
     _reader.ProcessChildren("group", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       "layer" => () => layers.Add(ReadTileLayer(false)),
       "objectgroup" => () => layers.Add(ReadObjectLayer()),
       "imagelayer" => () => layers.Add(ReadImageLayer()),

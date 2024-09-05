@@ -30,7 +30,7 @@ public abstract partial class TmjReaderBase
     var opacity = element.GetOptionalProperty<float>("opacity").GetValueOr(1.0f);
     var parallaxx = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
     var parallaxy = element.GetOptionalProperty<float>("parallaxy").GetValueOr(1.0f);
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]);
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
     var repeatX = element.GetOptionalProperty<bool>("repeatx").GetValueOr(false);
     var repeatY = element.GetOptionalProperty<bool>("repeaty").GetValueOr(false);
     var startX = element.GetOptionalProperty<int>("startx").GetValueOr(0);

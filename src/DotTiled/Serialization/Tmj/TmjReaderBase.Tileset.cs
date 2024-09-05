@@ -40,7 +40,7 @@ public abstract partial class TmjReaderBase
       "bottomright" => ObjectAlignment.BottomRight,
       _ => throw new JsonException($"Unknown object alignment '{s}'")
     }).GetValueOr(ObjectAlignment.Unspecified);
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]);
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
     var source = element.GetOptionalProperty<string>("source");
     var spacing = element.GetOptionalProperty<uint>("spacing");
     var tileCount = element.GetOptionalProperty<uint>("tilecount");
@@ -166,8 +166,8 @@ public abstract partial class TmjReaderBase
       var height = e.GetOptionalProperty<uint>("height").GetValueOr(imageHeight.GetValueOr(0));
       var objectGroup = e.GetOptionalPropertyCustom<ObjectLayer>("objectgroup", e => ReadObjectLayer(e));
       var probability = e.GetOptionalProperty<float>("probability").GetValueOr(0.0f);
-      var properties = e.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]);
       var type = e.GetOptionalProperty<string>("type").GetValueOr("");
+      var properties = ResolveAndMergeProperties(type, e.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
 
       Optional<Image> imageModel = image.HasValue ? new Image
       {
@@ -207,17 +207,17 @@ public abstract partial class TmjReaderBase
 
   internal Wangset ReadWangset(JsonElement element)
   {
-    var @clalss = element.GetOptionalProperty<string>("class").GetValueOr("");
+    var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
     var colors = element.GetOptionalPropertyCustom<List<WangColor>>("colors", e => e.GetValueAsList<WangColor>(el => ReadWangColor(el))).GetValueOr([]);
     var name = element.GetRequiredProperty<string>("name");
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]);
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
     var tile = element.GetOptionalProperty<int>("tile").GetValueOr(0);
     var type = element.GetOptionalProperty<string>("type").GetValueOr("");
     var wangTiles = element.GetOptionalPropertyCustom<List<WangTile>>("wangtiles", e => e.GetValueAsList<WangTile>(ReadWangTile)).GetValueOr([]);
 
     return new Wangset
     {
-      Class = @clalss,
+      Class = @class,
       WangColors = colors,
       Name = name,
       Properties = properties,
@@ -232,7 +232,7 @@ public abstract partial class TmjReaderBase
     var color = element.GetRequiredPropertyParseable<Color>("color");
     var name = element.GetRequiredProperty<string>("name");
     var probability = element.GetOptionalProperty<float>("probability").GetValueOr(1.0f);
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]);
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
     var tile = element.GetOptionalProperty<int>("tile").GetValueOr(0);
 
     return new WangColor

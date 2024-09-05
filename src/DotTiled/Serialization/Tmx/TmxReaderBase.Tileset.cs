@@ -68,7 +68,8 @@ public abstract partial class TmxReaderBase
     Image image = null;
     TileOffset tileOffset = null;
     Grid grid = null;
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
     List<Wangset> wangsets = null;
     Transformations transformations = null;
     List<Tile> tiles = [];
@@ -78,7 +79,7 @@ public abstract partial class TmxReaderBase
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(), "Image"),
       "tileoffset" => () => Helpers.SetAtMostOnce(ref tileOffset, ReadTileOffset(), "TileOffset"),
       "grid" => () => Helpers.SetAtMostOnce(ref grid, ReadGrid(), "Grid"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       "wangsets" => () => Helpers.SetAtMostOnce(ref wangsets, ReadWangsets(), "Wangsets"),
       "transformations" => () => Helpers.SetAtMostOnce(ref transformations, ReadTransformations(), "Transformations"),
       "tile" => () => tiles.Add(ReadTile()),
@@ -197,14 +198,15 @@ public abstract partial class TmxReaderBase
     var height = _reader.GetOptionalAttributeParseable<uint>("height");
 
     // Elements
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(type, _customTypeResolver);
     Image image = null;
     ObjectLayer objectLayer = null;
     List<Frame> animation = null;
 
     _reader.ProcessChildren("tile", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(), "Image"),
       "objectgroup" => () => Helpers.SetAtMostOnce(ref objectLayer, ReadObjectLayer(), "ObjectLayer"),
       "animation" => () => Helpers.SetAtMostOnce(ref animation, r.ReadList<Frame>("animation", "frame", (ar) =>
@@ -243,13 +245,14 @@ public abstract partial class TmxReaderBase
     var tile = _reader.GetRequiredAttributeParseable<int>("tile");
 
     // Elements
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
     List<WangColor> wangColors = [];
     List<WangTile> wangTiles = [];
 
     _reader.ProcessChildren("wangset", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       "wangcolor" => () => wangColors.Add(ReadWangColor()),
       "wangtile" => () => wangTiles.Add(ReadWangTile()),
       _ => r.Skip
@@ -279,11 +282,12 @@ public abstract partial class TmxReaderBase
     var probability = _reader.GetOptionalAttributeParseable<float>("probability").GetValueOr(0f);
 
     // Elements
-    List<IProperty> properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
 
     _reader.ProcessChildren("wangcolor", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       _ => r.Skip
     });
 
