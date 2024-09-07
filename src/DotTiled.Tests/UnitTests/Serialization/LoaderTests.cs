@@ -244,4 +244,72 @@ public class LoaderTests
     // Assert
     resourceReader.DidNotReceive().Read("template.tx");
   }
+
+  [Fact]
+  public void LoadMap_MapHasClassAndLoaderHasNoCustomTypes_ThrowsException()
+  {
+    // Arrange
+    var resourceReader = Substitute.For<IResourceReader>();
+    resourceReader.Read("map.tmx").Returns(
+    """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <map version="1.10" tiledversion="1.11.0" class="TestClass" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+      <layer id="1" name="Tile Layer 1" width="5" height="5">
+        <data encoding="csv">
+        0,0,0,0,0,
+        0,0,0,0,0,
+        0,0,0,0,0,
+        0,0,0,0,0,
+        0,0,0,0,0
+        </data>
+      </layer>
+    </map>
+    """);
+
+    var resourceCache = Substitute.For<IResourceCache>();
+    var customTypeDefinitions = Enumerable.Empty<ICustomTypeDefinition>();
+    var loader = new Loader(resourceReader, resourceCache, customTypeDefinitions);
+
+    // Act & Assert
+    Assert.Throws<KeyNotFoundException>(() => loader.LoadMap("map.tmx"));
+  }
+
+  [Fact]
+  public void LoadMap_MapHasClassAndLoaderHasCustomTypeWithSameName_ReturnsMapWithPropertiesFromCustomClass()
+  {
+    // Arrange
+    var resourceReader = Substitute.For<IResourceReader>();
+    resourceReader.Read("map.tmx").Returns(
+    """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <map version="1.10" tiledversion="1.11.0" class="TestClass" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+      <layer id="1" name="Tile Layer 1" width="5" height="5">
+        <data encoding="csv">
+        0,0,0,0,0,
+        0,0,0,0,0,
+        0,0,0,0,0,
+        0,0,0,0,0,
+        0,0,0,0,0
+        </data>
+      </layer>
+    </map>
+    """);
+    var resourceCache = Substitute.For<IResourceCache>();
+    var customClassDefinition = new CustomClassDefinition
+    {
+      Name = "TestClass",
+      UseAs = CustomClassUseAs.All,
+      Members = [
+        new StringProperty { Name = "Test1", Value = "Hello" },
+        new IntProperty { Name = "Test2", Value = 42 }
+      ]
+    };
+    var loader = new Loader(resourceReader, resourceCache, [customClassDefinition]);
+
+    // Act
+    var result = loader.LoadMap("map.tmx");
+
+    // Assert
+    DotTiledAssert.AssertProperties(customClassDefinition.Members, result.Properties);
+  }
 }
