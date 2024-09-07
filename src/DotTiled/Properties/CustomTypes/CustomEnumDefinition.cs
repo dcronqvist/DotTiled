@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DotTiled;
@@ -44,4 +45,9 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// Whether the value should be treated as flags.
   /// </summary>
   public bool ValueAsFlags { get; set; }
+
+  // public CustomEnumDefinition FromEnum(Type enumType)
+  // {
+  //   if (!enumType.Is)
+  // }
 }

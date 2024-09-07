@@ -111,7 +111,15 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
     if (type == typeof(string) || !type.IsClass)
       throw new ArgumentException("Type must be a class.", nameof(type));
 
-    return FromClass(() => Activator.CreateInstance(type));
+    var instance = Activator.CreateInstance(type);
+    var properties = type.GetProperties();
+
+    return new CustomClassDefinition
+    {
+      Name = type.Name,
+      UseAs = CustomClassUseAs.All,
+      Members = properties.Select(p => ConvertPropertyInfoToIProperty(instance, p)).ToList()
+    };
   }
 
   /// <summary>
@@ -130,7 +138,7 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   public static CustomClassDefinition FromClass<T>(Func<T> factory) where T : class
   {
     var instance = factory();
-    var type = instance.GetType();
+    var type = typeof(T);
     var properties = type.GetProperties();
 
     return new CustomClassDefinition
