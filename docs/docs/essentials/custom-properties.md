@@ -66,11 +66,14 @@ Tiled supports a variety of property types, which are represented in the DotTile
 - `object` - <xref:DotTiled.ObjectProperty>
 - `string` - <xref:DotTiled.StringProperty>
 
-In addition to these primitive property types, [Tiled also supports more complex property types](https://doc.mapeditor.org/en/stable/manual/custom-properties/#custom-types). These custom property types are defined in Tiled according to the linked documentation, and to work with them in DotTiled, you *must* define their equivalences as a <xref:DotTiled.ICustomTypeDefinition>. You must then provide a resolving function to a defined type given a custom type name, as it is defined in Tiled.
+In addition to these primitive property types, [Tiled also supports more complex property types](https://doc.mapeditor.org/en/stable/manual/custom-properties/#custom-types). These custom property types are defined in Tiled according to the linked documentation, and to work with them in DotTiled, you *must* define their equivalences as a <xref:DotTiled.ICustomTypeDefinition>. This is because of how Tiled handles default values for custom property types, and DotTiled needs to know these defaults to be able to populate the properties correctly.
 
 ## Custom types
 
-Tiled allows you to define custom property types that can be used in your maps. These custom property types can be of type `class` or `enum`. DotTiled supports custom property types by allowing you to define the equivalent in C# and then providing a custom type resolver function that will return the equivalent definition given a custom type name.
+Tiled allows you to define custom property types that can be used in your maps. These custom property types can be of type `class` or `enum`. DotTiled supports custom property types by allowing you to define the equivalent in C#. This section will guide you through how to define custom property types in DotTiled and how to map properties in loaded maps to C# classes or enums.
+
+> [!NOTE]
+> In the future, DotTiled could provide a way to configure the use of custom property types such that they aren't necessary to be defined, given that you have set the `Resolve object types and properties` setting in Tiled.
 
 ### Class properties
 
@@ -88,13 +91,38 @@ var monsterSpawnerDefinition = new CustomClassDefinition
   Name = "MonsterSpawner",
   UseAs = CustomClassUseAs.All, // Not really validated by DotTiled
   Members = [ // Make sure that the default values match the Tiled UI
-    new BoolProperty   { Name = "enabled",        Value = true },
-    new IntProperty    { Name = "maxSpawnAmount", Value = 10 },
-    new IntProperty    { Name = "minSpawnAmount", Value = 0 },
-    new StringProperty { Name = "monsterNames",   Value = "" }
+    new BoolProperty   { Name = "Enabled",        Value = true },
+    new IntProperty    { Name = "MaxSpawnAmount", Value = 10 },
+    new IntProperty    { Name = "MinSpawnAmount", Value = 0 },
+    new StringProperty { Name = "MonsterNames",   Value = "" }
   ]
 };
 ```
+
+Luckily, you don't have to manually define these custom class definitions, even though you most definitively can for scenarios that require it. DotTiled provides a way to automatically generate these definitions for you from a C# class. This is done by using the <xref:DotTiled.CustomClassDefinition.FromClass``1> method, or one of its overloads. This method will generate a <xref:DotTiled.CustomClassDefinition> from a given C# class, and you can then use this definition when loading your maps.
+
+```csharp
+class MonsterSpawner
+{
+  public bool Enabled { get; set; } = true;
+  public int MaxSpawnAmount { get; set; } = 10;
+  public int MinSpawnAmount { get; set; } = 0;
+  public string MonsterNames { get; set; } = "";
+}
+
+// ...
+
+// These are all valid ways to create your custom class definitions from a C# class
+// The first two require the class to have a default, parameterless constructor
+var monsterSpawnerDefinition1 = CustomClassDefinition.FromClass<MonsterSpawner>();
+var monsterSpawnerDefinition2 = CustomClassDefinition.FromClass(typeof(MonsterSpawner)); 
+var monsterSpawnerDefinition3 = CustomClassDefinition.FromClass(() => new MonsterSpawner
+{
+  Enabled = false // This will use the property values in the instance created by a factory method as the default values
+}); 
+```
+
+The last one is especially useful if you have classes that may not have parameterless constructors, or if you want to provide custom default values for the properties. Finally, the generated custom class definition will be identical to the one defined manually in the first example.
 
 ### Enum properties  
 
@@ -110,7 +138,7 @@ The equivalent definition in DotTiled would look like the following:
 var entityTypeDefinition = new CustomEnumDefinition
 {
   Name = "EntityType",
-  StorageType = CustomEnumStorageType.String,
+  StorageType = CustomEnumStorageType.Int,
   ValueAsFlags = false,
   Values = [
     "Bomb",
@@ -121,23 +149,9 @@ var entityTypeDefinition = new CustomEnumDefinition
 };
 ```
 
-### [Future] Automatically map custom property `class` types to C# classes
-
-In the future, DotTiled will support automatically mapping custom property `class` types to C# classes. This will allow you to define a C# class that matches the structure of the `class` property in Tiled, and DotTiled will automatically map the properties of the `class` property to the properties of the C# class. This will make working with `class` properties much easier and more intuitive.
-
-The idea is to expand on the <xref:DotTiled.IHasProperties> interface with a method like `GetMappedProperty<T>(string propertyName)`, where `T` is a class that matches the structure of the `class` property in Tiled.
-
-This functionality would be accompanied by a way to automatically create a matching <xref:DotTiled.ICustomTypeDefinition> given a C# class or enum. Something like this would then be possible:
+Similarly to custom class definitions, you can also automatically generate custom enum definitions from C# enums. This is done by using the <xref:DotTiled.CustomEnumDefinition.FromEnum``1> method, or one of its overloads. This method will generate a <xref:DotTiled.CustomEnumDefinition> from a given C# enum, and you can then use this definition when loading your maps.
 
 ```csharp
-class MonsterSpawner
-{
-  public bool Enabled { get; set; } = true;
-  public int MaxSpawnAmount { get; set; } = 10;
-  public int MinSpawnAmount { get; set; } = 0;
-  public string MonsterNames { get; set; } = "";
-}
-
 enum EntityType
 {
   Bomb,
@@ -146,16 +160,89 @@ enum EntityType
   Chair
 }
 
-var monsterSpawnerDefinition = CustomClassDefinition.FromClass<MonsterSpawner>();
-var entityTypeDefinition = CustomEnumDefinition.FromEnum<EntityType>();
-
 // ...
 
-var map = LoadMap();
-var monsterSpawner = map.GetMappedProperty<MonsterSpawner>("monsterSpawnerPropertyInMap");
-var entityType = map.GetMappedProperty<EntityType>("entityTypePropertyInMap");
+// These are both valid ways to create your custom enum definitions from a C# enum
+var entityTypeDefinition1 = CustomEnumDefinition.FromEnum<EntityType>();
+var entityTypeDefinition2 = CustomEnumDefinition.FromEnum(typeof(EntityType));
 ```
 
-Finally, it might be possible to also make some kind of exporting functionality for <xref:DotTiled.ICustomTypeDefinition>. Given a collection of custom type definitions, DotTiled could generate a corresponding `propertytypes.json` file that you then can import into Tiled. This would make it so that you only have to define your custom property types once (in C#) and then import them into Tiled to use them in your maps.
+The generated custom enum definition will be identical to the one defined manually in the first example.
 
-Depending on implementation this might become something that can inhibit native AOT compilation due to potential reflection usage. Source generators could be used to mitigate this, but it is not yet clear how this will be implemented.
+For enum definitions, the <xref:System.FlagsAttribute> can be used to indicate that the enum should be treated as a flags enum. This will make it so the enum definition will have `ValueAsFlags = true` and the enum values will be treated as flags when working with them in DotTiled.
+
+## Mapping properties to C# classes or enums
+
+So far, we have only discussed how to define custom property types in DotTiled, and why they are needed. However, the most important part is how you can map properties inside your maps to their corresponding C# classes or enums. 
+
+The interface <xref:DotTiled.IHasProperties> has two overloads of the <xref:DotTiled.IHasProperties.MapPropertiesTo``1> method. These methods allow you to map a collection of properties to a given C# class. Let's look at an example:
+
+```csharp
+// Define a few Tiled compatible custom types
+enum EntityType
+{
+  Player,
+  Enemy,
+  Collectible,
+  Explosive
+}
+
+class EntityData
+{
+  public EntityType Type { get; set; } = EntityType.Player;
+  public int Health { get; set; } = 100;
+  public string Name { get; set; } = "Unnamed Entity";
+}
+
+var entityTypeDef = CustomEnumDefinition.FromEnum<EntityType>();
+var entityDataDef = CustomClassDefinition.FromClass<EntityData>();
+```
+
+The above gives us two custom type definitions that we can supply to our map loader. Given a map that looks like this:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="7">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="5" height="5">
+  <data encoding="csv">
+  1,1,1,1,1,
+  0,0,0,0,0,
+  0,0,0,0,0,
+  0,0,0,0,0,
+  0,0,0,0,0
+  </data>
+ </layer>
+ <objectgroup id="3" name="Objects">
+  <object id="4" name="Circle1" type="EntityData" x="77" y="72.3333" width="34.6667" height="34.6667">
+   <properties>
+    <property name="Health" type="int" value="1"/>
+    <property name="Name" value="Bomb Chest"/>
+    <property name="Type" type="int" propertytype="EntityType" value="3"/>
+   </properties>
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>
+```
+
+We can see that there is an ellipse object in the map that has the type `EntityData` and it has set the three properties to some value other than their defaults. After having loaded this map, we can map the properties of the object to the `EntityData` class like this:
+
+```csharp
+var map = LoadMap([entityTypeDef, entityDataDef]); // Load the map somehow, using DotTiled.Loader or similar
+
+// Retrieve the object layer from the map in some way
+var objectLayer = map.Layers.Skip(1).First() as ObjectLayer;
+
+// Retrieve the object from the object layer
+var entityObject = objectLayer.Objects.First();
+
+// Map the properties of the object to the EntityData class
+var entityData = entityObject.MapPropertiesTo<EntityData>();
+```
+
+The above snippet will map the properties of the object to the `EntityData` class using reflection based on the property names. The `entityData` object will now have the properties set to the values found in the object in the map. If a property is not found in the object, the default value of the property in the `EntityData` class will be used. It will even map the nested enum to its corresponding value in C#. This will work for several levels of depth as it performs this kind of mapping recursively. <xref:DotTiled.IHasProperties.MapPropertiesTo``1> only supports mapping to classes that have a default, parameterless constructor.
+
+### [Future] Exporting custom types
+
+It might be possible to also make some kind of exporting functionality for <xref:DotTiled.ICustomTypeDefinition>. Given a collection of custom type definitions, DotTiled could generate a corresponding `propertytypes.json` file that you then can import into Tiled. This would make it so that you only have to define your custom property types once (in C#) and then import them into Tiled to use them in your maps.

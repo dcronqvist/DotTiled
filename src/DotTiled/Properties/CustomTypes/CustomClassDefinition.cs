@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace DotTiled;
 
@@ -76,7 +78,7 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   /// <summary>
   /// The color of the custom class inside the Tiled editor.
   /// </summary>
-  public Color? Color { get; set; }
+  public Color Color { get; set; }
 
   /// <summary>
   /// Whether the custom class should be drawn with a fill color.
@@ -95,4 +97,95 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
 
   /// <inheritdoc/>
   public override IList<IProperty> GetProperties() => Members;
+
+  /// <summary>
+  /// Creates a new <see cref="CustomClassDefinition"/> from the specified class type.
+  /// </summary>
+  /// <param name="type">The type of the class to create a custom class definition from.</param>
+  /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
+  /// <exception cref="ArgumentException">Thrown when the specified type is not a class.</exception>
+  public static CustomClassDefinition FromClass(Type type)
+  {
+    ArgumentNullException.ThrowIfNull(type, nameof(type));
+
+    if (type == typeof(string) || !type.IsClass)
+      throw new ArgumentException("Type must be a class.", nameof(type));
+
+    var instance = Activator.CreateInstance(type);
+    var properties = type.GetProperties();
+
+    return new CustomClassDefinition
+    {
+      Name = type.Name,
+      UseAs = CustomClassUseAs.All,
+      Members = properties.Select(p => ConvertPropertyInfoToIProperty(instance, p)).ToList()
+    };
+  }
+
+  /// <summary>
+  /// Creates a new <see cref="CustomClassDefinition"/> from the specified constructible class type.
+  /// </summary>
+  /// <typeparam name="T">The type of the class to create a custom class definition from.</typeparam>
+  /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
+  public static CustomClassDefinition FromClass<T>() where T : class, new() => FromClass(() => new T());
+
+  /// <summary>
+  /// Creates a new <see cref="CustomClassDefinition"/> from the specified factory function of a class instance.
+  /// </summary>
+  /// <typeparam name="T">The type of the class to create a custom class definition from.</typeparam>
+  /// <param name="factory">The factory function that creates an instance of the class.</param>
+  /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
+  public static CustomClassDefinition FromClass<T>(Func<T> factory) where T : class
+  {
+    var instance = factory();
+    var type = typeof(T);
+    var properties = type.GetProperties();
+
+    return new CustomClassDefinition
+    {
+      Name = type.Name,
+      UseAs = CustomClassUseAs.All,
+      Members = properties.Select(p => ConvertPropertyInfoToIProperty(instance, p)).ToList()
+    };
+  }
+
+  private static IProperty ConvertPropertyInfoToIProperty(object instance, PropertyInfo propertyInfo)
+  {
+    switch (propertyInfo.PropertyType)
+    {
+      case Type t when t == typeof(bool):
+        return new BoolProperty { Name = propertyInfo.Name, Value = (bool)propertyInfo.GetValue(instance) };
+      case Type t when t == typeof(Color):
+        return new ColorProperty { Name = propertyInfo.Name, Value = (Color)propertyInfo.GetValue(instance) };
+      case Type t when t == typeof(float):
+        return new FloatProperty { Name = propertyInfo.Name, Value = (float)propertyInfo.GetValue(instance) };
+      case Type t when t == typeof(string):
+        return new StringProperty { Name = propertyInfo.Name, Value = (string)propertyInfo.GetValue(instance) };
+      case Type t when t == typeof(int):
+        return new IntProperty { Name = propertyInfo.Name, Value = (int)propertyInfo.GetValue(instance) };
+      case Type t when t.IsClass:
+        return new ClassProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = GetNestedProperties(propertyInfo.PropertyType, propertyInfo.GetValue(instance)) };
+      default:
+        break;
+    }
+
+    throw new NotSupportedException($"Type '{propertyInfo.PropertyType.Name}' is not supported in custom classes.");
+  }
+
+  private static List<IProperty> GetNestedProperties(Type type, object instance)
+  {
+    var defaultInstance = Activator.CreateInstance(type);
+    var properties = type.GetProperties();
+
+    bool IsPropertyDefaultValue(PropertyInfo propertyInfo)
+    {
+      var defaultValue = propertyInfo.GetValue(defaultInstance);
+      var value = propertyInfo.GetValue(instance);
+      return value.Equals(defaultValue);
+    }
+
+    return properties
+      .Where(p => !IsPropertyDefaultValue(p))
+      .Select(p => ConvertPropertyInfoToIProperty(instance, p)).ToList();
+  }
 }

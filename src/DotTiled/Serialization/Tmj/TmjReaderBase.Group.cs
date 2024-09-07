@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.Json;
 
 namespace DotTiled.Serialization.Tmj;
@@ -10,16 +9,16 @@ public abstract partial class TmjReaderBase
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
-    var @class = element.GetOptionalProperty<string>("class", "");
-    var opacity = element.GetOptionalProperty<float>("opacity", 1.0f);
-    var visible = element.GetOptionalProperty<bool>("visible", true);
-    var tintColor = element.GetOptionalPropertyParseable<Color?>("tintcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
-    var offsetX = element.GetOptionalProperty<float>("offsetx", 0.0f);
-    var offsetY = element.GetOptionalProperty<float>("offsety", 0.0f);
-    var parallaxX = element.GetOptionalProperty<float>("parallaxx", 1.0f);
-    var parallaxY = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, []);
-    var layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(ReadLayer), []);
+    var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
+    var opacity = element.GetOptionalProperty<float>("opacity").GetValueOr(1.0f);
+    var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
+    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
+    var offsetX = element.GetOptionalProperty<float>("offsetx").GetValueOr(0.0f);
+    var offsetY = element.GetOptionalProperty<float>("offsety").GetValueOr(0.0f);
+    var parallaxX = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
+    var parallaxY = element.GetOptionalProperty<float>("parallaxy").GetValueOr(1.0f);
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
+    var layers = element.GetOptionalPropertyCustom<List<BaseLayer>>("layers", e => e.GetValueAsList<BaseLayer>(ReadLayer)).GetValueOr([]);
 
     return new Group
     {

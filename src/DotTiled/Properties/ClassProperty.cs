@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DotTiled;
@@ -8,7 +6,7 @@ namespace DotTiled;
 /// <summary>
 /// Represents a class property.
 /// </summary>
-public class ClassProperty : IHasProperties, IProperty<IList<IProperty>>
+public class ClassProperty : HasPropertiesBase, IProperty<IList<IProperty>>
 {
   /// <inheritdoc/>
   public required string Name { get; set; }
@@ -36,30 +34,5 @@ public class ClassProperty : IHasProperties, IProperty<IList<IProperty>>
   };
 
   /// <inheritdoc/>
-  public IList<IProperty> GetProperties() => Value;
-
-  /// <inheritdoc/>
-  public T GetProperty<T>(string name) where T : IProperty
-  {
-    var property = Value.FirstOrDefault(_properties => _properties.Name == name) ?? throw new InvalidOperationException($"Property '{name}' not found.");
-    if (property is T prop)
-    {
-      return prop;
-    }
-
-    throw new InvalidOperationException($"Property '{name}' is not of type '{typeof(T).Name}'.");
-  }
-
-  /// <inheritdoc/>
-  public bool TryGetProperty<T>(string name, [NotNullWhen(true)] out T? property) where T : IProperty
-  {
-    if (Value.FirstOrDefault(_properties => _properties.Name == name) is T prop)
-    {
-      property = prop;
-      return true;
-    }
-
-    property = default;
-    return false;
-  }
+  public override IList<IProperty> GetProperties() => Value;
 }

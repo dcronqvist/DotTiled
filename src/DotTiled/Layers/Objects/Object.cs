@@ -10,7 +10,7 @@ public abstract class Object : HasPropertiesBase
   /// <summary>
   /// Unique ID of the objects. Each object that is placed on a map gets a unique ID. Even if an object was deleted, no object gets the same ID.
   /// </summary>
-  public uint? ID { get; set; }
+  public Optional<uint> ID { get; set; } = Optional<uint>.Empty;
 
   /// <summary>
   /// The name of the object. An arbitrary string.
@@ -55,7 +55,7 @@ public abstract class Object : HasPropertiesBase
   /// <summary>
   /// A reference to a template file.
   /// </summary>
-  public string? Template { get; set; }
+  public Optional<string> Template { get; set; } = Optional<string>.Empty;
 
   /// <summary>
   /// Object properties.

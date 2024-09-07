@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
@@ -14,16 +13,16 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/dcronqvist/DotTiled</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>gamedev;window;parser;tiled;mapeditor</PackageTags>
+    <PackageTags>gamedev;parser;tiled;mapeditor;tmx;tsx;maps</PackageTags>
     <PackageProjectUrl>https://github.com/dcronqvist/DotTiled</PackageProjectUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Copyright>Copyright © 2024 dcronqvist</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
     <None Include="../../LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 

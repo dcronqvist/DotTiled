@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace DotTiled.Serialization.Tmx;
 
@@ -13,16 +14,15 @@ public abstract partial class TmxReaderBase
   {
     // Attributes
     var version = _reader.GetRequiredAttribute("version");
-    var tiledVersion = _reader.GetRequiredAttribute("tiledversion");
-    var @class = _reader.GetOptionalAttribute("class") ?? "";
-    var orientation = _reader.GetRequiredAttributeEnum<MapOrientation>("orientation", s => s switch
-    {
-      "orthogonal" => MapOrientation.Orthogonal,
-      "isometric" => MapOrientation.Isometric,
-      "staggered" => MapOrientation.Staggered,
-      "hexagonal" => MapOrientation.Hexagonal,
-      _ => throw new InvalidOperationException($"Unknown orientation '{s}'")
-    });
+    var tiledVersion = _reader.GetOptionalAttribute("tiledversion");
+    var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
+    var orientation = _reader.GetRequiredAttributeEnum<MapOrientation>("orientation", Helpers.CreateMapper<MapOrientation>(
+      s => throw new InvalidOperationException($"Unknown orientation '{s}'"),
+      ("orthogonal", MapOrientation.Orthogonal),
+      ("isometric", MapOrientation.Isometric),
+      ("staggered", MapOrientation.Staggered),
+      ("hexagonal", MapOrientation.Hexagonal)
+    ));
     var renderOrder = _reader.GetOptionalAttributeEnum<RenderOrder>("renderorder", s => s switch
     {
       "right-down" => RenderOrder.RightDown,
@@ -30,8 +30,8 @@ public abstract partial class TmxReaderBase
       "left-down" => RenderOrder.LeftDown,
       "left-up" => RenderOrder.LeftUp,
       _ => throw new InvalidOperationException($"Unknown render order '{s}'")
-    }) ?? RenderOrder.RightDown;
-    var compressionLevel = _reader.GetOptionalAttributeParseable<int>("compressionlevel") ?? -1;
+    }).GetValueOr(RenderOrder.RightDown);
+    var compressionLevel = _reader.GetOptionalAttributeParseable<int>("compressionlevel").GetValueOr(-1);
     var width = _reader.GetRequiredAttributeParseable<uint>("width");
     var height = _reader.GetRequiredAttributeParseable<uint>("height");
     var tileWidth = _reader.GetRequiredAttributeParseable<uint>("tilewidth");
@@ -49,15 +49,16 @@ public abstract partial class TmxReaderBase
       "even" => StaggerIndex.Even,
       _ => throw new InvalidOperationException($"Unknown stagger index '{s}'")
     });
-    var parallaxOriginX = _reader.GetOptionalAttributeParseable<float>("parallaxoriginx") ?? 0.0f;
-    var parallaxOriginY = _reader.GetOptionalAttributeParseable<float>("parallaxoriginy") ?? 0.0f;
-    var backgroundColor = _reader.GetOptionalAttributeClass<Color>("backgroundcolor") ?? Color.Parse("#00000000", CultureInfo.InvariantCulture);
+    var parallaxOriginX = _reader.GetOptionalAttributeParseable<float>("parallaxoriginx").GetValueOr(0.0f);
+    var parallaxOriginY = _reader.GetOptionalAttributeParseable<float>("parallaxoriginy").GetValueOr(0.0f);
+    var backgroundColor = _reader.GetOptionalAttributeClass<Color>("backgroundcolor").GetValueOr(Color.Parse("#00000000", CultureInfo.InvariantCulture));
     var nextLayerID = _reader.GetRequiredAttributeParseable<uint>("nextlayerid");
     var nextObjectID = _reader.GetRequiredAttributeParseable<uint>("nextobjectid");
-    var infinite = (_reader.GetOptionalAttributeParseable<uint>("infinite") ?? 0) == 1;
+    var infinite = _reader.GetOptionalAttributeParseable<uint>("infinite").GetValueOr(0) == 1;
 
     // At most one of
-    List<IProperty>? properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
 
     // Any number of
     List<BaseLayer> layers = [];
@@ -65,8 +66,8 @@ public abstract partial class TmxReaderBase
 
     _reader.ProcessChildren("map", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
-      "tileset" => () => tilesets.Add(ReadTileset()),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
+      "tileset" => () => tilesets.Add(ReadTileset(version, tiledVersion)),
       "layer" => () => layers.Add(ReadTileLayer(infinite)),
       "objectgroup" => () => layers.Add(ReadObjectLayer()),
       "imagelayer" => () => layers.Add(ReadImageLayer()),

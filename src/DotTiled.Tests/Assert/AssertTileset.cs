@@ -4,7 +4,6 @@ public static partial class DotTiledAssert
 {
   internal static void AssertTileset(Tileset expected, Tileset actual)
   {
-    // Attributes
     AssertEqual(expected.Version, actual.Version, nameof(Tileset.Version));
     AssertEqual(expected.TiledVersion, actual.TiledVersion, nameof(Tileset.TiledVersion));
     AssertEqual(expected.FirstGID, actual.FirstGID, nameof(Tileset.FirstGID));
@@ -21,29 +20,16 @@ public static partial class DotTiledAssert
     AssertEqual(expected.RenderSize, actual.RenderSize, nameof(Tileset.RenderSize));
     AssertEqual(expected.FillMode, actual.FillMode, nameof(Tileset.FillMode));
 
-    // At most one of
-    AssertImage(expected.Image, actual.Image);
-    AssertTileOffset(expected.TileOffset, actual.TileOffset);
-    AssertGrid(expected.Grid, actual.Grid);
+    AssertOptionalsEqual(expected.Image, actual.Image, nameof(Tileset.Image), AssertImage);
+    AssertOptionalsEqual(expected.TileOffset, actual.TileOffset, nameof(Tileset.TileOffset), AssertTileOffset);
+    AssertOptionalsEqual(expected.Grid, actual.Grid, nameof(Tileset.Grid), AssertGrid);
     AssertProperties(expected.Properties, actual.Properties);
-    // TODO: AssertTerrainTypes(actual.TerrainTypes, expected.TerrainTypes);
-    if (expected.Wangsets is not null)
-    {
-      Assert.NotNull(actual.Wangsets);
-      AssertEqual(expected.Wangsets.Count, actual.Wangsets.Count, "Wangsets.Count");
-      for (var i = 0; i < expected.Wangsets.Count; i++)
-        AssertWangset(expected.Wangsets[i], actual.Wangsets[i]);
-    }
-    AssertTransformations(expected.Transformations, actual.Transformations);
-
-    // Any number of
-    Assert.NotNull(actual.Tiles);
-    AssertEqual(expected.Tiles.Count, actual.Tiles.Count, "Tiles.Count");
-    for (var i = 0; i < expected.Tiles.Count; i++)
-      AssertTile(expected.Tiles[i], actual.Tiles[i]);
+    AssertListOrdered(expected.Wangsets, actual.Wangsets, nameof(Tileset.Wangsets), AssertWangset);
+    AssertOptionalsEqual(expected.Transformations, actual.Transformations, nameof(Tileset.Transformations), AssertTransformations);
+    AssertListOrdered(expected.Tiles, actual.Tiles, nameof(Tileset.Tiles), AssertTile);
   }
 
-  private static void AssertTileOffset(TileOffset? expected, TileOffset? actual)
+  private static void AssertTileOffset(TileOffset expected, TileOffset actual)
   {
     if (expected is null)
     {
@@ -57,7 +43,7 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Y, actual.Y, nameof(TileOffset.Y));
   }
 
-  private static void AssertGrid(Grid? expected, Grid? actual)
+  private static void AssertGrid(Grid expected, Grid actual)
   {
     if (expected is null)
     {
@@ -74,27 +60,17 @@ public static partial class DotTiledAssert
 
   private static void AssertWangset(Wangset expected, Wangset actual)
   {
-    // Attributes
     AssertEqual(expected.Name, actual.Name, nameof(Wangset.Name));
     AssertEqual(expected.Class, actual.Class, nameof(Wangset.Class));
     AssertEqual(expected.Tile, actual.Tile, nameof(Wangset.Tile));
 
-    // At most one of
     AssertProperties(expected.Properties, actual.Properties);
-    if (expected.WangColors is not null)
-    {
-      Assert.NotNull(actual.WangColors);
-      AssertEqual(expected.WangColors.Count, actual.WangColors.Count, "WangColors.Count");
-      for (var i = 0; i < expected.WangColors.Count; i++)
-        AssertWangColor(expected.WangColors[i], actual.WangColors[i]);
-    }
-    for (var i = 0; i < expected.WangTiles.Count; i++)
-      AssertWangTile(expected.WangTiles[i], actual.WangTiles[i]);
+    AssertListOrdered(expected.WangColors, actual.WangColors, nameof(Wangset.WangColors), AssertWangColor);
+    AssertListOrdered(expected.WangTiles, actual.WangTiles, nameof(Wangset.WangTiles), AssertWangTile);
   }
 
   private static void AssertWangColor(WangColor expected, WangColor actual)
   {
-    // Attributes
     AssertEqual(expected.Name, actual.Name, nameof(WangColor.Name));
     AssertEqual(expected.Class, actual.Class, nameof(WangColor.Class));
     AssertEqual(expected.Color, actual.Color, nameof(WangColor.Color));
@@ -106,12 +82,11 @@ public static partial class DotTiledAssert
 
   private static void AssertWangTile(WangTile expected, WangTile actual)
   {
-    // Attributes
     AssertEqual(expected.TileID, actual.TileID, nameof(WangTile.TileID));
     AssertEqual(expected.WangID, actual.WangID, nameof(WangTile.WangID));
   }
 
-  private static void AssertTransformations(Transformations? expected, Transformations? actual)
+  private static void AssertTransformations(Transformations expected, Transformations actual)
   {
     if (expected is null)
     {
@@ -119,7 +94,6 @@ public static partial class DotTiledAssert
       return;
     }
 
-    // Attributes
     Assert.NotNull(actual);
     AssertEqual(expected.HFlip, actual.HFlip, nameof(Transformations.HFlip));
     AssertEqual(expected.VFlip, actual.VFlip, nameof(Transformations.VFlip));
@@ -129,7 +103,6 @@ public static partial class DotTiledAssert
 
   private static void AssertTile(Tile expected, Tile actual)
   {
-    // Attributes
     AssertEqual(expected.ID, actual.ID, nameof(Tile.ID));
     AssertEqual(expected.Type, actual.Type, nameof(Tile.Type));
     AssertEqual(expected.Probability, actual.Probability, nameof(Tile.Probability));
@@ -138,22 +111,14 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Width, actual.Width, nameof(Tile.Width));
     AssertEqual(expected.Height, actual.Height, nameof(Tile.Height));
 
-    // Elements
     AssertProperties(expected.Properties, actual.Properties);
-    AssertImage(expected.Image, actual.Image);
-    AssertLayer((BaseLayer?)expected.ObjectLayer, (BaseLayer?)actual.ObjectLayer);
-    if (expected.Animation is not null)
-    {
-      Assert.NotNull(actual.Animation);
-      AssertEqual(expected.Animation.Count, actual.Animation.Count, "Animation.Count");
-      for (var i = 0; i < expected.Animation.Count; i++)
-        AssertFrame(expected.Animation[i], actual.Animation[i]);
-    }
+    AssertOptionalsEqual(expected.Image, actual.Image, nameof(Tile.Image), AssertImage);
+    AssertOptionalsEqual(expected.ObjectLayer, actual.ObjectLayer, nameof(Tile.ObjectLayer), (a, b) => AssertLayer((BaseLayer)a, (BaseLayer)b));
+    AssertListOrdered(expected.Animation, actual.Animation, nameof(Tile.Animation), AssertFrame);
   }
 
   private static void AssertFrame(Frame expected, Frame actual)
   {
-    // Attributes
     AssertEqual(expected.TileID, actual.TileID, nameof(Frame.TileID));
     AssertEqual(expected.Duration, actual.Duration, nameof(Frame.Duration));
   }

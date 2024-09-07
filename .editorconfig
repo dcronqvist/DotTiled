@@ -235,6 +235,7 @@ dotnet_diagnostic.IDE0004.severity = silent
 dotnet_diagnostic.IDE0005.severity = error
 dotnet_diagnostic.IDE0008.severity = silent
 dotnet_diagnostic.IDE0055.severity = silent
+dotnet_diagnostic.IDE0058.severity = silent
 dotnet_diagnostic.IDE0160.severity = none
 dotnet_diagnostic.CA1707.severity = silent
 dotnet_diagnostic.CA1852.severity = none
@@ -243,7 +244,7 @@ dotnet_diagnostic.CA1720.severity = silent
 dotnet_diagnostic.CA1711.severity = silent
 dotnet_diagnostic.CA1716.severity = silent
 
-[.github/**/*.yml]
+[*.(yml|json|js)]
 charset = utf-8
 end_of_line = lf
 indent_size = 2

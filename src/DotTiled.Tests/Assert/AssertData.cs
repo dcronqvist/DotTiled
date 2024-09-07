@@ -2,7 +2,7 @@ namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertData(Data? expected, Data? actual)
+  internal static void AssertData(Data expected, Data actual)
   {
     if (expected is null)
     {
@@ -18,14 +18,7 @@ public static partial class DotTiledAssert
     // Data
     AssertEqual(expected.GlobalTileIDs, actual.GlobalTileIDs, nameof(Data.GlobalTileIDs));
     AssertEqual(expected.FlippingFlags, actual.FlippingFlags, nameof(Data.FlippingFlags));
-
-    if (expected.Chunks is not null)
-    {
-      Assert.NotNull(actual.Chunks);
-      AssertEqual(expected.Chunks.Length, actual.Chunks.Length, "Chunks.Length");
-      for (var i = 0; i < expected.Chunks.Length; i++)
-        AssertChunk(expected.Chunks[i], actual.Chunks[i]);
-    }
+    AssertOptionalsEqual(expected.Chunks, actual.Chunks, nameof(Data.Chunks), (a, b) => AssertListOrdered(a, b, nameof(Chunk), AssertChunk));
   }
 
   private static void AssertChunk(Chunk expected, Chunk actual)

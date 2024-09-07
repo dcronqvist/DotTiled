@@ -22,9 +22,9 @@ public abstract partial class TmjReaderBase
         "object" => PropertyType.Object,
         "class" => PropertyType.Class,
         _ => throw new JsonException("Invalid property type")
-      }, PropertyType.String);
-      var propertyType = e.GetOptionalProperty<string?>("propertytype", null);
-      if (propertyType is not null)
+      }).GetValueOr(PropertyType.String);
+      var propertyType = e.GetOptionalProperty<string>("propertytype");
+      if (propertyType.HasValue)
       {
         return ReadPropertyWithCustomType(e);
       }
@@ -48,7 +48,7 @@ public abstract partial class TmjReaderBase
 
   internal IProperty ReadPropertyWithCustomType(JsonElement element)
   {
-    var isClass = element.GetOptionalProperty<string?>("type", null) == "class";
+    var isClass = element.GetOptionalProperty<string>("type") == "class";
     if (isClass)
     {
       return ReadClassProperty(element);
@@ -66,7 +66,7 @@ public abstract partial class TmjReaderBase
     if (customTypeDef is CustomClassDefinition ccd)
     {
       var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
-      var props = element.GetOptionalPropertyCustom<List<IProperty>>("value", e => ReadPropertiesInsideClass(e, ccd), []);
+      var props = element.GetOptionalPropertyCustom<List<IProperty>>("value", e => ReadPropertiesInsideClass(e, ccd)).GetValueOr([]);
       var mergedProps = Helpers.MergeProperties(propsInType, props);
 
       return new ClassProperty
@@ -120,7 +120,7 @@ public abstract partial class TmjReaderBase
       "string" => PropertyType.String,
       "int" => PropertyType.Int,
       _ => throw new JsonException("Invalid property type")
-    }, PropertyType.String);
+    }).GetValueOr(PropertyType.String);
     var customTypeDef = _customTypeResolver(propertyType);
 
     if (customTypeDef is not CustomEnumDefinition ced)

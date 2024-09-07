@@ -34,7 +34,7 @@ public class Wangset : HasPropertiesBase
   /// <summary>
   /// The Wang colors in the Wang set.
   /// </summary>
-  public List<WangColor>? WangColors { get; set; } = [];
+  public List<WangColor> WangColors { get; set; } = [];
 
   /// <summary>
   /// The Wang tiles in the Wang set.

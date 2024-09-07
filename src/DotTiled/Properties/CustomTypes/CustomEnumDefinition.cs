@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotTiled;
 
@@ -44,4 +46,43 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// Whether the value should be treated as flags.
   /// </summary>
   public bool ValueAsFlags { get; set; }
+
+  /// <summary>
+  /// Creates a custom enum definition from the specified enum type.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  /// <returns></returns>
+  public static CustomEnumDefinition FromEnum<T>() where T : Enum
+  {
+    var type = typeof(T);
+    var isFlags = type.GetCustomAttributes(typeof(FlagsAttribute), false).Length != 0;
+
+    return new CustomEnumDefinition
+    {
+      Name = type.Name,
+      StorageType = CustomEnumStorageType.Int,
+      Values = Enum.GetNames(type).ToList(),
+      ValueAsFlags = isFlags
+    };
+  }
+
+  /// <summary>
+  /// Creates a custom enum definition from the specified enum type.
+  /// </summary>
+  /// <returns></returns>
+  public static CustomEnumDefinition FromEnum(Type type)
+  {
+    if (!type.IsEnum)
+      throw new ArgumentException("Type must be an enum.", nameof(type));
+
+    var isFlags = type.GetCustomAttributes(typeof(FlagsAttribute), false).Length != 0;
+
+    return new CustomEnumDefinition
+    {
+      Name = type.Name,
+      StorageType = CustomEnumStorageType.Int,
+      Values = Enum.GetNames(type).ToList(),
+      ValueAsFlags = isFlags
+    };
+  }
 }

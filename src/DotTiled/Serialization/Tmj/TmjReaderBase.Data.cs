@@ -6,20 +6,18 @@ namespace DotTiled.Serialization.Tmj;
 
 public abstract partial class TmjReaderBase
 {
-  internal static Data ReadDataAsChunks(JsonElement element, DataCompression? compression, DataEncoding encoding)
+  internal static Data ReadDataAsChunks(JsonElement element, Optional<DataCompression> compression, DataEncoding encoding)
   {
     var chunks = element.GetValueAsList<Chunk>(e => ReadChunk(e, compression, encoding)).ToArray();
     return new Data
     {
       Chunks = chunks,
       Compression = compression,
-      Encoding = encoding,
-      FlippingFlags = null,
-      GlobalTileIDs = null
+      Encoding = encoding
     };
   }
 
-  internal static Chunk ReadChunk(JsonElement element, DataCompression? compression, DataEncoding encoding)
+  internal static Chunk ReadChunk(JsonElement element, Optional<DataCompression> compression, DataEncoding encoding)
   {
     var data = ReadDataWithoutChunks(element, compression, encoding);
 
@@ -34,33 +32,33 @@ public abstract partial class TmjReaderBase
       Y = y,
       Width = width,
       Height = height,
-      GlobalTileIDs = data.GlobalTileIDs!,
-      FlippingFlags = data.FlippingFlags!
+      GlobalTileIDs = data.GlobalTileIDs,
+      FlippingFlags = data.FlippingFlags
     };
   }
 
-  internal static Data ReadDataWithoutChunks(JsonElement element, DataCompression? compression, DataEncoding encoding)
+  internal static Data ReadDataWithoutChunks(JsonElement element, Optional<DataCompression> compression, DataEncoding encoding)
   {
     if (encoding == DataEncoding.Csv)
     {
       // Array of uint
       var data = element.GetValueAsList<uint>(e => e.GetValueAs<uint>()).ToArray();
       var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(data);
-      return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
+      return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
     }
     else if (encoding == DataEncoding.Base64)
     {
       var base64Data = element.GetBytesFromBase64();
 
-      if (compression == null)
+      if (!compression.HasValue)
       {
         var data = Helpers.ReadBytesAsInt32Array(base64Data);
         var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(data);
-        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
+        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
       }
 
       using var stream = new MemoryStream(base64Data);
-      var decompressed = compression switch
+      var decompressed = compression.Value switch
       {
         DataCompression.GZip => Helpers.DecompressGZip(stream),
         DataCompression.ZLib => Helpers.DecompressZLib(stream),
@@ -70,7 +68,7 @@ public abstract partial class TmjReaderBase
 
       {
         var (globalTileIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs(decompressed);
-        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags, Chunks = null };
+        return new Data { Encoding = encoding, Compression = compression, GlobalTileIDs = globalTileIDs, FlippingFlags = flippingFlags };
       }
     }
 

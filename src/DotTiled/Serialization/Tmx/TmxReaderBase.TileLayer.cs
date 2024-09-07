@@ -8,27 +8,28 @@ public abstract partial class TmxReaderBase
   internal TileLayer ReadTileLayer(bool dataUsesChunks)
   {
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
-    var name = _reader.GetOptionalAttribute("name") ?? "";
-    var @class = _reader.GetOptionalAttribute("class") ?? "";
-    var x = _reader.GetOptionalAttributeParseable<uint>("x") ?? 0;
-    var y = _reader.GetOptionalAttributeParseable<uint>("y") ?? 0;
+    var name = _reader.GetOptionalAttribute("name").GetValueOr("");
+    var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
+    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
     var width = _reader.GetRequiredAttributeParseable<uint>("width");
     var height = _reader.GetRequiredAttributeParseable<uint>("height");
-    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
+    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
+    var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
-    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
-    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
-    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
-    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
+    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
+    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);
+    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
+    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1.0f);
 
-    List<IProperty>? properties = null;
-    Data? data = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
+    Data data = null;
 
     _reader.ProcessChildren("layer", (r, elementName) => elementName switch
     {
       "data" => () => Helpers.SetAtMostOnce(ref data, ReadData(dataUsesChunks), "Data"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       _ => r.Skip
     });
 
@@ -48,7 +49,7 @@ public abstract partial class TmxReaderBase
       OffsetY = offsetY,
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
-      Data = data,
+      Data = data ?? Optional<Data>.Empty,
       Properties = properties ?? []
     };
   }
@@ -56,27 +57,28 @@ public abstract partial class TmxReaderBase
   internal ImageLayer ReadImageLayer()
   {
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
-    var name = _reader.GetOptionalAttribute("name") ?? "";
-    var @class = _reader.GetOptionalAttribute("class") ?? "";
-    var x = _reader.GetOptionalAttributeParseable<uint>("x") ?? 0;
-    var y = _reader.GetOptionalAttributeParseable<uint>("y") ?? 0;
-    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
+    var name = _reader.GetOptionalAttribute("name").GetValueOr("");
+    var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
+    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
+    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1f);
+    var visible = _reader.GetOptionalAttributeParseable<bool>("visible").GetValueOr(true);
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
-    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
-    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
-    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
-    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
-    var repeatX = (_reader.GetOptionalAttributeParseable<uint>("repeatx") ?? 0) == 1;
-    var repeatY = (_reader.GetOptionalAttributeParseable<uint>("repeaty") ?? 0) == 1;
+    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
+    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);
+    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
+    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1.0f);
+    var repeatX = _reader.GetOptionalAttributeParseable<uint>("repeatx").GetValueOr(0) == 1;
+    var repeatY = _reader.GetOptionalAttributeParseable<uint>("repeaty").GetValueOr(0) == 1;
 
-    List<IProperty>? properties = null;
-    Image? image = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
+    Image image = null;
 
     _reader.ProcessChildren("imagelayer", (r, elementName) => elementName switch
     {
       "image" => () => Helpers.SetAtMostOnce(ref image, ReadImage(), "Image"),
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       _ => r.Skip
     });
 
@@ -104,22 +106,23 @@ public abstract partial class TmxReaderBase
   internal Group ReadGroup()
   {
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
-    var name = _reader.GetOptionalAttribute("name") ?? "";
-    var @class = _reader.GetOptionalAttribute("class") ?? "";
-    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity") ?? 1.0f;
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible") ?? true;
+    var name = _reader.GetOptionalAttribute("name").GetValueOr("");
+    var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
+    var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
+    var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
-    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx") ?? 0.0f;
-    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety") ?? 0.0f;
-    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx") ?? 1.0f;
-    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy") ?? 1.0f;
+    var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0f);
+    var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0f);
+    var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1f);
+    var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1f);
 
-    List<IProperty>? properties = null;
+    var propertiesCounter = 0;
+    List<IProperty> properties = Helpers.ResolveClassProperties(@class, _customTypeResolver);
     List<BaseLayer> layers = [];
 
     _reader.ProcessChildren("group", (r, elementName) => elementName switch
     {
-      "properties" => () => Helpers.SetAtMostOnce(ref properties, ReadProperties(), "Properties"),
+      "properties" => () => Helpers.SetAtMostOnceUsingCounter(ref properties, Helpers.MergeProperties(properties, ReadProperties()).ToList(), "Properties", ref propertiesCounter),
       "layer" => () => layers.Add(ReadTileLayer(false)),
       "objectgroup" => () => layers.Add(ReadObjectLayer()),
       "imagelayer" => () => layers.Add(ReadImageLayer()),

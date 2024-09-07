@@ -41,7 +41,10 @@
       "_appName": "DotTiled",
       "_appTitle": "DotTiled",
       "_enableSearch": true,
-      "pdf": true
-    }
+      "pdf": false
+    },
+    "xref": [
+      "https://learn.microsoft.com/en-us/dotnet/.xrefmap.json"
+    ]
   }
 }

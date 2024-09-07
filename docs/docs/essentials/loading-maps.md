@@ -1,15 +1,92 @@
 # Loading maps
 
-Loading maps with DotTiled is straightforward and easy. The <xref:DotTiled.Map> class is a representation of a Tiled map, mimicking the structure of a Tiled map file. Map files can either be in the [`.tmx`/XML](https://doc.mapeditor.org/en/stable/reference/tmx-map-format/) or [`.tmj`/json](https://doc.mapeditor.org/en/stable/reference/json-map-format/) format. DotTiled supports **both** formats fully.
+Loading maps with DotTiled is very flexible and allows you as a developer to freely choose how you want to load your maps and tilesets. This guide will show you how to customize the loading process to fit your needs. As the tip below suggests, you can also use the quickstart guide if you just want to load maps from the filesystem without any particular customization.
 
-> [!NOTE]
-> Using the `.tmj` file format will result in <xref:DotTiled.ImageLayer.Image> not having the same amount of information as for the `.tmx` format. This is due to the fact that the `.tmj` format does not include the full information that the `.tmx` format does. This is not a problem with DotTiled, but rather a limitation of the `.tmj` format.
+> [!TIP]
+> For a quick and easy way to load maps from the filesystem, please refer to the [quickstart guide](../quickstart.md).
 
-## External resolution
+## File format caveats
 
-Tiled maps may consist of several external files, such as tilesets or object templates. In Tiled map files, they are typically referenced by their path relative to the map file. It would be annoying to have to first load all these external resources before loading a map (which is how some other similar libraries work), so loading a map with DotTiled is designed in a way that you only have to provide a function that resolves these external resources. This way, DotTiled will figure out which external resources are needed and will invoke the corresponding resolver function to load them.
+The <xref:DotTiled.Map> class is a representation of a Tiled map, mimicking the structure of a Tiled XML map file. Map files can either be in the [`.tmx`/XML](https://doc.mapeditor.org/en/stable/reference/tmx-map-format/) or [`.tmj`/json](https://doc.mapeditor.org/en/stable/reference/json-map-format/) format. DotTiled supports **both** formats fully.
 
-Loading a map, tileset, or template will require you to specify **three** resolver functions. We'll go through each of them below.
+> [!WARNING]
+> Using the `.tmj` file format will result in <xref:DotTiled.ImageLayer.Image> (the source image for image layers) not having the same amount of information as for the `.tmx` format. This is due to the fact that the `.tmj` format does not include the full information that the `.tmx` format does. This is not a problem with DotTiled, but rather a limitation of the `.tmj` format.
+
+## The process of loading a map
+
+Loading a map with DotTiled is not a complex process, but one that at least demands a basic understanding of how Tiled maps are structured. The process can be broken down into the following flow(-ish) chart:
+
+```mermaid
+flowchart LR
+    Z{{Loading a map 
+    with DotTiled}} --> A
+
+    subgraph Parsing map
+    A[(Read map)] --> B(Parse map)
+    end
+
+    subgraph Parsing tileset
+    B -.->|References 
+          external tileset| C[(Read tileset)]
+    C --> D(Parse tileset) --o|Store in map| B
+    end
+
+    subgraph Parsing template
+    B -.->|References external 
+          template in object| E[(Read template)]
+    E --> F(Parse template) --o|Use as template
+                                for object| B
+    end
+    
+    F -.-> |References 
+           external tileset| C
+    F -.-> |References 
+            external template| E
+```
+
+As you can see, the process is quite simple. You read the map, parse it, and then read and parse any external tilesets or templates that are referenced in the map. The tilesets and templates are then stored in the map object that is returned to you.
+
+However, because DotTiled works in the way that it does, you will need to provide a way to resolve these external resources. We'll go through how to do that in the next section.
+
+## Loading a map with <xref:DotTiled.Serialization.Loader>
+
+When using <xref:DotTiled.Serialization.Loader>, external resources like tilesets and templates will be resolved by the loader itself. Since Tiled saves the external resource paths relative to the map file, the loader will automatically resolve these paths and use the provided <xref:DotTiled.Serialization.IResourceReader> to read the external resources. Therefore, as long as the external resources are accessible in a "relative path" way using the provided <xref:DotTiled.Serialization.IResourceReader>, you don't have to worry about resolving them yourself.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="5" height="5">
+  <data encoding="csv">
+1,1,0,0,7,
+1,1,0,0,7,
+0,0,1,0,7,
+0,0,0,1,7,
+21,21,21,21,1
+</data>
+ </layer>
+</map>
+```
+
+A map like the one above that is loaded by the following code will result in the loader calling `IResourceReader.Read("path/to/tileset.tsx")` to read the external tileset, since it will use the path relative to the map file to resolve the tileset.
+
+```csharp
+var loader = Loader.Default();
+var map = loader.LoadMap("path/to/map.tmx");
+```
+
+Additionally, the loader will use an in-memory cache to avoid loading the same tileset or template multiple times. This is done using the <xref:DotTiled.Serialization.IResourceCache> that is provided to the loader. If you don't provide a cache, the loader will use the <xref:DotTiled.Serialization.DefaultResourceCache> by default.
+
+## Loading a map manually with <xref:DotTiled.Serialization.MapReader>
+
+While it is recommended to use the <xref:DotTiled.Serialization.Loader> class to perform the loading of maps and tilesets, you may have certain requirements that necessitate you to load maps in a more manual way. This section will guide you through how to load a map manually without the use of the provided loader.
+
+### <xref:DotTiled.Serialization.MapReader>, <xref:DotTiled.Serialization.TilesetReader>, and <xref:DotTiled.Serialization.TemplateReader>
+
+are the three classes that you will use to read the map, tileset, and template, respectively. They are designed to be used in a way that you can provide your own resolver functions to load external resources.
+
+> [!IMPORTANT]
+> The resolving functions will get the source path of the external resource as a parameter, *in the exact way it is written in the map file*. You will have to perform your own path resolution to load the external resources.
 
 ### `Func<string, Tileset>` - Tileset resolver
 
@@ -38,17 +115,17 @@ Tileset ResolveTileset(string source)
 
 ### `Func<string, Template>` - Template resolver
 
-This function is used to resolve external object templates by their source path. The function should return a <xref:DotTiled.Template> instance given the source path of the template. If you just want to load templates from the file system, you can use something very similar to the tileset resolver by replacing <xref:DotTiled.Serialization.TilesetReader> with <xref:DotTiled.Serialization.TemplateReader>.
+This function is used to resolve external object templates by their source path. The function should return a <xref:DotTiled.Template> instance given the source path of the template. If you just want to load templates from the file system, you can use something very similar to the example tileset resolver by replacing <xref:DotTiled.Serialization.TilesetReader> with <xref:DotTiled.Serialization.TemplateReader>.
 
-### `Func<string, CustomType>` - Custom type resolver
+### `Func<string, ICustomTypeDefinition>` - Custom type resolver
 
-This function is used to resolve custom types that are defined in Tiled maps. Please refer to the [custom properties](custom-properties.md) documentation for more information on custom types. The function should return a <xref:DotTiled.ICustomTypeDefinition> instance given the custom type's name.
+This function is used to resolve custom types that are defined in your Tiled maps. Please refer to the [custom properties](custom-properties.md) documentation for more information on custom types. The function should return a <xref:DotTiled.ICustomTypeDefinition> instance given the custom type's name.
 
 ## Putting it all together
 
 The following classes are the readers that you will need to use to read the map, tileset, and template: <xref:DotTiled.Serialization.MapReader>, <xref:DotTiled.Serialization.TilesetReader>, and <xref:DotTiled.Serialization.TemplateReader>.
 
-Here is an example of how you can load a map with DotTiled:
+Here is an example of how you can load a map with DotTiled, and is very similar to how the <xref:DotTiled.Serialization.Loader> class works:
 
 ```csharp
 string mapPath = "path/to/map.tmx";

@@ -8,6 +8,20 @@ namespace DotTiled.Serialization;
 
 internal static partial class Helpers
 {
+  internal static Func<string, T> CreateMapper<T>(Func<string, Exception> noMatch, params (string, T)[] mappings)
+  {
+    return s =>
+    {
+      foreach (var (key, value) in mappings)
+      {
+        if (key == s)
+          return value;
+      }
+
+      throw noMatch(s);
+    };
+  }
+
   internal static uint[] ReadMemoryStreamAsInt32Array(Stream stream)
   {
     var finalValues = new List<uint>();
@@ -72,6 +86,18 @@ internal static partial class Helpers
     };
   }
 
+  internal static List<IProperty> ResolveClassProperties(string className, Func<string, ICustomTypeDefinition> customTypeResolver)
+  {
+    if (string.IsNullOrWhiteSpace(className))
+      return null;
+
+    var customType = customTypeResolver(className) ?? throw new InvalidOperationException($"Could not resolve custom type '{className}'.");
+    if (customType is not CustomClassDefinition ccd)
+      throw new InvalidOperationException($"Custom type '{className}' is not a class.");
+
+    return CreateInstanceOfCustomClass(ccd, customTypeResolver);
+  }
+
   internal static List<IProperty> CreateInstanceOfCustomClass(
     CustomClassDefinition customClassDefinition,
     Func<string, ICustomTypeDefinition> customTypeResolver)
@@ -92,7 +118,7 @@ internal static partial class Helpers
     }).ToList();
   }
 
-  internal static IList<IProperty> MergeProperties(IList<IProperty>? baseProperties, IList<IProperty>? overrideProperties)
+  internal static IList<IProperty> MergeProperties(IList<IProperty> baseProperties, IList<IProperty> overrideProperties)
   {
     if (baseProperties is null)
       return overrideProperties ?? [];
@@ -134,7 +160,7 @@ internal static partial class Helpers
       properties[index] = property;
   }
 
-  internal static void SetAtMostOnce<T>(ref T? field, T value, string fieldName)
+  internal static void SetAtMostOnce<T>(ref T field, T value, string fieldName)
   {
     if (field is not null)
       throw new InvalidOperationException($"{fieldName} already set");
@@ -142,7 +168,7 @@ internal static partial class Helpers
     field = value;
   }
 
-  internal static void SetAtMostOnceUsingCounter<T>(ref T? field, T value, string fieldName, ref int counter)
+  internal static void SetAtMostOnceUsingCounter<T>(ref T field, T value, string fieldName, ref int counter)
   {
     if (counter > 0)
       throw new InvalidOperationException($"{fieldName} already set");

@@ -37,7 +37,7 @@ public abstract class BaseLayer : HasPropertiesBase
   /// <summary>
   /// A tint color that is multiplied with any tiles drawn by this layer.
   /// </summary>
-  public Color? TintColor { get; set; }
+  public Optional<Color> TintColor { get; set; } = Optional<Color>.Empty;
 
   /// <summary>
   /// Horizontal offset for this layer in pixels.

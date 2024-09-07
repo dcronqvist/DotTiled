@@ -21,5 +21,5 @@ public class TsxTilesetReader : TmxReaderBase, ITilesetReader
   { }
 
   /// <inheritdoc/>
-  public new Tileset ReadTileset() => base.ReadTileset();
+  public Tileset ReadTileset() => base.ReadTileset();
 }

@@ -11,29 +11,29 @@ public abstract partial class TmjReaderBase
   {
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
-    var @class = element.GetOptionalProperty<string>("class", "");
-    var opacity = element.GetOptionalProperty<float>("opacity", 1.0f);
-    var visible = element.GetOptionalProperty<bool>("visible", true);
-    var tintColor = element.GetOptionalPropertyParseable<Color?>("tintcolor", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
-    var offsetX = element.GetOptionalProperty<float>("offsetx", 0.0f);
-    var offsetY = element.GetOptionalProperty<float>("offsety", 0.0f);
-    var parallaxX = element.GetOptionalProperty<float>("parallaxx", 1.0f);
-    var parallaxY = element.GetOptionalProperty<float>("parallaxy", 1.0f);
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, []);
+    var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
+    var opacity = element.GetOptionalProperty<float>("opacity").GetValueOr(1.0f);
+    var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
+    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
+    var offsetX = element.GetOptionalProperty<float>("offsetx").GetValueOr(0.0f);
+    var offsetY = element.GetOptionalProperty<float>("offsety").GetValueOr(0.0f);
+    var parallaxX = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
+    var parallaxY = element.GetOptionalProperty<float>("parallaxy").GetValueOr(1.0f);
+    var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
 
-    var x = element.GetOptionalProperty<uint>("x", 0);
-    var y = element.GetOptionalProperty<uint>("y", 0);
-    var width = element.GetOptionalProperty<uint?>("width", null);
-    var height = element.GetOptionalProperty<uint?>("height", null);
-    var color = element.GetOptionalPropertyParseable<Color?>("color", s => Color.Parse(s, CultureInfo.InvariantCulture), null);
+    var x = element.GetOptionalProperty<uint>("x").GetValueOr(0);
+    var y = element.GetOptionalProperty<uint>("y").GetValueOr(0);
+    var width = element.GetOptionalProperty<uint>("width").GetValueOr(0);
+    var height = element.GetOptionalProperty<uint>("height").GetValueOr(0);
+    var color = element.GetOptionalPropertyParseable<Color>("color");
     var drawOrder = element.GetOptionalPropertyParseable<DrawOrder>("draworder", s => s switch
     {
       "topdown" => DrawOrder.TopDown,
       "index" => DrawOrder.Index,
       _ => throw new JsonException($"Unknown draw order '{s}'.")
-    }, DrawOrder.TopDown);
+    }).GetValueOr(DrawOrder.TopDown);
 
-    var objects = element.GetOptionalPropertyCustom<List<DotTiled.Object>>("objects", e => e.GetValueAsList<DotTiled.Object>(el => ReadObject(el)), []);
+    var objects = element.GetOptionalPropertyCustom<List<DotTiled.Object>>("objects", e => e.GetValueAsList<DotTiled.Object>(el => ReadObject(el))).GetValueOr([]);
 
     return new ObjectLayer
     {
@@ -60,7 +60,7 @@ public abstract partial class TmjReaderBase
 
   internal DotTiled.Object ReadObject(JsonElement element)
   {
-    uint? idDefault = null;
+    Optional<uint> idDefault = Optional<uint>.Empty;
     string nameDefault = "";
     string typeDefault = "";
     float xDefault = 0f;
@@ -68,16 +68,16 @@ public abstract partial class TmjReaderBase
     float widthDefault = 0f;
     float heightDefault = 0f;
     float rotationDefault = 0f;
-    uint? gidDefault = null;
     bool visibleDefault = true;
     bool ellipseDefault = false;
     bool pointDefault = false;
-    List<Vector2>? polygonDefault = null;
-    List<Vector2>? polylineDefault = null;
+
+    List<Vector2> polygonDefault = null;
+    List<Vector2> polylineDefault = null;
     List<IProperty> propertiesDefault = [];
 
-    var template = element.GetOptionalProperty<string?>("template", null);
-    if (template is not null)
+    var template = element.GetOptionalProperty<string>("template");
+    if (template.HasValue)
     {
       var resolvedTemplate = _externalTemplateResolver(template);
       var templObj = resolvedTemplate.Object;
@@ -98,24 +98,24 @@ public abstract partial class TmjReaderBase
       polylineDefault = (templObj is PolylineObject polylineObj) ? polylineObj.Points : null;
     }
 
-    var ellipse = element.GetOptionalProperty<bool>("ellipse", ellipseDefault);
-    var gid = element.GetOptionalProperty<uint?>("gid", gidDefault);
-    var height = element.GetOptionalProperty<float>("height", heightDefault);
-    var id = element.GetOptionalProperty<uint?>("id", idDefault);
-    var name = element.GetOptionalProperty<string>("name", nameDefault);
-    var point = element.GetOptionalProperty<bool>("point", pointDefault);
-    var polygon = element.GetOptionalPropertyCustom<List<Vector2>?>("polygon", ReadPoints, polygonDefault);
-    var polyline = element.GetOptionalPropertyCustom<List<Vector2>?>("polyline", ReadPoints, polylineDefault);
-    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties, propertiesDefault);
-    var rotation = element.GetOptionalProperty<float>("rotation", rotationDefault);
-    var text = element.GetOptionalPropertyCustom<TextObject?>("text", ReadText, null);
-    var type = element.GetOptionalProperty<string>("type", typeDefault);
-    var visible = element.GetOptionalProperty<bool>("visible", visibleDefault);
-    var width = element.GetOptionalProperty<float>("width", widthDefault);
-    var x = element.GetOptionalProperty<float>("x", xDefault);
-    var y = element.GetOptionalProperty<float>("y", yDefault);
+    var ellipse = element.GetOptionalProperty<bool>("ellipse").GetValueOr(ellipseDefault);
+    var gid = element.GetOptionalProperty<uint>("gid");
+    var height = element.GetOptionalProperty<float>("height").GetValueOr(heightDefault);
+    var id = element.GetOptionalProperty<uint>("id").GetValueOrOptional(idDefault);
+    var name = element.GetOptionalProperty<string>("name").GetValueOr(nameDefault);
+    var point = element.GetOptionalProperty<bool>("point").GetValueOr(pointDefault);
+    var polygon = element.GetOptionalPropertyCustom<List<Vector2>>("polygon", ReadPoints).GetValueOr(polygonDefault);
+    var polyline = element.GetOptionalPropertyCustom<List<Vector2>>("polyline", ReadPoints).GetValueOr(polylineDefault);
+    var properties = element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr(propertiesDefault);
+    var rotation = element.GetOptionalProperty<float>("rotation").GetValueOr(rotationDefault);
+    var text = element.GetOptionalPropertyCustom<TextObject>("text", ReadText);
+    var type = element.GetOptionalProperty<string>("type").GetValueOr(typeDefault);
+    var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(visibleDefault);
+    var width = element.GetOptionalProperty<float>("width").GetValueOr(widthDefault);
+    var x = element.GetOptionalProperty<float>("x").GetValueOr(xDefault);
+    var y = element.GetOptionalProperty<float>("y").GetValueOr(yDefault);
 
-    if (gid is not null)
+    if (gid.HasValue)
     {
       return new TileObject
       {
@@ -208,19 +208,19 @@ public abstract partial class TmjReaderBase
       };
     }
 
-    if (text is not null)
+    if (text.HasValue)
     {
-      text.ID = id;
-      text.Name = name;
-      text.Type = type;
-      text.X = x;
-      text.Y = y;
-      text.Width = width;
-      text.Height = height;
-      text.Rotation = rotation;
-      text.Visible = visible;
-      text.Template = template;
-      text.Properties = properties;
+      text.Value.ID = id;
+      text.Value.Name = name;
+      text.Value.Type = type;
+      text.Value.X = x;
+      text.Value.Y = y;
+      text.Value.Width = width;
+      text.Value.Height = height;
+      text.Value.Rotation = rotation;
+      text.Value.Visible = visible;
+      text.Value.Template = template;
+      text.Value.Properties = properties;
       return text;
     }
 
@@ -250,30 +250,30 @@ public abstract partial class TmjReaderBase
 
   internal static TextObject ReadText(JsonElement element)
   {
-    var bold = element.GetOptionalProperty<bool>("bold", false);
-    var color = element.GetOptionalPropertyParseable<Color>("color", s => Color.Parse(s, CultureInfo.InvariantCulture), Color.Parse("#00000000", CultureInfo.InvariantCulture));
-    var fontfamily = element.GetOptionalProperty<string>("fontfamily", "sans-serif");
+    var bold = element.GetOptionalProperty<bool>("bold").GetValueOr(false);
+    var color = element.GetOptionalPropertyParseable<Color>("color").GetValueOr(Color.Parse("#00000000", CultureInfo.InvariantCulture));
+    var fontfamily = element.GetOptionalProperty<string>("fontfamily").GetValueOr("sans-serif");
     var halign = element.GetOptionalPropertyParseable<TextHorizontalAlignment>("halign", s => s switch
     {
       "left" => TextHorizontalAlignment.Left,
       "center" => TextHorizontalAlignment.Center,
       "right" => TextHorizontalAlignment.Right,
       _ => throw new JsonException($"Unknown horizontal alignment '{s}'.")
-    }, TextHorizontalAlignment.Left);
-    var italic = element.GetOptionalProperty<bool>("italic", false);
-    var kerning = element.GetOptionalProperty<bool>("kerning", true);
-    var pixelsize = element.GetOptionalProperty<int>("pixelsize", 16);
-    var strikeout = element.GetOptionalProperty<bool>("strikeout", false);
+    }).GetValueOr(TextHorizontalAlignment.Left);
+    var italic = element.GetOptionalProperty<bool>("italic").GetValueOr(false);
+    var kerning = element.GetOptionalProperty<bool>("kerning").GetValueOr(true);
+    var pixelsize = element.GetOptionalProperty<int>("pixelsize").GetValueOr(16);
+    var strikeout = element.GetOptionalProperty<bool>("strikeout").GetValueOr(false);
     var text = element.GetRequiredProperty<string>("text");
-    var underline = element.GetOptionalProperty<bool>("underline", false);
+    var underline = element.GetOptionalProperty<bool>("underline").GetValueOr(false);
     var valign = element.GetOptionalPropertyParseable<TextVerticalAlignment>("valign", s => s switch
     {
       "top" => TextVerticalAlignment.Top,
       "center" => TextVerticalAlignment.Center,
       "bottom" => TextVerticalAlignment.Bottom,
       _ => throw new JsonException($"Unknown vertical alignment '{s}'.")
-    }, TextVerticalAlignment.Top);
-    var wrap = element.GetOptionalProperty<bool>("wrap", false);
+    }).GetValueOr(TextVerticalAlignment.Top);
+    var wrap = element.GetOptionalProperty<bool>("wrap").GetValueOr(false);
 
     return new TextObject
     {

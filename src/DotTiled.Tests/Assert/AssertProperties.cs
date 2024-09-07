@@ -2,7 +2,7 @@ namespace DotTiled.Tests;
 
 public static partial class DotTiledAssert
 {
-  internal static void AssertProperties(IList<IProperty>? expected, IList<IProperty>? actual)
+  internal static void AssertProperties(IList<IProperty> expected, IList<IProperty> actual)
   {
     if (expected is null)
     {
