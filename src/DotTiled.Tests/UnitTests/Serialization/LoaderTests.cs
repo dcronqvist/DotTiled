@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using DotTiled.Serialization;
 using NSubstitute;
 
@@ -244,16 +243,5 @@ public class LoaderTests
 
     // Assert
     resourceReader.DidNotReceive().Read("template.tx");
-  }
-
-  private static string WhereAmI([CallerFilePath] string callerFilePath = "") => callerFilePath;
-
-  [Fact]
-  public void Test1()
-  {
-    var basePath = Path.GetDirectoryName(WhereAmI())!;
-    var mapPath = Path.Combine(basePath, "TestData/Map/map-with-external-tileset/map-with-external-tileset.tmx");
-    var loader = Loader.Default();
-    loader.LoadMap(mapPath);
   }
 }

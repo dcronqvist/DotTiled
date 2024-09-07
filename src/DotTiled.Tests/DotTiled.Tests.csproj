@@ -26,12 +26,12 @@
 
   <ItemGroup>
     <!-- Test data -->
-    <EmbeddedResource Include="Serialization/TestData/**/*.tmx" />
-    <EmbeddedResource Include="Serialization/TestData/**/*.tmj" />
-    <EmbeddedResource Include="Serialization/TestData/**/*.tsx" />
-    <EmbeddedResource Include="Serialization/TestData/**/*.tsj" />
-    <EmbeddedResource Include="Serialization/TestData/**/*.tx" />
-    <EmbeddedResource Include="Serialization/TestData/**/*.tj" />
+    <EmbeddedResource Include="TestData/**/*.tmx" />
+    <EmbeddedResource Include="TestData/**/*.tmj" />
+    <EmbeddedResource Include="TestData/**/*.tsx" />
+    <EmbeddedResource Include="TestData/**/*.tsj" />
+    <EmbeddedResource Include="TestData/**/*.tx" />
+    <EmbeddedResource Include="TestData/**/*.tj" />
   </ItemGroup>
 
 </Project>
