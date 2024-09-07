@@ -77,16 +77,6 @@ public class CustomClassDefinitionTests
     yield return (typeof(TestClass3WithOverridenNestedClass), ExpectedTestClass3WithOverridenNestedClassDefinition);
   }
 
-  private static void AssertCustomClassDefinitionEqual(CustomClassDefinition expected, CustomClassDefinition actual)
-  {
-    DotTiledAssert.AssertEqual(expected.ID, actual.ID, nameof(CustomClassDefinition.ID));
-    DotTiledAssert.AssertEqual(expected.Name, actual.Name, nameof(CustomClassDefinition.Name));
-    DotTiledAssert.AssertEqual(expected.Color, actual.Color, nameof(CustomClassDefinition.Color));
-    DotTiledAssert.AssertEqual(expected.DrawFill, actual.DrawFill, nameof(CustomClassDefinition.DrawFill));
-    DotTiledAssert.AssertEqual(expected.UseAs, actual.UseAs, nameof(CustomClassDefinition.UseAs));
-    DotTiledAssert.AssertProperties(expected.Members, actual.Members);
-  }
-
   public static IEnumerable<object[]> CustomClassDefinitionTestData =>
     GetCustomClassDefinitionTestData().Select(data => new object[] { data.Item1, data.Item2 });
   [Theory]
@@ -97,7 +87,7 @@ public class CustomClassDefinitionTests
     var result = CustomClassDefinition.FromClass(type);
 
     // Assert
-    AssertCustomClassDefinitionEqual(expected, result);
+    DotTiledAssert.AssertCustomClassDefinitionEqual(expected, result);
   }
 
   [Fact]

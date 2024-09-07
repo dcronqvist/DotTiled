@@ -2,15 +2,6 @@ namespace DotTiled.Tests;
 
 public class CustomEnumDefinitionTests
 {
-  private static void AssertCustomEnumDefinitionEqual(CustomEnumDefinition expected, CustomEnumDefinition actual)
-  {
-    DotTiledAssert.AssertEqual(expected.ID, actual.ID, nameof(CustomEnumDefinition.ID));
-    DotTiledAssert.AssertEqual(expected.Name, actual.Name, nameof(CustomEnumDefinition.Name));
-    DotTiledAssert.AssertEqual(expected.StorageType, actual.StorageType, nameof(CustomEnumDefinition.StorageType));
-    DotTiledAssert.AssertEqual(expected.ValueAsFlags, actual.ValueAsFlags, nameof(CustomEnumDefinition.ValueAsFlags));
-    DotTiledAssert.AssertListOrdered(expected.Values, actual.Values, nameof(CustomEnumDefinition.Values));
-  }
-
   [Fact]
   public void FromEnum_Type_WhenTypeIsNotEnum_ThrowsArgumentException()
   {
@@ -41,7 +32,7 @@ public class CustomEnumDefinitionTests
     var result = CustomEnumDefinition.FromEnum(type);
 
     // Assert
-    AssertCustomEnumDefinitionEqual(expected, result);
+    DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
   }
 
   [Flags]
@@ -65,7 +56,7 @@ public class CustomEnumDefinitionTests
     var result = CustomEnumDefinition.FromEnum(type);
 
     // Assert
-    AssertCustomEnumDefinitionEqual(expected, result);
+    DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
   }
 
   [Fact]
@@ -85,7 +76,7 @@ public class CustomEnumDefinitionTests
     var result = CustomEnumDefinition.FromEnum<TestEnum1>();
 
     // Assert
-    AssertCustomEnumDefinitionEqual(expected, result);
+    DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
   }
 
   [Fact]
@@ -105,6 +96,6 @@ public class CustomEnumDefinitionTests
     var result = CustomEnumDefinition.FromEnum<TestEnum2>();
 
     // Assert
-    AssertCustomEnumDefinitionEqual(expected, result);
+    DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
   }
 }
