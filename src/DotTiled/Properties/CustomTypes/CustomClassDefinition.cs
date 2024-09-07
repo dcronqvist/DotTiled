@@ -104,23 +104,14 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   /// <param name="type">The type of the class to create a custom class definition from.</param>
   /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
   /// <exception cref="ArgumentException">Thrown when the specified type is not a class.</exception>
-  public static CustomClassDefinition FromClassType(Type type)
+  public static CustomClassDefinition FromClass(Type type)
   {
+    ArgumentNullException.ThrowIfNull(type, nameof(type));
+
     if (type == typeof(string) || !type.IsClass)
       throw new ArgumentException("Type must be a class.", nameof(type));
 
     return FromClass(() => Activator.CreateInstance(type));
-  }
-
-  /// <summary>
-  /// Creates a new <see cref="CustomClassDefinition"/> from the specified instance of a class.
-  /// </summary>
-  /// <param name="instance">The instance of the class to create a custom class definition from.</param>
-  /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
-  public static CustomClassDefinition FromClassInstance(dynamic instance)
-  {
-    ArgumentNullException.ThrowIfNull(instance);
-    return FromClass(() => instance);
   }
 
   /// <summary>

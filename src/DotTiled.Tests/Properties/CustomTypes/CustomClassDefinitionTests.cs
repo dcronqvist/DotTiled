@@ -2,16 +2,6 @@ namespace DotTiled.Tests;
 
 public class CustomClassDefinitionTests
 {
-  [Fact]
-  public void FromClassType_WhenTypeIsNotCustomClass_ThrowsArgumentException()
-  {
-    // Arrange
-    var type = typeof(string);
-
-    // Act & Assert
-    Assert.Throws<ArgumentException>(() => CustomClassDefinition.FromClassType(type));
-  }
-
   private sealed class TestClass1
   {
     public string Name { get; set; } = "John Doe";
@@ -101,12 +91,42 @@ public class CustomClassDefinitionTests
     GetCustomClassDefinitionTestData().Select(data => new object[] { data.Item1, data.Item2 });
   [Theory]
   [MemberData(nameof(CustomClassDefinitionTestData))]
-  public void FromClassType_WhenTypeIsCustomClass_ReturnsCustomClassDefinition(Type type, CustomClassDefinition expected)
+  public void FromClass_Type_WhenTypeIsCustomClass_ReturnsCustomClassDefinition(Type type, CustomClassDefinition expected)
   {
     // Arrange & Act
-    var result = CustomClassDefinition.FromClassType(type);
+    var result = CustomClassDefinition.FromClass(type);
 
     // Assert
     AssertCustomClassDefinitionEqual(expected, result);
+  }
+
+  [Fact]
+  public void FromClass_Type_WhenTypeIsNull_ThrowsArgumentNullException()
+  {
+    // Arrange
+    Type type = null;
+
+    // Act & Assert
+    Assert.Throws<ArgumentNullException>(() => CustomClassDefinition.FromClass(type));
+  }
+
+  [Fact]
+  public void FromClass_Type_WhenTypeIsString_ThrowsArgumentException()
+  {
+    // Arrange
+    Type type = typeof(string);
+
+    // Act & Assert
+    Assert.Throws<ArgumentException>(() => CustomClassDefinition.FromClass(type));
+  }
+
+  [Fact]
+  public void FromClass_Type_WhenTypeIsNotClass_ThrowsArgumentException()
+  {
+    // Arrange
+    Type type = typeof(int);
+
+    // Act & Assert
+    Assert.Throws<ArgumentException>(() => CustomClassDefinition.FromClass(type));
   }
 }
