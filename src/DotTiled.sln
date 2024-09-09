@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Tests", "DotTiled.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Benchmark", "DotTiled.Benchmark\DotTiled.Benchmark.csproj", "{510F3077-8EA4-47D1-8D01-E2D538F1B899}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Example", "DotTiled.Example\DotTiled.Example.csproj", "{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
