@@ -26,4 +26,13 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="embedded-tilemap.tmx" />
+      <EmbeddedResource Include="embedded-tilemap.tmx" />
+      <None Remove="embedded-tileset.png" />
+      <EmbeddedResource Include="embedded-tileset.png" />
+      <None Remove="embedded-tileset.tsx" />
+      <EmbeddedResource Include="embedded-tileset.tsx" />
+    </ItemGroup>
+
 </Project>

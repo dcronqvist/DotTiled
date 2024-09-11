@@ -1,10 +1,11 @@
-﻿using DotTiled.Serialization;
+﻿using System.Reflection;
+using DotTiled.Serialization;
 
 namespace DotTiled.Example;
 
 class Program
 {
-  static void Main(string[] args)
+  private static void Main()
   {
     Quick();
     Manual();
@@ -12,7 +13,7 @@ class Program
 
   // QUICK START
   // Automatic and easy way to load tilemaps.
-  static void Quick()
+  private static void Quick()
   {
     var loader = Loader.Default();
     var map = loader.LoadMap("tilemap.tmx");
@@ -25,7 +26,7 @@ class Program
 
   // MANUAL
   // Manually load a map, if you need to load from a custom source
-  static void Manual()
+  private static void Manual()
   {
     using var mapFileReader = new StreamReader("tilemap.tmx");
     var mapString = mapFileReader.ReadToEnd();
@@ -33,7 +34,7 @@ class Program
     var map = mapReader.ReadMap();
 
     // Now do some other stuff with it...
-    StringProperty hello = (StringProperty)map.Properties.FirstOrDefault(property => property.Name == "hello");
+    StringProperty hello = map.GetProperty<StringProperty>("hello");
     Console.WriteLine($"Layer 1 name: {map.Layers[0].Name}");
     Console.WriteLine($"Property 'hello': {hello.Value}");
 
@@ -43,36 +44,38 @@ class Program
     Console.WriteLine($"Tileset 0 image 0 source: {tileset.Image.Value.Source.Value}");
   }
 
-  /* This function is responsible for loading all tilesets required by a tilemap, if you
-   want to use a custom source. */
-  static Tileset ResolveTileset(string source)
+  // This function is responsible for loading all tilesets required by a tilemap, if you
+  // want to use a custom source.
+  private static Tileset ResolveTileset(string source)
   {
-    string tilesetPath = Path.Combine(Directory.GetCurrentDirectory(), source); // Resolve path to a tileset.
-    using var tilesetFileReader = new StreamReader(tilesetPath); // Read tileset file itself.
-    var tilesetString = tilesetFileReader.ReadToEnd();           // You can replace this with any custom function
-                                                                 // to load data from any source, eg. .zip file.
-    using var tilesetReader = new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType); // Parse loaded tileset.
+    // Read a file from assembly
+    // You can use any other source for files, eg. compressed archive, or even file from internet.
+    using Stream? tilesetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotTiled.Example.embedded-{source}")
+      ?? throw new FileLoadException($"{source} not found in assembly.");
+    string tilesetString = new StreamReader(tilesetStream).ReadToEnd();
+
+    using TilesetReader tilesetReader = new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType); // Parse loaded tileset.
 
     return tilesetReader.ReadTileset(); // Return loaded tileset
   }
 
   // This is pretty similar to above, but instead it loads templates, not tilesets.
-  static Template ResolveTemplate(string source)
+  private static Template ResolveTemplate(string source)
   {
-    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), source);
-    using var templateFileReader = new StreamReader(templatePath);
-    var templateString = templateFileReader.ReadToEnd();
-    using var templateReader = new TemplateReader(templateString, ResolveTileset, ResolveTemplate, ResolveCustomType);
+    using Stream? templateStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotTiled.Example.{source}")
+      ?? throw new FileLoadException($"{source} not found in assembly.");
+    string templateString = new StreamReader(templateStream).ReadToEnd();
+
+    using TemplateReader templateReader = new TemplateReader(templateString, ResolveTileset, ResolveTemplate, ResolveCustomType);
     return templateReader.ReadTemplate();
   }
 
-  static ICustomTypeDefinition ResolveCustomType(string name)
+  private static ICustomTypeDefinition ResolveCustomType(string name)
   {
-    CustomClassDefinition[] allDefinedTypes =
-      [
-        new CustomClassDefinition() { Name = "a" },
-      ];
-    return allDefinedTypes.FirstOrDefault(type => type.Name == name);
+    ICustomTypeDefinition[] allDefinedTypes =
+    [
+      new CustomClassDefinition() { Name = "a" },
+    ];
+    return allDefinedTypes.FirstOrDefault(type => type.Name == name) ?? throw new InvalidOperationException();
   }
-
 }
