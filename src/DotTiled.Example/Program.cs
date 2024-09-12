@@ -3,7 +3,7 @@ using DotTiled.Serialization;
 
 namespace DotTiled.Example;
 
-class Program
+public class Program
 {
   private static void Main()
   {
