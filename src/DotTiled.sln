@@ -9,7 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Tests", "DotTiled.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Benchmark", "DotTiled.Benchmark\DotTiled.Benchmark.csproj", "{510F3077-8EA4-47D1-8D01-E2D538F1B899}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Example", "DotTiled.Example\DotTiled.Example.csproj", "{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{8C54542E-3C2C-486C-9BEF-4C510391AFDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Example.Console", "DotTiled.Examples\DotTiled.Example.Console\DotTiled.Example.Console.csproj", "{F9892295-6C2C-4ABD-9D6F-2AC81D2C6E67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Example.Godot", "DotTiled.Examples\DotTiled.Example.Godot\DotTiled.Example.Godot.csproj", "{7541A9B3-43A5-45A7-939E-6F542319D990}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +36,17 @@ Global
 		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{510F3077-8EA4-47D1-8D01-E2D538F1B899}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31D5D3EB-67E1-4C8F-BB59-5BC32817C0FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9892295-6C2C-4ABD-9D6F-2AC81D2C6E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9892295-6C2C-4ABD-9D6F-2AC81D2C6E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9892295-6C2C-4ABD-9D6F-2AC81D2C6E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9892295-6C2C-4ABD-9D6F-2AC81D2C6E67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7541A9B3-43A5-45A7-939E-6F542319D990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7541A9B3-43A5-45A7-939E-6F542319D990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7541A9B3-43A5-45A7-939E-6F542319D990}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{7541A9B3-43A5-45A7-939E-6F542319D990}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F9892295-6C2C-4ABD-9D6F-2AC81D2C6E67} = {8C54542E-3C2C-486C-9BEF-4C510391AFDA}
+		{7541A9B3-43A5-45A7-939E-6F542319D990} = {8C54542E-3C2C-486C-9BEF-4C510391AFDA}
 	EndGlobalSection
 EndGlobal

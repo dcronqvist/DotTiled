@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DotTiled\DotTiled.csproj" />
+      <ProjectReference Include="..\..\DotTiled\DotTiled.csproj" />
     </ItemGroup>
 
     <ItemGroup>
