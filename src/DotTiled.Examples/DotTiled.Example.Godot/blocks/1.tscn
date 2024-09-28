@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://ce10iald4cb3f"]
+
+[ext_resource type="Texture2D" uid="uid://da08vay832u8c" path="res://tileset.png" id="1_c5fs4"]
+
+[node name="1" type="Node2D"]
+
+[node name="1" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_c5fs4")
