@@ -1,6 +1,7 @@
 test:
 	dotnet build src/DotTiled.sln
 	dotnet test src/DotTiled.sln
+	dotnet run --project src/DotTiled.Examples/DotTiled.Example.Console/DotTiled.Example.Console.csproj -- src/DotTiled.Examples/DotTiled.Example.Console
 
 docs-serve: docs/index.md
 	docfx docs/docfx.json --serve

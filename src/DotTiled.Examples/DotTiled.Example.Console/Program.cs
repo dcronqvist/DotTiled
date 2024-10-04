@@ -5,18 +5,20 @@ namespace DotTiled.Example;
 
 public class Program
 {
-  private static void Main()
+  private static void Main(string[] args)
   {
-    Quick();
+    Quick(args[0]);
     Manual();
   }
 
   // QUICK START
   // Automatic and easy way to load tilemaps.
-  private static void Quick()
+  private static void Quick(string basePath)
   {
+    var tilemapPath = Path.Combine(basePath, "tilemap.tmx");
+
     var loader = Loader.Default();
-    var map = loader.LoadMap("tilemap.tmx");
+    var map = loader.LoadMap(tilemapPath);
 
     // You can do stuff with it like...
     Console.WriteLine($"Tile width and height: {map.TileWidth}x{map.TileHeight}");
@@ -28,9 +30,10 @@ public class Program
   // Manually load a map, if you need to load from a custom source
   private static void Manual()
   {
-    using var mapFileReader = new StreamReader("tilemap.tmx");
-    var mapString = mapFileReader.ReadToEnd();
-    using var mapReader = new MapReader(mapString, ResolveTileset, ResolveTemplate, ResolveCustomType);
+    using Stream? tilemapStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotTiled.Example.Console.tilemap.tmx")
+      ?? throw new FileLoadException($"DotTiled.Example.Console.tilemap.tmx not found in assembly.");
+    string tileMapString = new StreamReader(tilemapStream).ReadToEnd();
+    using var mapReader = new MapReader(tileMapString, ResolveTileset, ResolveTemplate, ResolveCustomType);
     var map = mapReader.ReadMap();
 
     // Now do some other stuff with it...
@@ -50,7 +53,7 @@ public class Program
   {
     // Read a file from assembly
     // You can use any other source for files, eg. compressed archive, or even file from internet.
-    using Stream? tilesetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotTiled.Example.embedded-{source}")
+    using Stream? tilesetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotTiled.Example.Console.{source}")
       ?? throw new FileLoadException($"{source} not found in assembly.");
     string tilesetString = new StreamReader(tilesetStream).ReadToEnd();
 
@@ -62,7 +65,7 @@ public class Program
   // This is pretty similar to above, but instead it loads templates, not tilesets.
   private static Template ResolveTemplate(string source)
   {
-    using Stream? templateStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotTiled.Example.{source}")
+    using Stream? templateStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotTiled.Example.Console.{source}")
       ?? throw new FileLoadException($"{source} not found in assembly.");
     string templateString = new StreamReader(templateStream).ReadToEnd();
 

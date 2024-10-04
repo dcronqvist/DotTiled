@@ -12,27 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="tilemap.tmx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="tileset.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="assets\tileset.tsx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="tileset.tsx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="embedded-tilemap.tmx" />
-      <EmbeddedResource Include="embedded-tilemap.tmx" />
-      <None Remove="embedded-tileset.png" />
-      <EmbeddedResource Include="embedded-tileset.png" />
-      <None Remove="embedded-tileset.tsx" />
-      <EmbeddedResource Include="embedded-tileset.tsx" />
+      <EmbeddedResource Include="tilemap.tmx" />
+      <EmbeddedResource Include="tileset.png" />
+      <EmbeddedResource Include="tileset.tsx" />
     </ItemGroup>
 
 </Project>
