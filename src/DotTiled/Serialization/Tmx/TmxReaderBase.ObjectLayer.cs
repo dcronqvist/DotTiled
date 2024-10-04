@@ -97,7 +97,7 @@ public abstract partial class TmxReaderBase
     var height = _reader.GetOptionalAttributeParseable<float>("height").GetValueOr(heightDefault);
     var rotation = _reader.GetOptionalAttributeParseable<float>("rotation").GetValueOr(rotationDefault);
     var gid = _reader.GetOptionalAttributeParseable<uint>("gid").GetValueOrOptional(gidDefault);
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible").GetValueOr(visibleDefault);
+    var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(visibleDefault ? 1u : 0u) == 1;
 
     // Elements
     DotTiled.Object foundObject = null;
