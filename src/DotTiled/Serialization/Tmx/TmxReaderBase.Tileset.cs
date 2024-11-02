@@ -51,7 +51,7 @@ public abstract partial class TmxReaderBase
       "bottomright" => ObjectAlignment.BottomRight,
       _ => throw new InvalidOperationException($"Unknown object alignment '{s}'")
     }).GetValueOr(ObjectAlignment.Unspecified);
-    var renderSize = _reader.GetOptionalAttributeEnum<TileRenderSize>("rendersize", s => s switch
+    var renderSize = _reader.GetOptionalAttributeEnum<TileRenderSize>("tilerendersize", s => s switch
     {
       "tile" => TileRenderSize.Tile,
       "grid" => TileRenderSize.Grid,
