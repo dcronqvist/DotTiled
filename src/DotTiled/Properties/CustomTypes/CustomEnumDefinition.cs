@@ -52,7 +52,7 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// </summary>
   /// <typeparam name="T"></typeparam>
   /// <returns></returns>
-  public static CustomEnumDefinition FromEnum<T>() where T : Enum
+  public static CustomEnumDefinition FromEnum<T>(CustomEnumStorageType storageType = CustomEnumStorageType.Int) where T : Enum
   {
     var type = typeof(T);
     var isFlags = type.GetCustomAttributes(typeof(FlagsAttribute), false).Length != 0;
@@ -60,7 +60,7 @@ public class CustomEnumDefinition : ICustomTypeDefinition
     return new CustomEnumDefinition
     {
       Name = type.Name,
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = Enum.GetNames(type).ToList(),
       ValueAsFlags = isFlags
     };
@@ -70,7 +70,7 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// Creates a custom enum definition from the specified enum type.
   /// </summary>
   /// <returns></returns>
-  public static CustomEnumDefinition FromEnum(Type type)
+  public static CustomEnumDefinition FromEnum(Type type, CustomEnumStorageType storageType = CustomEnumStorageType.Int)
   {
     if (!type.IsEnum)
       throw new ArgumentException("Type must be an enum.", nameof(type));
@@ -80,7 +80,7 @@ public class CustomEnumDefinition : ICustomTypeDefinition
     return new CustomEnumDefinition
     {
       Name = type.Name,
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = Enum.GetNames(type).ToList(),
       ValueAsFlags = isFlags
     };
