@@ -135,16 +135,17 @@ public abstract partial class TmjReaderBase
       if (ced.ValueAsFlags)
       {
         var values = value.Split(',').Select(v => v.Trim()).ToHashSet();
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values };
+        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values, ValueString = value};
       }
       else
       {
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = new HashSet<string> { value } };
+        return new EnumProperty { Name = name, PropertyType = propertyType, Value = new HashSet<string> { value }, ValueString = value };
       }
     }
     else if (ced.StorageType == CustomEnumStorageType.Int)
     {
       var value = element.GetRequiredProperty<int>("value");
+      var valueString = element.GetRequiredProperty<string>("value");
       if (ced.ValueAsFlags)
       {
         var allValues = ced.Values;
@@ -158,13 +159,13 @@ public abstract partial class TmjReaderBase
             _ = enumValues.Add(enumValue);
           }
         }
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = enumValues };
+        return new EnumProperty { Name = name, PropertyType = propertyType, Value = enumValues, ValueString = valueString };
       }
       else
       {
         var allValues = ced.Values;
         var enumValue = allValues[value];
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = new HashSet<string> { enumValue } };
+        return new EnumProperty { Name = name, PropertyType = propertyType, Value = new HashSet<string> { enumValue }, ValueString = valueString };
       }
     }
 

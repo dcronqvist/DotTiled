@@ -16,6 +16,10 @@ public class ColorProperty : IProperty<Color>
   /// </summary>
   public required Color Value { get; set; }
 
+
+  /// <inheritdoc/>
+  public string ValueString => Value != null ? Value.ToString() : string.Empty;
+
   /// <inheritdoc/>
   public IProperty Clone() => new ColorProperty
   {

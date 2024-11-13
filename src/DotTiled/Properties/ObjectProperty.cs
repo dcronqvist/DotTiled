@@ -17,6 +17,9 @@ public class ObjectProperty : IProperty<uint>
   public required uint Value { get; set; }
 
   /// <inheritdoc/>
+  public string ValueString => Value.ToString();
+
+  /// <inheritdoc/>
   public IProperty Clone() => new ObjectProperty
   {
     Name = Name,

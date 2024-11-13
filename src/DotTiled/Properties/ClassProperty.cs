@@ -26,6 +26,9 @@ public class ClassProperty : HasPropertiesBase, IProperty<IList<IProperty>>
   public required IList<IProperty> Value { get; set; }
 
   /// <inheritdoc/>
+  public string ValueString => PropertyType;
+
+  /// <inheritdoc/>
   public IProperty Clone() => new ClassProperty
   {
     Name = Name,

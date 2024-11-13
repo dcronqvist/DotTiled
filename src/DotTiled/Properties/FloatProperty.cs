@@ -17,6 +17,9 @@ public class FloatProperty : IProperty<float>
   public required float Value { get; set; }
 
   /// <inheritdoc/>
+  public string ValueString => Value.ToString();
+
+  /// <inheritdoc/>
   public IProperty Clone() => new FloatProperty
   {
     Name = Name,

@@ -17,6 +17,9 @@ public class StringProperty : IProperty<string>
   public required string Value { get; set; }
 
   /// <inheritdoc/>
+  public string ValueString => Value;
+
+  /// <inheritdoc/>
   public IProperty Clone() => new StringProperty
   {
     Name = Name,

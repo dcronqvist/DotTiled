@@ -26,11 +26,15 @@ public class EnumProperty : IProperty<ISet<string>>
   public required ISet<string> Value { get; set; }
 
   /// <inheritdoc/>
+  public required string ValueString { get; set; }
+
+  /// <inheritdoc/>
   public IProperty Clone() => new EnumProperty
   {
     Name = Name,
     PropertyType = PropertyType,
-    Value = Value.ToHashSet()
+    Value = Value.ToHashSet(),
+    ValueString = ValueString
   };
 
   /// <summary>

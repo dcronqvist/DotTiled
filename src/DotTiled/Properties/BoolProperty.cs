@@ -17,6 +17,9 @@ public class BoolProperty : IProperty<bool>
   public required bool Value { get; set; }
 
   /// <inheritdoc/>
+  public string ValueString => Value.ToString();
+
+  /// <inheritdoc/>
   public IProperty Clone() => new BoolProperty
   {
     Name = Name,

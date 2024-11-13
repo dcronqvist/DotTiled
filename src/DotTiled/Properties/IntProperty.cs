@@ -17,6 +17,9 @@ public class IntProperty : IProperty<int>
   public required int Value { get; set; }
 
   /// <inheritdoc/>
+  public string ValueString => Value.ToString();
+
+  /// <inheritdoc/>
   public IProperty Clone() => new IntProperty
   {
     Name = Name,

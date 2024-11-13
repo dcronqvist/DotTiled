@@ -11,6 +11,11 @@ public interface IProperty
   public string Name { get; set; }
 
   /// <summary>
+  /// The value of the property as it is in the .tmx / .tmj
+  /// </summary>
+  public string ValueString { get; }
+
+  /// <summary>
   /// The type of the property.
   /// </summary>
   public PropertyType Type { get; }

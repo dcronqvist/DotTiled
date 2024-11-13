@@ -159,7 +159,8 @@ public abstract partial class TmxReaderBase
       return obj;
     }
 
-    return OverrideObject((dynamic)obj, (dynamic)foundObject);
+    //return OverrideObject((dynamic)obj, (dynamic)foundObject);
+    return foundObject;
   }
 
   internal EllipseObject ReadEllipseObject()
