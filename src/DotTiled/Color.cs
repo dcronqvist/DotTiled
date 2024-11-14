@@ -40,7 +40,7 @@ public class Color : IParsable<Color>, IEquatable<Color>
   public static Color Parse(string s, IFormatProvider provider)
   {
     _ = TryParse(s, provider, out var result);
-    return result ?? throw new FormatException($"Invalid format for TiledColor: {s}");
+    return result;
   }
 
   /// <summary>
@@ -62,6 +62,10 @@ public class Color : IParsable<Color>, IEquatable<Color>
     // Format: #RRGGBB or #AARRGGBB
     if (s is null || (s.Length != 7 && s.Length != 9) || s[0] != '#')
     {
+      if(s.Length > 1)
+      {
+        throw new FormatException($"Invalid format for TiledColor: {s}");
+      }
       result = default;
       return false;
     }
