@@ -14,8 +14,10 @@ public class CustomEnumDefinitionTests
 
   private enum TestEnum1 { Value1, Value2, Value3 }
 
-  [Fact]
-  public void FromEnum_Type_WhenTypeIsEnum_ReturnsCustomEnumDefinition()
+  [Theory]
+  [InlineData(CustomEnumStorageType.String)]
+  [InlineData(CustomEnumStorageType.Int)]
+  public void FromEnum_Type_WhenTypeIsEnum_ReturnsCustomEnumDefinition(CustomEnumStorageType storageType)
   {
     // Arrange
     var type = typeof(TestEnum1);
@@ -23,13 +25,13 @@ public class CustomEnumDefinitionTests
     {
       ID = 0,
       Name = "TestEnum1",
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = ["Value1", "Value2", "Value3"],
       ValueAsFlags = false
     };
 
     // Act
-    var result = CustomEnumDefinition.FromEnum(type);
+    var result = CustomEnumDefinition.FromEnum(type, storageType);
 
     // Assert
     DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
@@ -38,8 +40,10 @@ public class CustomEnumDefinitionTests
   [Flags]
   private enum TestEnum2 { Value1, Value2, Value3 }
 
-  [Fact]
-  public void FromEnum_Type_WhenEnumIsFlags_ReturnsCustomEnumDefinition()
+  [Theory]
+  [InlineData(CustomEnumStorageType.String)]
+  [InlineData(CustomEnumStorageType.Int)]
+  public void FromEnum_Type_WhenEnumIsFlags_ReturnsCustomEnumDefinition(CustomEnumStorageType storageType)
   {
     // Arrange
     var type = typeof(TestEnum2);
@@ -47,53 +51,57 @@ public class CustomEnumDefinitionTests
     {
       ID = 0,
       Name = "TestEnum2",
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = ["Value1", "Value2", "Value3"],
       ValueAsFlags = true
     };
 
     // Act
-    var result = CustomEnumDefinition.FromEnum(type);
+    var result = CustomEnumDefinition.FromEnum(type, storageType);
 
     // Assert
     DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
   }
 
-  [Fact]
-  public void FromEnum_T_WhenTypeIsEnum_ReturnsCustomEnumDefinition()
+  [Theory]
+  [InlineData(CustomEnumStorageType.String)]
+  [InlineData(CustomEnumStorageType.Int)]
+  public void FromEnum_T_WhenTypeIsEnum_ReturnsCustomEnumDefinition(CustomEnumStorageType storageType)
   {
     // Arrange
     var expected = new CustomEnumDefinition
     {
       ID = 0,
       Name = "TestEnum1",
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = ["Value1", "Value2", "Value3"],
       ValueAsFlags = false
     };
 
     // Act
-    var result = CustomEnumDefinition.FromEnum<TestEnum1>();
+    var result = CustomEnumDefinition.FromEnum<TestEnum1>(storageType);
 
     // Assert
     DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
   }
 
-  [Fact]
-  public void FromEnum_T_WhenEnumIsFlags_ReturnsCustomEnumDefinition()
+  [Theory]
+  [InlineData(CustomEnumStorageType.String)]
+  [InlineData(CustomEnumStorageType.Int)]
+  public void FromEnum_T_WhenEnumIsFlags_ReturnsCustomEnumDefinition(CustomEnumStorageType storageType)
   {
     // Arrange
     var expected = new CustomEnumDefinition
     {
       ID = 0,
       Name = "TestEnum2",
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = ["Value1", "Value2", "Value3"],
       ValueAsFlags = true
     };
 
     // Act
-    var result = CustomEnumDefinition.FromEnum<TestEnum2>();
+    var result = CustomEnumDefinition.FromEnum<TestEnum2>(storageType);
 
     // Assert
     DotTiledAssert.AssertCustomEnumDefinitionEqual(expected, result);
