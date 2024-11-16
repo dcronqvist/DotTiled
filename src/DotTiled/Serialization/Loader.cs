@@ -12,7 +12,7 @@ public class Loader
 {
   private readonly IResourceReader _resourceReader;
   private readonly IResourceCache _resourceCache;
-  private readonly IDictionary<string, ICustomTypeDefinition> _customTypeDefinitions;
+  private readonly Dictionary<string, ICustomTypeDefinition> _customTypeDefinitions;
 
   /// <summary>
   /// Initializes a new instance of the <see cref="Loader"/> class with the given <paramref name="resourceReader"/>, <paramref name="resourceCache"/>, and <paramref name="customTypeDefinitions"/>.
@@ -114,5 +114,11 @@ public class Loader
         return templateReader.ReadTemplate();
       });
 
-  private ICustomTypeDefinition CustomTypeResolver(string name) => _customTypeDefinitions[name];
+  private Optional<ICustomTypeDefinition> CustomTypeResolver(string name)
+  {
+    if (_customTypeDefinitions.TryGetValue(name, out var customTypeDefinition))
+      return new Optional<ICustomTypeDefinition>(customTypeDefinition);
+
+    return Optional<ICustomTypeDefinition>.Empty;
+  }
 }

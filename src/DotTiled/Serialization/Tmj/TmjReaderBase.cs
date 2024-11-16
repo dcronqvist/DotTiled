@@ -13,7 +13,7 @@ public abstract partial class TmjReaderBase : IDisposable
   // External resolvers
   private readonly Func<string, Tileset> _externalTilesetResolver;
   private readonly Func<string, Template> _externalTemplateResolver;
-  private readonly Func<string, ICustomTypeDefinition> _customTypeResolver;
+  private readonly Func<string, Optional<ICustomTypeDefinition>> _customTypeResolver;
 
   /// <summary>
   /// The root element of the JSON document being read.
@@ -34,7 +34,7 @@ public abstract partial class TmjReaderBase : IDisposable
     string jsonString,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    Func<string, ICustomTypeDefinition> customTypeResolver)
+    Func<string, Optional<ICustomTypeDefinition>> customTypeResolver)
   {
     RootElement = JsonDocument.Parse(jsonString ?? throw new ArgumentNullException(nameof(jsonString))).RootElement;
     _externalTilesetResolver = externalTilesetResolver ?? throw new ArgumentNullException(nameof(externalTilesetResolver));

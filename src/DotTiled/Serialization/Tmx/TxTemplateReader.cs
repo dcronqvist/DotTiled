@@ -16,7 +16,7 @@ public class TxTemplateReader : TmxReaderBase, ITemplateReader
     XmlReader reader,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    Func<string, ICustomTypeDefinition> customTypeResolver) : base(
+    Func<string, Optional<ICustomTypeDefinition>> customTypeResolver) : base(
       reader, externalTilesetResolver, externalTemplateResolver, customTypeResolver)
   { }
 

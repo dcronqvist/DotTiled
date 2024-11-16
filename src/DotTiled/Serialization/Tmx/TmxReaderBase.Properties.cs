@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 
@@ -66,25 +67,35 @@ public abstract partial class TmxReaderBase
     var propertyType = _reader.GetRequiredAttribute("propertytype");
     var customTypeDef = _customTypeResolver(propertyType);
 
-    if (customTypeDef is CustomClassDefinition ccd)
+    // If the custom class definition is not found,
+    // we assume an empty class definition.
+    if (!customTypeDef.HasValue)
     {
       if (!_reader.IsEmptyElement)
       {
         _reader.ReadStartElement("property");
-        var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
         var props = ReadProperties();
-        var mergedProps = Helpers.MergeProperties(propsInType, props);
         _reader.ReadEndElement();
-        return new ClassProperty { Name = name, PropertyType = propertyType, Value = mergedProps };
+        return new ClassProperty { Name = name, PropertyType = propertyType, Value = props };
       }
-      else
-      {
-        var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
-        return new ClassProperty { Name = name, PropertyType = propertyType, Value = propsInType };
-      }
+
+      return new ClassProperty { Name = name, PropertyType = propertyType, Value = [] };
     }
 
-    throw new XmlException($"Unkonwn custom class definition: {propertyType}");
+    if (customTypeDef.Value is not CustomClassDefinition ccd)
+      throw new XmlException($"Custom type {propertyType} is not a class.");
+
+    var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
+    if (!_reader.IsEmptyElement)
+    {
+      _reader.ReadStartElement("property");
+      var props = ReadProperties();
+      var mergedProps = Helpers.MergeProperties(propsInType, props);
+      _reader.ReadEndElement();
+      return new ClassProperty { Name = name, PropertyType = propertyType, Value = mergedProps };
+    }
+
+    return new ClassProperty { Name = name, PropertyType = propertyType, Value = propsInType };
   }
 
   internal EnumProperty ReadEnumProperty()
@@ -99,8 +110,26 @@ public abstract partial class TmxReaderBase
     }) ?? PropertyType.String;
     var customTypeDef = _customTypeResolver(propertyType);
 
-    if (customTypeDef is not CustomEnumDefinition ced)
-      throw new XmlException($"Unknown custom enum definition: {propertyType}. Enums must be defined");
+    // If the custom enum definition is not found,
+    // we assume an empty enum definition.
+    if (!customTypeDef.HasValue)
+    {
+      if (typeInXml == PropertyType.String)
+      {
+        var value = _reader.GetRequiredAttribute("value");
+        var values = value.Split(',').Select(v => v.Trim()).ToHashSet();
+        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values };
+      }
+      else
+      {
+        var value = _reader.GetRequiredAttributeParseable<int>("value");
+        var values = new HashSet<string> { value.ToString(CultureInfo.InvariantCulture) };
+        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values };
+      }
+    }
+
+    if (customTypeDef.Value is not CustomEnumDefinition ced)
+      throw new XmlException($"Custom defined type {propertyType} is not an enum.");
 
     if (ced.StorageType == CustomEnumStorageType.String)
     {
@@ -144,6 +173,6 @@ public abstract partial class TmxReaderBase
       }
     }
 
-    throw new XmlException($"Unknown custom enum storage type: {ced.StorageType}");
+    throw new XmlException($"Unable to read enum property {name} with type {propertyType}");
   }
 }
