@@ -73,7 +73,10 @@ In addition to these primitive property types, [Tiled also supports more complex
 Tiled allows you to define custom property types that can be used in your maps. These custom property types can be of type `class` or `enum`. DotTiled supports custom property types by allowing you to define the equivalent in C#. This section will guide you through how to define custom property types in DotTiled and how to map properties in loaded maps to C# classes or enums.
 
 > [!NOTE]
-> In the future, DotTiled could provide a way to configure the use of custom property types such that they aren't necessary to be defined, given that you have set the `Resolve object types and properties` setting in Tiled.
+> While custom types are powerful, they will incur a bit of overhead as you attempt to sync them between Tiled and DotTiled. Defining custom types is recommended, but not necessary for simple use cases as Tiled supports arbitrary strings as classes.
+
+> [!IMPORTANT]
+> If you choose to use custom types in your maps, but don't define them properly in DotTiled, you may get inconsistencies between the map in Tiled and the loaded map with DotTiled. If you still want to use custom types in Tiled without having to define them in DotTiled, it is recommended to set the `Resolve object types and properties` setting in Tiled to `true`. This will make Tiled resolve the custom types for you, but it will still require you to define the custom types in DotTiled if you want to access the properties in a type-safe manner.
 
 ### Class properties
 
