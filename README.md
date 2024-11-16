@@ -2,7 +2,7 @@
 
 <img src="https://www.mapeditor.org/img/tiled-logo-white.png" align="right" width="20%"/>
 
-DotTiled is a simple and easy-to-use library for loading, saving, and managing [Tiled maps and tilesets](https://mapeditor.org) in your .NET projects. After [TiledCS](https://github.com/TheBoneJarmer/TiledCS) unfortunately became unmaintained (since 2022), I aimed to create a new library that could fill its shoes. DotTiled is the result of that effort.
+DotTiled is a simple and easy-to-use library for loading [Tiled maps and tilesets](https://mapeditor.org) in your .NET projects. After [TiledCS](https://github.com/TheBoneJarmer/TiledCS) unfortunately became unmaintained (since 2022), I aimed to create a new library that could fill its shoes. DotTiled is the result of that effort.
 
 DotTiled is designed to be a lightweight and efficient library that provides a simple API for loading and managing Tiled maps and tilesets. It is built with performance in mind and aims to be as fast and memory-efficient as possible.
 
