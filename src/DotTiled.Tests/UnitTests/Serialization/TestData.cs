@@ -42,6 +42,7 @@ public static partial class TestData
     [GetMapPath("map-external-tileset-multi"), (string f) => MapExternalTilesetMulti(f), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-external-tileset-wangset"), (string f) => MapExternalTilesetWangset(f), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-many-layers"), (string f) => MapWithManyLayers(f), Array.Empty<ICustomTypeDefinition>()],
+    [GetMapPath("map-with-multiline-string-prop"), (string f) => MapWithMultilineStringProp(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-deep-props"), (string f) => MapWithDeepProps(), MapWithDeepPropsCustomTypeDefinitions()],
     [GetMapPath("map-with-class"), (string f) => MapWithClass(), MapWithClassCustomTypeDefinitions()],
     [GetMapPath("map-with-class-and-props"), (string f) => MapWithClassAndProps(), MapWithClassAndPropsCustomTypeDefinitions()],

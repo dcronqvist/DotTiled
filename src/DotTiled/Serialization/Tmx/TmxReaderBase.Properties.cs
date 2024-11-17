@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -32,9 +33,14 @@ public abstract partial class TmxReaderBase
         return ReadPropertyWithCustomType();
       }
 
+      if (type == PropertyType.String)
+      {
+        return ReadStringProperty(name);
+      }
+
       IProperty property = type switch
       {
-        PropertyType.String => new StringProperty { Name = name, Value = r.GetRequiredAttribute("value") },
+        PropertyType.String => throw new InvalidOperationException("String properties should be handled elsewhere."),
         PropertyType.Int => new IntProperty { Name = name, Value = r.GetRequiredAttributeParseable<int>("value") },
         PropertyType.Float => new FloatProperty { Name = name, Value = r.GetRequiredAttributeParseable<float>("value") },
         PropertyType.Bool => new BoolProperty { Name = name, Value = r.GetRequiredAttributeParseable<bool>("value") },
@@ -47,6 +53,25 @@ public abstract partial class TmxReaderBase
       };
       return property;
     });
+  }
+
+  internal StringProperty ReadStringProperty(string name)
+  {
+    var valueAttrib = _reader.GetOptionalAttribute("value");
+    if (valueAttrib.HasValue)
+    {
+      return new StringProperty { Name = name, Value = valueAttrib.Value };
+    }
+
+    if (!_reader.IsEmptyElement)
+    {
+      _reader.ReadStartElement("property");
+      var value = _reader.ReadContentAsString();
+      _reader.ReadEndElement();
+      return new StringProperty { Name = name, Value = value };
+    }
+
+    return new StringProperty { Name = name, Value = string.Empty };
   }
 
   internal IProperty ReadPropertyWithCustomType()
