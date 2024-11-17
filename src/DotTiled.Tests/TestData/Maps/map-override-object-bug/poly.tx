@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <object name="Poly">
+  <properties>
+   <property name="templateprop" value="helo there"/>
+  </properties>
+  <polygon points="0,0 104,20 35.6667,32.3333"/>
+ </object>
+</template>

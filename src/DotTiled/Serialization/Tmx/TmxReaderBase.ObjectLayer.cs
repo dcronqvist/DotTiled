@@ -148,19 +148,20 @@ public abstract partial class TmxReaderBase
     if (obj is null)
       return foundObject;
 
+    obj.ID = foundObject.ID;
+    obj.Name = foundObject.Name;
+    obj.Type = foundObject.Type;
+    obj.X = foundObject.X;
+    obj.Y = foundObject.Y;
+    obj.Width = foundObject.Width;
+    obj.Height = foundObject.Height;
+    obj.Rotation = foundObject.Rotation;
+    obj.Visible = foundObject.Visible;
+    obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties).ToList();
+    obj.Template = foundObject.Template;
+
     if (obj.GetType() != foundObject.GetType())
     {
-      obj.ID = foundObject.ID;
-      obj.Name = foundObject.Name;
-      obj.Type = foundObject.Type;
-      obj.X = foundObject.X;
-      obj.Y = foundObject.Y;
-      obj.Width = foundObject.Width;
-      obj.Height = foundObject.Height;
-      obj.Rotation = foundObject.Rotation;
-      obj.Visible = foundObject.Visible;
-      obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties).ToList();
-      obj.Template = foundObject.Template;
       return obj;
     }
 
@@ -228,6 +229,13 @@ public abstract partial class TmxReaderBase
   internal static PolylineObject OverrideObject(PolylineObject obj, PolylineObject foundObject)
   {
     obj.Points = foundObject.Points;
+    return obj;
+  }
+
+  internal static RectangleObject OverrideObject(RectangleObject obj, RectangleObject foundObject)
+  {
+    obj.Width = foundObject.Width;
+    obj.Height = foundObject.Height;
     return obj;
   }
 
