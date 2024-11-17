@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Numerics;
 using System.Text.Json;
 
@@ -117,6 +118,8 @@ public abstract partial class TmjReaderBase
 
     if (gid.HasValue)
     {
+      var (clearedGIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs([gid.Value]);
+
       return new TileObject
       {
         ID = id,
@@ -130,7 +133,8 @@ public abstract partial class TmjReaderBase
         Visible = visible,
         Template = template,
         Properties = properties,
-        GID = gid.Value
+        GID = clearedGIDs.Single(),
+        FlippingFlags = flippingFlags.Single()
       };
     }
 

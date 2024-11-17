@@ -118,9 +118,14 @@ public abstract partial class TmxReaderBase
     if (foundObject is null)
     {
       if (gid.HasValue)
-        foundObject = new TileObject { ID = id, GID = gid.Value };
+      {
+        var (clearedGIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs([gid.Value]);
+        foundObject = new TileObject { ID = id, GID = clearedGIDs.Single(), FlippingFlags = flippingFlags.Single() };
+      }
       else
+      {
         foundObject = new RectangleObject { ID = id };
+      }
     }
 
     foundObject.ID = id;

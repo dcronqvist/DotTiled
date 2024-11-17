@@ -9,4 +9,9 @@ public class TileObject : Object
   /// A reference to a tile.
   /// </summary>
   public uint GID { get; set; }
+
+  /// <summary>
+  /// The flipping flags for the tile.
+  /// </summary>
+  public FlippingFlags FlippingFlags { get; set; }
 }
