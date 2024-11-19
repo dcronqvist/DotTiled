@@ -5,10 +5,25 @@ namespace DotTiled.Tests;
 
 public class FromTypeUsedInLoaderTests
 {
+  private enum TestEnum
+  {
+    A,
+    B,
+    C
+  }
+  [Flags]
+  private enum TestFlags
+  {
+    A = 0b001,
+    B = 0b010,
+    C = 0b100
+  }
   private sealed class TestClass
   {
     public string Name { get; set; } = "John Doe";
     public int Age { get; set; } = 42;
+    public TestEnum Enum { get; set; } = TestEnum.A;
+    public TestFlags Flags { get; set; } = TestFlags.B | TestFlags.C;
   }
 
   [Fact]
@@ -82,7 +97,9 @@ public class FromTypeUsedInLoaderTests
       ],
       Properties = [
         new StringProperty { Name = "Name", Value = "John Doe" },
-        new IntProperty { Name = "Age", Value = 42 }
+        new IntProperty { Name = "Age", Value = 42 },
+        new EnumProperty { Name = "Enum", PropertyType = "TestEnum", Value = new HashSet<string> { "A" } },
+        new EnumProperty { Name = "Flags", PropertyType = "TestFlags", Value = new HashSet<string> { "B", "C" } }
       ]
     };
 
@@ -167,7 +184,9 @@ public class FromTypeUsedInLoaderTests
       ],
       Properties = [
         new StringProperty { Name = "Name", Value = "John Doe" },
-        new IntProperty { Name = "Age", Value = 42 }
+        new IntProperty { Name = "Age", Value = 42 },
+        new EnumProperty { Name = "Enum", PropertyType = "TestEnum", Value = new HashSet<string> { "A" } },
+        new EnumProperty { Name = "Flags", PropertyType = "TestFlags", Value = new HashSet<string> { "B", "C" } }
       ]
     };
 

@@ -165,6 +165,20 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
         return new IntProperty { Name = propertyInfo.Name, Value = (int)propertyInfo.GetValue(instance) };
       case Type t when t.IsClass:
         return new ClassProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = GetNestedProperties(propertyInfo.PropertyType, propertyInfo.GetValue(instance)) };
+      case Type t when t.IsEnum:
+        var isFlags = t.GetCustomAttributes(typeof(FlagsAttribute), false).Length != 0;
+
+        if (isFlags)
+        {
+          ISet<string> values = new HashSet<string>();
+          foreach (var value in t.GetEnumValues())
+          {
+            if (((int)value & (int)propertyInfo.GetValue(instance)) != 0) values.Add(t.GetEnumName(value));
+          }
+          return new EnumProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = values };
+        }
+
+        return new EnumProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = new HashSet<string> { t.GetEnumName(propertyInfo.GetValue(instance)) } };
       default:
         break;
     }
