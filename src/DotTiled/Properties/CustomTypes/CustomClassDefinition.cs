@@ -166,19 +166,16 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
       case Type t when t.IsClass:
         return new ClassProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = GetNestedProperties(propertyInfo.PropertyType, propertyInfo.GetValue(instance)) };
       case Type t when t.IsEnum:
-        var isFlags = t.GetCustomAttributes(typeof(FlagsAttribute), false).Length != 0;
+        var enumDefinition = CustomEnumDefinition.FromEnum(t);
 
-        if (isFlags)
-        {
-          ISet<string> values = new HashSet<string>();
-          foreach (var value in t.GetEnumValues())
-          {
-            if (((int)value & (int)propertyInfo.GetValue(instance)) != 0) values.Add(t.GetEnumName(value));
-          }
-          return new EnumProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = values };
-        }
+        if (!enumDefinition.ValueAsFlags)
+          return new EnumProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = new HashSet<string> { propertyInfo.GetValue(instance).ToString() } };
 
-        return new EnumProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = new HashSet<string> { t.GetEnumName(propertyInfo.GetValue(instance)) } };
+        var flags = (Enum)propertyInfo.GetValue(instance);
+        var enumValues = Enum.GetValues(t).Cast<Enum>();
+        var enumNames = enumValues.Where(flags.HasFlag).Select(e => e.ToString());
+
+        return new EnumProperty { Name = propertyInfo.Name, PropertyType = t.Name, Value = enumNames.ToHashSet() };
       default:
         break;
     }
