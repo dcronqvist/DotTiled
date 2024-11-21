@@ -8,6 +8,7 @@
   <property name="intprop" type="int" value="8"/>
   <property name="objectprop" type="object" value="5"/>
   <property name="stringprop" value="This is a string, hello world!"/>
+  <property name="unsetcolorprop" type="color" value=""/>
  </properties>
  <layer id="1" name="Tile Layer 1" width="5" height="5">
   <data encoding="csv">
