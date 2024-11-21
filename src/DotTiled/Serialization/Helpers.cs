@@ -86,13 +86,16 @@ internal static partial class Helpers
     };
   }
 
-  internal static List<IProperty> ResolveClassProperties(string className, Func<string, ICustomTypeDefinition> customTypeResolver)
+  internal static List<IProperty> ResolveClassProperties(string className, Func<string, Optional<ICustomTypeDefinition>> customTypeResolver)
   {
     if (string.IsNullOrWhiteSpace(className))
       return null;
 
     var customType = customTypeResolver(className) ?? throw new InvalidOperationException($"Could not resolve custom type '{className}'.");
-    if (customType is not CustomClassDefinition ccd)
+    if (!customType.HasValue)
+      return null;
+
+    if (customType.Value is not CustomClassDefinition ccd)
       throw new InvalidOperationException($"Custom type '{className}' is not a class.");
 
     return CreateInstanceOfCustomClass(ccd, customTypeResolver);
@@ -100,17 +103,31 @@ internal static partial class Helpers
 
   internal static List<IProperty> CreateInstanceOfCustomClass(
     CustomClassDefinition customClassDefinition,
-    Func<string, ICustomTypeDefinition> customTypeResolver)
+    Func<string, Optional<ICustomTypeDefinition>> customTypeResolver)
   {
     return customClassDefinition.Members.Select(x =>
     {
       if (x is ClassProperty cp)
       {
+        var resolvedType = customTypeResolver(cp.PropertyType);
+        if (!resolvedType.HasValue)
+        {
+          return new ClassProperty
+          {
+            Name = cp.Name,
+            PropertyType = cp.PropertyType,
+            Value = []
+          };
+        }
+
+        if (resolvedType.Value is not CustomClassDefinition ccd)
+          throw new InvalidOperationException($"Custom type '{cp.PropertyType}' is not a class.");
+
         return new ClassProperty
         {
           Name = cp.Name,
           PropertyType = cp.PropertyType,
-          Value = CreateInstanceOfCustomClass((CustomClassDefinition)customTypeResolver(cp.PropertyType), customTypeResolver)
+          Value = CreateInstanceOfCustomClass(ccd, customTypeResolver)
         };
       }
 

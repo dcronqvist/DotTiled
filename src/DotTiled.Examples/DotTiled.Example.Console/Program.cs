@@ -73,12 +73,12 @@ public class Program
     return templateReader.ReadTemplate();
   }
 
-  private static ICustomTypeDefinition ResolveCustomType(string name)
+  private static Optional<ICustomTypeDefinition> ResolveCustomType(string name)
   {
     ICustomTypeDefinition[] allDefinedTypes =
     [
       new CustomClassDefinition() { Name = "a" },
     ];
-    return allDefinedTypes.FirstOrDefault(type => type.Name == name) ?? throw new InvalidOperationException();
+    return allDefinedTypes.FirstOrDefault(ctd => ctd.Name == name) is ICustomTypeDefinition ctd ? new Optional<ICustomTypeDefinition>(ctd) : Optional<ICustomTypeDefinition>.Empty;
   }
 }

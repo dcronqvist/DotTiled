@@ -14,7 +14,7 @@ public class MapReader : IMapReader
   // External resolvers
   private readonly Func<string, Tileset> _externalTilesetResolver;
   private readonly Func<string, Template> _externalTemplateResolver;
-  private readonly Func<string, ICustomTypeDefinition> _customTypeResolver;
+  private readonly Func<string, Optional<ICustomTypeDefinition>> _customTypeResolver;
 
   private readonly StringReader _mapStringReader;
   private readonly XmlReader _xmlReader;
@@ -33,7 +33,7 @@ public class MapReader : IMapReader
     string map,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    Func<string, ICustomTypeDefinition> customTypeResolver)
+    Func<string, Optional<ICustomTypeDefinition>> customTypeResolver)
   {
     _externalTilesetResolver = externalTilesetResolver ?? throw new ArgumentNullException(nameof(externalTilesetResolver));
     _externalTemplateResolver = externalTemplateResolver ?? throw new ArgumentNullException(nameof(externalTemplateResolver));

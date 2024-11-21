@@ -28,9 +28,14 @@ public partial class TmxMapReaderTests
       using var tilesetReader = new TsxTilesetReader(xmlTilesetReader, ResolveTileset, ResolveTemplate, ResolveCustomType);
       return tilesetReader.ReadTileset();
     }
-    ICustomTypeDefinition ResolveCustomType(string name)
+    Optional<ICustomTypeDefinition> ResolveCustomType(string name)
     {
-      return customTypeDefinitions.FirstOrDefault(ctd => ctd.Name == name)!;
+      if (customTypeDefinitions.FirstOrDefault(ctd => ctd.Name == name) is ICustomTypeDefinition ctd)
+      {
+        return new Optional<ICustomTypeDefinition>(ctd);
+      }
+
+      return Optional<ICustomTypeDefinition>.Empty;
     }
     using var mapReader = new TmxMapReader(reader, ResolveTileset, ResolveTemplate, ResolveCustomType);
 
