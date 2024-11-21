@@ -203,6 +203,9 @@ var entityDataDef = CustomClassDefinition.FromClass<EntityData>();
 
 The above gives us two custom type definitions that we can supply to our map loader. Given a map that looks like this:
 
+> [!WARNING]
+> For classes that you call `FromClass` on, which also contain enum properties (at some level of depth) that you want to map to a C# enum, you must also supply the custom enum definitions to the map loader. This is so that the map loader can resolve the enum values correctly.
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="7">
