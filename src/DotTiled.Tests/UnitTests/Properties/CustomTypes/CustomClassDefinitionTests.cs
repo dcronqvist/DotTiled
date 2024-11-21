@@ -70,11 +70,42 @@ public class CustomClassDefinitionTests
     ]
   };
 
+  private enum TestEnum1
+  {
+    Value1,
+    Value2
+  }
+
+  [Flags]
+  private enum TestFlags1
+  {
+    Value1 = 0b001,
+    Value2 = 0b010,
+    Value3 = 0b100
+  }
+
+  private sealed class TestClass4WithEnums
+  {
+    public TestEnum1 Enum { get; set; } = TestEnum1.Value2;
+    public TestFlags1 Flags { get; set; } = TestFlags1.Value1 | TestFlags1.Value2;
+  }
+
+  private static CustomClassDefinition ExpectedTestClass4WithEnumsDefinition => new CustomClassDefinition
+  {
+    Name = "TestClass4WithEnums",
+    UseAs = CustomClassUseAs.All,
+    Members = [
+      new EnumProperty { Name = "Enum", PropertyType = "TestEnum1", Value = new HashSet<string> { "Value2" } },
+      new EnumProperty { Name = "Flags", PropertyType = "TestFlags1", Value = new HashSet<string> { "Value1", "Value2" } }
+    ]
+  };
+
   private static IEnumerable<(Type, CustomClassDefinition)> GetCustomClassDefinitionTestData()
   {
     yield return (typeof(TestClass1), ExpectedTestClass1Definition);
     yield return (typeof(TestClass2WithNestedClass), ExpectedTestClass2WithNestedClassDefinition);
     yield return (typeof(TestClass3WithOverridenNestedClass), ExpectedTestClass3WithOverridenNestedClassDefinition);
+    yield return (typeof(TestClass4WithEnums), ExpectedTestClass4WithEnumsDefinition);
   }
 
   public static IEnumerable<object[]> CustomClassDefinitionTestData =>
