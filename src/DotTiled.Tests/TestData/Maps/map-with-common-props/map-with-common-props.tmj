@@ -58,6 +58,11 @@
          "name":"stringprop",
          "type":"string",
          "value":"This is a string, hello world!"
+        }, 
+        {
+         "name":"unsetcolorprop",
+         "type":"color",
+         "value":""
         }],
  "renderorder":"right-down",
  "tiledversion":"1.11.0",

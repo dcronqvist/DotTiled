@@ -36,7 +36,7 @@ public abstract partial class TmjReaderBase
         PropertyType.Int => new IntProperty { Name = name, Value = e.GetRequiredProperty<int>("value") },
         PropertyType.Float => new FloatProperty { Name = name, Value = e.GetRequiredProperty<float>("value") },
         PropertyType.Bool => new BoolProperty { Name = name, Value = e.GetRequiredProperty<bool>("value") },
-        PropertyType.Color => new ColorProperty { Name = name, Value = e.GetRequiredPropertyParseable<Color>("value") },
+        PropertyType.Color => new ColorProperty { Name = name, Value = e.GetRequiredPropertyParseable<Color>("value", s => s == "" ? default : Color.Parse(s, CultureInfo.InvariantCulture)) },
         PropertyType.File => new FileProperty { Name = name, Value = e.GetRequiredProperty<string>("value") },
         PropertyType.Object => new ObjectProperty { Name = name, Value = e.GetRequiredProperty<uint>("value") },
         PropertyType.Class => throw new JsonException("Class property must have a property type"),
