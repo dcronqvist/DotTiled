@@ -1,0 +1,68 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0],
+         "height":5,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"customclassprop",
+         "propertytype":"CustomClass",
+         "type":"class",
+         "value":
+            {
+             "boolinclass":true,
+             "floatinclass":13.37,
+             "stringinclass":"This is a set string"
+            }
+        }, 
+        {
+         "name":"customenumintflagsprop",
+         "propertytype":"CustomEnumIntFlags",
+         "type":"int",
+         "value":6
+        }, 
+        {
+         "name":"customenumintprop",
+         "propertytype":"CustomEnumInt",
+         "type":"int",
+         "value":3
+        }, 
+        {
+         "name":"customenumstringflagsprop",
+         "propertytype":"CustomEnumStringFlags",
+         "type":"string",
+         "value":"CustomEnumStringFlags_1,CustomEnumStringFlags_2"
+        }, 
+        {
+         "name":"customenumstringprop",
+         "propertytype":"CustomEnumString",
+         "type":"string",
+         "value":"CustomEnumString_2"
+        }],
+ "renderorder":"right-down",
+ "tiledversion":"1.11.0",
+ "tileheight":32,
+ "tilesets":[],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":5
+}

@@ -75,11 +75,7 @@ public abstract partial class TmjReaderBase
       {
         Name = name,
         PropertyType = propertyType,
-        Value = ReadPropertiesInsideClass(valueElement, new CustomClassDefinition
-        {
-          Name = propertyType,
-          Members = []
-        })
+        Value = ReadPropertiesInsideClass(valueElement, null)
       };
     }
 
@@ -103,6 +99,31 @@ public abstract partial class TmjReaderBase
     CustomClassDefinition customClassDefinition)
   {
     List<IProperty> resultingProps = [];
+
+    if (customClassDefinition is null)
+    {
+      foreach (var prop in element.EnumerateObject())
+      {
+        var name = prop.Name;
+        var value = prop.Value;
+
+#pragma warning disable IDE0072 // Add missing cases
+        IProperty property = value.ValueKind switch
+        {
+          JsonValueKind.String => new StringProperty { Name = name, Value = value.GetString() },
+          JsonValueKind.Number => value.TryGetInt32(out var intValue) ? new IntProperty { Name = name, Value = intValue } : new FloatProperty { Name = name, Value = value.GetSingle() },
+          JsonValueKind.True => new BoolProperty { Name = name, Value = true },
+          JsonValueKind.False => new BoolProperty { Name = name, Value = false },
+          JsonValueKind.Object => new ClassProperty { Name = name, PropertyType = "", Value = ReadPropertiesInsideClass(value, null) },
+          _ => throw new JsonException("Invalid property type")
+        };
+#pragma warning restore IDE0072 // Add missing cases
+
+        resultingProps.Add(property);
+      }
+
+      return resultingProps;
+    }
 
     foreach (var prop in customClassDefinition.Members)
     {
