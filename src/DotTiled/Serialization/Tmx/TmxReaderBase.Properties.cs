@@ -123,7 +123,7 @@ public abstract partial class TmxReaderBase
     return new ClassProperty { Name = name, PropertyType = propertyType, Value = propsInType };
   }
 
-  internal EnumProperty ReadEnumProperty()
+  internal IProperty ReadEnumProperty()
   {
     var name = _reader.GetRequiredAttribute("name");
     var propertyType = _reader.GetRequiredAttribute("propertytype");
@@ -132,25 +132,22 @@ public abstract partial class TmxReaderBase
       "string" => PropertyType.String,
       "int" => PropertyType.Int,
       _ => throw new XmlException("Invalid property type")
-    }) ?? PropertyType.String;
+    }).GetValueOr(PropertyType.String);
     var customTypeDef = _customTypeResolver(propertyType);
 
     // If the custom enum definition is not found,
     // we assume an empty enum definition.
     if (!customTypeDef.HasValue)
     {
-      if (typeInXml == PropertyType.String)
+#pragma warning disable CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+#pragma warning disable IDE0072 // Add missing cases
+      return typeInXml switch
       {
-        var value = _reader.GetRequiredAttribute("value");
-        var values = value.Split(',').Select(v => v.Trim()).ToHashSet();
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values };
-      }
-      else
-      {
-        var value = _reader.GetRequiredAttributeParseable<int>("value");
-        var values = new HashSet<string> { value.ToString(CultureInfo.InvariantCulture) };
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values };
-      }
+        PropertyType.String => new StringProperty { Name = name, Value = _reader.GetRequiredAttribute("value") },
+        PropertyType.Int => new IntProperty { Name = name, Value = _reader.GetRequiredAttributeParseable<int>("value") },
+      };
+#pragma warning restore IDE0072 // Add missing cases
+#pragma warning restore CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
     }
 
     if (customTypeDef.Value is not CustomEnumDefinition ced)
