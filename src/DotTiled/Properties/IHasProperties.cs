@@ -105,7 +105,9 @@ public abstract class HasPropertiesBase : IHasProperties
           type.GetProperty(prop.Name)?.SetValue(instance, boolProp.Value);
           break;
         case ColorProperty colorProp:
-          type.GetProperty(prop.Name)?.SetValue(instance, colorProp.Value);
+          if (!colorProp.Value.HasValue)
+            break;
+          type.GetProperty(prop.Name)?.SetValue(instance, colorProp.Value.Value);
           break;
         case FloatProperty floatProp:
           type.GetProperty(prop.Name)?.SetValue(instance, floatProp.Value);

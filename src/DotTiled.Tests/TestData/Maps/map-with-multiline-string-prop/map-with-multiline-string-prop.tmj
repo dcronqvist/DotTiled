@@ -55,13 +55,18 @@
          "value":5
         }, 
         {
+         "name":"stringmultiline",
+         "type":"string",
+         "value":"hello there\n\ni am a multiline\nstring property"
+        }, 
+        {
          "name":"stringprop",
          "type":"string",
          "value":"This is a string, hello world!"
         }, 
         {
-         "name":"unsetcolorprop",
-         "type":"color",
+         "name":"unsetstringprop",
+         "type":"string",
          "value":""
         }],
  "renderorder":"right-down",

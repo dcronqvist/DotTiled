@@ -9,7 +9,7 @@ docs-serve: docs/index.md
 docs-build: docs/index.md
 	docfx docs/docfx.json
 
-docs/index.md: 
+docs/index.md: README.md
 	cp README.md docs/index.md
 
 lint:

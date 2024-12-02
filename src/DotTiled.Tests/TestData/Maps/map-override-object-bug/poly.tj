@@ -1,0 +1,31 @@
+{ "object":
+    {
+     "height":0,
+     "id":5,
+     "name":"Poly",
+     "polygon":[
+            {
+             "x":0,
+             "y":0
+            }, 
+            {
+             "x":104,
+             "y":20
+            }, 
+            {
+             "x":35.6667,
+             "y":32.3333
+            }],
+     "properties":[
+            {
+             "name":"templateprop",
+             "type":"string",
+             "value":"helo there"
+            }],
+     "rotation":0,
+     "type":"",
+     "visible":true,
+     "width":0
+    },
+ "type":"template"
+}

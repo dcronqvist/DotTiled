@@ -20,8 +20,8 @@ public partial class TestData
     BackgroundColor = Color.Parse("#00000000", CultureInfo.InvariantCulture),
     Version = "1.10",
     TiledVersion = "1.11.0",
-    NextLayerID = 2,
-    NextObjectID = 1,
+    NextLayerID = 3,
+    NextObjectID = 3,
     Tilesets = [
       new Tileset
       {
@@ -68,6 +68,33 @@ public partial class TestData
             FlippingFlags.FlippedHorizontally, FlippingFlags.FlippedHorizontally, FlippingFlags.FlippedHorizontally, FlippingFlags.FlippedHorizontally, FlippingFlags.None
           ])
         }
+      },
+      new ObjectLayer
+      {
+        ID = 2,
+        Name = "Object Layer 1",
+        Objects = [
+          new TileObject
+          {
+            ID = 1,
+            GID = 21,
+            X = 80.0555f,
+            Y = 48.3887f,
+            Width = 32,
+            Height = 32,
+            FlippingFlags = FlippingFlags.FlippedHorizontally
+          },
+          new TileObject
+          {
+            ID = 2,
+            GID = 21,
+            X = 15.833f,
+            Y = 112.056f,
+            Width = 32,
+            Height = 32,
+            FlippingFlags = FlippingFlags.FlippedHorizontally | FlippingFlags.FlippedVertically
+          }
+        ]
       }
     ]
   };

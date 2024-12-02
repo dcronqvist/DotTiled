@@ -32,9 +32,14 @@ public partial class MapReaderTests
         using var tilesetReader = new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType);
         return tilesetReader.ReadTileset();
       }
-      ICustomTypeDefinition ResolveCustomType(string name)
+      Optional<ICustomTypeDefinition> ResolveCustomType(string name)
       {
-        return customTypeDefinitions.FirstOrDefault(ctd => ctd.Name == name)!;
+        if (customTypeDefinitions.FirstOrDefault(ctd => ctd.Name == name) is ICustomTypeDefinition ctd)
+        {
+          return new Optional<ICustomTypeDefinition>(ctd);
+        }
+
+        return Optional<ICustomTypeDefinition>.Empty;
       }
       using var mapReader = new MapReader(mapString, ResolveTileset, ResolveTemplate, ResolveCustomType);
 

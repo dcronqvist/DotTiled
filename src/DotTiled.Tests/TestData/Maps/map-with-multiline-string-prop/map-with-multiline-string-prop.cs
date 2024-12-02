@@ -4,7 +4,7 @@ namespace DotTiled.Tests;
 
 public partial class TestData
 {
-  public static Map MapWithCommonProps() => new Map
+  public static Map MapWithMultilineStringProp() => new Map
   {
     Class = "",
     Orientation = MapOrientation.Isometric,
@@ -57,8 +57,9 @@ public partial class TestData
       new FloatProperty { Name = "floatprop", Value = 4.2f },
       new IntProperty { Name = "intprop", Value = 8 },
       new ObjectProperty { Name = "objectprop", Value = 5 },
+      new StringProperty { Name = "stringmultiline", Value = "hello there\n\ni am a multiline\nstring property" },
       new StringProperty { Name = "stringprop", Value = "This is a string, hello world!" },
-      new ColorProperty { Name = "unsetcolorprop", Value = Optional<Color>.Empty }
+      new StringProperty { Name = "unsetstringprop", Value = "" }
     ]
   };
 }

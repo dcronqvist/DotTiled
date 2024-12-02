@@ -17,9 +17,44 @@
          "width":5,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "gid":2147483669,
+                 "height":32,
+                 "id":1,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":80.0555234239445,
+                 "y":48.3886639676113
+                }, 
+                {
+                 "gid":1073741845,
+                 "height":32,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":15.8334297281666,
+                 "y":112.055523423944
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":2,
- "nextobjectid":1,
+ "nextlayerid":3,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.0",

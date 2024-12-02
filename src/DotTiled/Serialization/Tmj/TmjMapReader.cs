@@ -19,7 +19,7 @@ public class TmjMapReader : TmjReaderBase, IMapReader
     string jsonString,
     Func<string, Tileset> externalTilesetResolver,
     Func<string, Template> externalTemplateResolver,
-    Func<string, ICustomTypeDefinition> customTypeResolver) : base(
+    Func<string, Optional<ICustomTypeDefinition>> customTypeResolver) : base(
       jsonString, externalTilesetResolver, externalTemplateResolver, customTypeResolver)
   { }
 

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 
@@ -32,13 +34,18 @@ public abstract partial class TmxReaderBase
         return ReadPropertyWithCustomType();
       }
 
+      if (type == PropertyType.String)
+      {
+        return ReadStringProperty(name);
+      }
+
       IProperty property = type switch
       {
-        PropertyType.String => new StringProperty { Name = name, Value = r.GetRequiredAttribute("value") },
+        PropertyType.String => throw new InvalidOperationException("String properties should be handled elsewhere."),
         PropertyType.Int => new IntProperty { Name = name, Value = r.GetRequiredAttributeParseable<int>("value") },
         PropertyType.Float => new FloatProperty { Name = name, Value = r.GetRequiredAttributeParseable<float>("value") },
         PropertyType.Bool => new BoolProperty { Name = name, Value = r.GetRequiredAttributeParseable<bool>("value") },
-        PropertyType.Color => new ColorProperty { Name = name, Value = r.GetRequiredAttributeParseable<Color>("value") },
+        PropertyType.Color => new ColorProperty { Name = name, Value = r.GetRequiredAttributeParseable<Color>("value", s => s == "" ? default : Color.Parse(s, CultureInfo.InvariantCulture)) },
         PropertyType.File => new FileProperty { Name = name, Value = r.GetRequiredAttribute("value") },
         PropertyType.Object => new ObjectProperty { Name = name, Value = r.GetRequiredAttributeParseable<uint>("value") },
         PropertyType.Class => throw new XmlException("Class property must have a property type"),
@@ -47,6 +54,25 @@ public abstract partial class TmxReaderBase
       };
       return property;
     });
+  }
+
+  internal StringProperty ReadStringProperty(string name)
+  {
+    var valueAttrib = _reader.GetOptionalAttribute("value");
+    if (valueAttrib.HasValue)
+    {
+      return new StringProperty { Name = name, Value = valueAttrib.Value };
+    }
+
+    if (!_reader.IsEmptyElement)
+    {
+      _reader.ReadStartElement("property");
+      var value = _reader.ReadContentAsString();
+      _reader.ReadEndElement();
+      return new StringProperty { Name = name, Value = value };
+    }
+
+    return new StringProperty { Name = name, Value = string.Empty };
   }
 
   internal IProperty ReadPropertyWithCustomType()
@@ -66,28 +92,38 @@ public abstract partial class TmxReaderBase
     var propertyType = _reader.GetRequiredAttribute("propertytype");
     var customTypeDef = _customTypeResolver(propertyType);
 
-    if (customTypeDef is CustomClassDefinition ccd)
+    // If the custom class definition is not found,
+    // we assume an empty class definition.
+    if (!customTypeDef.HasValue)
     {
       if (!_reader.IsEmptyElement)
       {
         _reader.ReadStartElement("property");
-        var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
         var props = ReadProperties();
-        var mergedProps = Helpers.MergeProperties(propsInType, props);
         _reader.ReadEndElement();
-        return new ClassProperty { Name = name, PropertyType = propertyType, Value = mergedProps };
+        return new ClassProperty { Name = name, PropertyType = propertyType, Value = props };
       }
-      else
-      {
-        var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
-        return new ClassProperty { Name = name, PropertyType = propertyType, Value = propsInType };
-      }
+
+      return new ClassProperty { Name = name, PropertyType = propertyType, Value = [] };
     }
 
-    throw new XmlException($"Unkonwn custom class definition: {propertyType}");
+    if (customTypeDef.Value is not CustomClassDefinition ccd)
+      throw new XmlException($"Custom type {propertyType} is not a class.");
+
+    var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
+    if (!_reader.IsEmptyElement)
+    {
+      _reader.ReadStartElement("property");
+      var props = ReadProperties();
+      var mergedProps = Helpers.MergeProperties(propsInType, props);
+      _reader.ReadEndElement();
+      return new ClassProperty { Name = name, PropertyType = propertyType, Value = mergedProps };
+    }
+
+    return new ClassProperty { Name = name, PropertyType = propertyType, Value = propsInType };
   }
 
-  internal EnumProperty ReadEnumProperty()
+  internal IProperty ReadEnumProperty()
   {
     var name = _reader.GetRequiredAttribute("name");
     var propertyType = _reader.GetRequiredAttribute("propertytype");
@@ -96,11 +132,26 @@ public abstract partial class TmxReaderBase
       "string" => PropertyType.String,
       "int" => PropertyType.Int,
       _ => throw new XmlException("Invalid property type")
-    }) ?? PropertyType.String;
+    }).GetValueOr(PropertyType.String);
     var customTypeDef = _customTypeResolver(propertyType);
 
-    if (customTypeDef is not CustomEnumDefinition ced)
-      throw new XmlException($"Unknown custom enum definition: {propertyType}. Enums must be defined");
+    // If the custom enum definition is not found,
+    // we assume an empty enum definition.
+    if (!customTypeDef.HasValue)
+    {
+#pragma warning disable CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+#pragma warning disable IDE0072 // Add missing cases
+      return typeInXml switch
+      {
+        PropertyType.String => new StringProperty { Name = name, Value = _reader.GetRequiredAttribute("value") },
+        PropertyType.Int => new IntProperty { Name = name, Value = _reader.GetRequiredAttributeParseable<int>("value") },
+      };
+#pragma warning restore IDE0072 // Add missing cases
+#pragma warning restore CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+    }
+
+    if (customTypeDef.Value is not CustomEnumDefinition ced)
+      throw new XmlException($"Custom defined type {propertyType} is not an enum.");
 
     if (ced.StorageType == CustomEnumStorageType.String)
     {
@@ -144,6 +195,6 @@ public abstract partial class TmxReaderBase
       }
     }
 
-    throw new XmlException($"Unknown custom enum storage type: {ced.StorageType}");
+    throw new XmlException($"Unable to read enum property {name} with type {propertyType}");
   }
 }

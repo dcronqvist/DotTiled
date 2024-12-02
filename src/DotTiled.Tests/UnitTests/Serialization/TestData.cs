@@ -36,14 +36,17 @@ public static partial class TestData
     [GetMapPath("default-map"), (string f) => DefaultMap(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-common-props"), (string f) => MapWithCommonProps(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-custom-type-props"), (string f) => MapWithCustomTypeProps(), MapWithCustomTypePropsCustomTypeDefinitions()],
+    [GetMapPath("map-with-custom-type-props-without-defs"), (string f) => MapWithCustomTypePropsWithoutDefs(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-embedded-tileset"), (string f) => MapWithEmbeddedTileset(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-external-tileset"), (string f) => MapWithExternalTileset(f), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-flippingflags"), (string f) => MapWithFlippingFlags(f), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-external-tileset-multi"), (string f) => MapExternalTilesetMulti(f), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-external-tileset-wangset"), (string f) => MapExternalTilesetWangset(f), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-many-layers"), (string f) => MapWithManyLayers(f), Array.Empty<ICustomTypeDefinition>()],
+    [GetMapPath("map-with-multiline-string-prop"), (string f) => MapWithMultilineStringProp(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-deep-props"), (string f) => MapWithDeepProps(), MapWithDeepPropsCustomTypeDefinitions()],
     [GetMapPath("map-with-class"), (string f) => MapWithClass(), MapWithClassCustomTypeDefinitions()],
     [GetMapPath("map-with-class-and-props"), (string f) => MapWithClassAndProps(), MapWithClassAndPropsCustomTypeDefinitions()],
+    [GetMapPath("map-override-object-bug"), (string f) => MapOverrideObjectBug(f), MapOverrideObjectBugCustomTypeDefinitions()],
   ];
 }

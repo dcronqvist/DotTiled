@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -35,7 +36,7 @@ public abstract partial class TmjReaderBase
         PropertyType.Int => new IntProperty { Name = name, Value = e.GetRequiredProperty<int>("value") },
         PropertyType.Float => new FloatProperty { Name = name, Value = e.GetRequiredProperty<float>("value") },
         PropertyType.Bool => new BoolProperty { Name = name, Value = e.GetRequiredProperty<bool>("value") },
-        PropertyType.Color => new ColorProperty { Name = name, Value = e.GetRequiredPropertyParseable<Color>("value") },
+        PropertyType.Color => new ColorProperty { Name = name, Value = e.GetRequiredPropertyParseable<Color>("value", s => s == "" ? default : Color.Parse(s, CultureInfo.InvariantCulture)) },
         PropertyType.File => new FileProperty { Name = name, Value = e.GetRequiredProperty<string>("value") },
         PropertyType.Object => new ObjectProperty { Name = name, Value = e.GetRequiredProperty<uint>("value") },
         PropertyType.Class => throw new JsonException("Class property must have a property type"),
@@ -63,21 +64,34 @@ public abstract partial class TmjReaderBase
     var propertyType = element.GetRequiredProperty<string>("propertytype");
     var customTypeDef = _customTypeResolver(propertyType);
 
-    if (customTypeDef is CustomClassDefinition ccd)
+    // If the custom class definition is not found,
+    // we assume an empty class definition.
+    if (!customTypeDef.HasValue)
     {
-      var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
-      var props = element.GetOptionalPropertyCustom<List<IProperty>>("value", e => ReadPropertiesInsideClass(e, ccd)).GetValueOr([]);
-      var mergedProps = Helpers.MergeProperties(propsInType, props);
+      if (!element.TryGetProperty("value", out var valueElement))
+        return new ClassProperty { Name = name, PropertyType = propertyType, Value = [] };
 
       return new ClassProperty
       {
         Name = name,
         PropertyType = propertyType,
-        Value = mergedProps
+        Value = ReadPropertiesInsideClass(valueElement, null)
       };
     }
 
-    throw new JsonException($"Unknown custom class '{propertyType}'.");
+    if (customTypeDef.Value is not CustomClassDefinition ccd)
+      throw new JsonException($"Custom type {propertyType} is not a class.");
+
+    var propsInType = Helpers.CreateInstanceOfCustomClass(ccd, _customTypeResolver);
+    var props = element.GetOptionalPropertyCustom<List<IProperty>>("value", e => ReadPropertiesInsideClass(e, ccd)).GetValueOr([]);
+    var mergedProps = Helpers.MergeProperties(propsInType, props);
+
+    return new ClassProperty
+    {
+      Name = name,
+      PropertyType = propertyType,
+      Value = mergedProps
+    };
   }
 
   internal List<IProperty> ReadPropertiesInsideClass(
@@ -86,10 +100,62 @@ public abstract partial class TmjReaderBase
   {
     List<IProperty> resultingProps = [];
 
+    if (customClassDefinition is null)
+    {
+      foreach (var prop in element.EnumerateObject())
+      {
+        var name = prop.Name;
+        var value = prop.Value;
+
+#pragma warning disable IDE0072 // Add missing cases
+        IProperty property = value.ValueKind switch
+        {
+          JsonValueKind.String => new StringProperty { Name = name, Value = value.GetString() },
+          JsonValueKind.Number => value.TryGetInt32(out var intValue) ? new IntProperty { Name = name, Value = intValue } : new FloatProperty { Name = name, Value = value.GetSingle() },
+          JsonValueKind.True => new BoolProperty { Name = name, Value = true },
+          JsonValueKind.False => new BoolProperty { Name = name, Value = false },
+          JsonValueKind.Object => new ClassProperty { Name = name, PropertyType = "", Value = ReadPropertiesInsideClass(value, null) },
+          _ => throw new JsonException("Invalid property type")
+        };
+#pragma warning restore IDE0072 // Add missing cases
+
+        resultingProps.Add(property);
+      }
+
+      return resultingProps;
+    }
+
     foreach (var prop in customClassDefinition.Members)
     {
       if (!element.TryGetProperty(prop.Name, out var propElement))
         continue;
+
+      if (prop is ClassProperty classProp)
+      {
+        var resolvedCustomType = _customTypeResolver(classProp.PropertyType);
+        if (!resolvedCustomType.HasValue)
+        {
+          resultingProps.Add(new ClassProperty
+          {
+            Name = classProp.Name,
+            PropertyType = classProp.PropertyType,
+            Value = []
+          });
+          continue;
+        }
+
+        if (resolvedCustomType.Value is not CustomClassDefinition ccd)
+          throw new JsonException($"Custom type '{classProp.PropertyType}' is not a class.");
+
+        var readProps = ReadPropertiesInsideClass(propElement, ccd);
+        resultingProps.Add(new ClassProperty
+        {
+          Name = classProp.Name,
+          PropertyType = classProp.PropertyType,
+          Value = readProps
+        });
+        continue;
+      }
 
       IProperty property = prop.Type switch
       {
@@ -100,8 +166,8 @@ public abstract partial class TmjReaderBase
         PropertyType.Color => new ColorProperty { Name = prop.Name, Value = Color.Parse(propElement.GetValueAs<string>(), CultureInfo.InvariantCulture) },
         PropertyType.File => new FileProperty { Name = prop.Name, Value = propElement.GetValueAs<string>() },
         PropertyType.Object => new ObjectProperty { Name = prop.Name, Value = propElement.GetValueAs<uint>() },
-        PropertyType.Class => new ClassProperty { Name = prop.Name, PropertyType = ((ClassProperty)prop).PropertyType, Value = ReadPropertiesInsideClass(propElement, (CustomClassDefinition)_customTypeResolver(((ClassProperty)prop).PropertyType)) },
         PropertyType.Enum => ReadEnumProperty(propElement),
+        PropertyType.Class => throw new NotImplementedException("Class properties should be handled elsewhere"),
         _ => throw new JsonException("Invalid property type")
       };
 
@@ -111,11 +177,11 @@ public abstract partial class TmjReaderBase
     return resultingProps;
   }
 
-  internal EnumProperty ReadEnumProperty(JsonElement element)
+  internal IProperty ReadEnumProperty(JsonElement element)
   {
     var name = element.GetRequiredProperty<string>("name");
     var propertyType = element.GetRequiredProperty<string>("propertytype");
-    var typeInXml = element.GetOptionalPropertyParseable<PropertyType>("type", (s) => s switch
+    var typeInJson = element.GetOptionalPropertyParseable<PropertyType>("type", (s) => s switch
     {
       "string" => PropertyType.String,
       "int" => PropertyType.Int,
@@ -123,8 +189,21 @@ public abstract partial class TmjReaderBase
     }).GetValueOr(PropertyType.String);
     var customTypeDef = _customTypeResolver(propertyType);
 
-    if (customTypeDef is not CustomEnumDefinition ced)
-      throw new JsonException($"Unknown custom enum '{propertyType}'. Enums must be defined");
+    if (!customTypeDef.HasValue)
+    {
+#pragma warning disable CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+#pragma warning disable IDE0072 // Add missing cases
+      return typeInJson switch
+      {
+        PropertyType.String => new StringProperty { Name = name, Value = element.GetRequiredProperty<string>("value") },
+        PropertyType.Int => new IntProperty { Name = name, Value = element.GetRequiredProperty<int>("value") },
+      };
+#pragma warning restore IDE0072 // Add missing cases
+#pragma warning restore CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+    }
+
+    if (customTypeDef.Value is not CustomEnumDefinition ced)
+      throw new JsonException($"Custom type '{propertyType}' is not an enum.");
 
     if (ced.StorageType == CustomEnumStorageType.String)
     {

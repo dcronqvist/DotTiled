@@ -4,20 +4,20 @@ namespace DotTiled.Tests;
 
 public partial class TestData
 {
-  public static Map MapWithCommonProps() => new Map
+  public static Map MapWithCustomTypePropsWithoutDefs() => new Map
   {
     Class = "",
-    Orientation = MapOrientation.Isometric,
+    Orientation = MapOrientation.Orthogonal,
     Width = 5,
     Height = 5,
     TileWidth = 32,
-    TileHeight = 16,
+    TileHeight = 32,
     Infinite = false,
     ParallaxOriginX = 0,
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = Color.Parse("#00ff00", CultureInfo.InvariantCulture),
+    BackgroundColor = Color.Parse("#00000000", CultureInfo.InvariantCulture),
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 2,
@@ -49,16 +49,37 @@ public partial class TestData
         }
       }
     ],
-    Properties =
-    [
-      new BoolProperty { Name = "boolprop", Value = true },
-      new ColorProperty { Name = "colorprop", Value = Color.Parse("#ff55ffff", CultureInfo.InvariantCulture) },
-      new FileProperty { Name = "fileprop", Value = "file.txt" },
-      new FloatProperty { Name = "floatprop", Value = 4.2f },
-      new IntProperty { Name = "intprop", Value = 8 },
-      new ObjectProperty { Name = "objectprop", Value = 5 },
-      new StringProperty { Name = "stringprop", Value = "This is a string, hello world!" },
-      new ColorProperty { Name = "unsetcolorprop", Value = Optional<Color>.Empty }
+    Properties = [
+      new ClassProperty
+      {
+        Name = "customclassprop",
+        PropertyType = "CustomClass",
+        Value = [
+          new BoolProperty { Name = "boolinclass", Value = true },
+          new FloatProperty { Name = "floatinclass", Value = 13.37f },
+          new StringProperty { Name = "stringinclass", Value = "This is a set string" }
+        ]
+      },
+      new IntProperty
+      {
+        Name = "customenumintflagsprop",
+        Value = 6
+      },
+      new IntProperty
+      {
+        Name = "customenumintprop",
+        Value = 3
+      },
+      new StringProperty
+      {
+        Name = "customenumstringprop",
+        Value = "CustomEnumString_2"
+      },
+      new StringProperty
+      {
+        Name = "customenumstringflagsprop",
+        Value = "CustomEnumStringFlags_1,CustomEnumStringFlags_2"
+      }
     ]
   };
 }

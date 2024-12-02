@@ -45,7 +45,7 @@ internal static class ExtensionsXmlReader
     return T.Parse(value, CultureInfo.InvariantCulture);
   }
 
-  internal static Optional<T> GetOptionalAttributeParseable<T>(this XmlReader reader, string attribute, Func<string, T> parser) where T : struct
+  internal static Optional<T> GetOptionalAttributeParseable<T>(this XmlReader reader, string attribute, Func<string, T> parser)
   {
     var value = reader.GetAttribute(attribute);
     if (value is null)

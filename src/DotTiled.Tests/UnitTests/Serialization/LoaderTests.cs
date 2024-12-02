@@ -246,7 +246,7 @@ public class LoaderTests
   }
 
   [Fact]
-  public void LoadMap_MapHasClassAndLoaderHasNoCustomTypes_ThrowsException()
+  public void LoadMap_MapHasClassAndLoaderHasNoCustomTypes_ReturnsMapWithEmptyProperties()
   {
     // Arrange
     var resourceReader = Substitute.For<IResourceReader>();
@@ -270,8 +270,11 @@ public class LoaderTests
     var customTypeDefinitions = Enumerable.Empty<ICustomTypeDefinition>();
     var loader = new Loader(resourceReader, resourceCache, customTypeDefinitions);
 
-    // Act & Assert
-    Assert.Throws<KeyNotFoundException>(() => loader.LoadMap("map.tmx"));
+    // Act
+    var result = loader.LoadMap("map.tmx");
+
+    // Assert
+    DotTiledAssert.AssertProperties([], result.Properties);
   }
 
   [Fact]

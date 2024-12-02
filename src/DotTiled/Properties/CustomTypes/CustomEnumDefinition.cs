@@ -51,8 +51,9 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// Creates a custom enum definition from the specified enum type.
   /// </summary>
   /// <typeparam name="T"></typeparam>
+  /// <param name="storageType">The storage type of the custom enum. Defaults to <see cref="CustomEnumStorageType.String"/> to be consistent with Tiled.</param>
   /// <returns></returns>
-  public static CustomEnumDefinition FromEnum<T>() where T : Enum
+  public static CustomEnumDefinition FromEnum<T>(CustomEnumStorageType storageType = CustomEnumStorageType.String) where T : Enum
   {
     var type = typeof(T);
     var isFlags = type.GetCustomAttributes(typeof(FlagsAttribute), false).Length != 0;
@@ -60,7 +61,7 @@ public class CustomEnumDefinition : ICustomTypeDefinition
     return new CustomEnumDefinition
     {
       Name = type.Name,
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = Enum.GetNames(type).ToList(),
       ValueAsFlags = isFlags
     };
@@ -69,8 +70,10 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// <summary>
   /// Creates a custom enum definition from the specified enum type.
   /// </summary>
+  /// <param name="type">The enum type to create a custom enum definition from.</param>
+  /// <param name="storageType">The storage type of the custom enum. Defaults to <see cref="CustomEnumStorageType.String"/> to be consistent with Tiled.</param>
   /// <returns></returns>
-  public static CustomEnumDefinition FromEnum(Type type)
+  public static CustomEnumDefinition FromEnum(Type type, CustomEnumStorageType storageType = CustomEnumStorageType.String)
   {
     if (!type.IsEnum)
       throw new ArgumentException("Type must be an enum.", nameof(type));
@@ -80,7 +83,7 @@ public class CustomEnumDefinition : ICustomTypeDefinition
     return new CustomEnumDefinition
     {
       Name = type.Name,
-      StorageType = CustomEnumStorageType.Int,
+      StorageType = storageType,
       Values = Enum.GetNames(type).ToList(),
       ValueAsFlags = isFlags
     };
