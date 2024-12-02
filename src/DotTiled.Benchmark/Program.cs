@@ -15,10 +15,10 @@ namespace DotTiled.Benchmark
   [HideColumns(["StdDev", "Error", "RatioSD"])]
   public class MapLoading
   {
-    private readonly string _tmxPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmx";
+    private readonly string _tmxPath = @"DotTiled.Tests/TestData/Maps/default-map/default-map.tmx";
     private readonly string _tmxContents = "";
 
-    private readonly string _tmjPath = @"DotTiled.Tests/Serialization/TestData/Map/default-map/default-map.tmj";
+    private readonly string _tmjPath = @"DotTiled.Tests/TestData/Maps/default-map/default-map.tmj";
     private readonly string _tmjContents = "";
 
     public MapLoading()
