@@ -35,7 +35,7 @@ public partial class TmjMapReaderTests
         return new Optional<ICustomTypeDefinition>(ctd);
       }
 
-      return Optional<ICustomTypeDefinition>.Empty;
+      return Optional.Empty;
     }
     using var mapReader = new TmjMapReader(json, ResolveTileset, ResolveTemplate, ResolveCustomType);
 

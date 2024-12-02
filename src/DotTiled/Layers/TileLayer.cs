@@ -30,7 +30,7 @@ public class TileLayer : BaseLayer
   /// <summary>
   /// The tile layer data.
   /// </summary>
-  public Optional<Data> Data { get; set; } = Optional<Data>.Empty;
+  public Optional<Data> Data { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Helper method to retrieve the Global Tile ID at a given coordinate in the layer.

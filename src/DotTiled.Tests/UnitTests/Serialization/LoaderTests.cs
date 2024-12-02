@@ -71,8 +71,8 @@ public class LoaderTests
     """);
 
     var resourceCache = Substitute.For<IResourceCache>();
-    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional<Tileset>.Empty);
-    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional<Template>.Empty);
+    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional.Empty);
+    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional.Empty);
 
     var customTypeDefinitions = Enumerable.Empty<ICustomTypeDefinition>();
     var loader = new Loader(resourceReader, resourceCache, customTypeDefinitions);
@@ -134,8 +134,8 @@ public class LoaderTests
     """);
 
     var resourceCache = Substitute.For<IResourceCache>();
-    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional<Tileset>.Empty);
-    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional<Template>.Empty);
+    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional.Empty);
+    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional.Empty);
 
     var customTypeDefinitions = Enumerable.Empty<ICustomTypeDefinition>();
     var loader = new Loader(resourceReader, resourceCache, customTypeDefinitions);
@@ -219,7 +219,7 @@ public class LoaderTests
     """);
 
     var resourceCache = Substitute.For<IResourceCache>();
-    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional<Tileset>.Empty);
+    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional.Empty);
     resourceCache.GetTemplate("template.tx").Returns(new Optional<Template>(new Template
     {
       Object = new PolygonObject

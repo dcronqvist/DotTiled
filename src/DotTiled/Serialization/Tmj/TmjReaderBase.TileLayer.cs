@@ -16,7 +16,7 @@ public abstract partial class TmjReaderBase
     {
       "zlib" => DataCompression.ZLib,
       "gzip" => DataCompression.GZip,
-      "" => Optional<DataCompression>.Empty,
+      "" => Optional.Empty,
       _ => throw new JsonException($"Unsupported compression '{s}'.")
     });
     var chunks = element.GetOptionalPropertyCustom<Data>("chunks", e => ReadDataAsChunks(e, compression, encoding));
@@ -62,7 +62,7 @@ public abstract partial class TmjReaderBase
       Y = y,
       Width = width,
       Height = height,
-      Data = data ?? chunks
+      Data = data.GetValueOrOptional(chunks)
     };
   }
 }

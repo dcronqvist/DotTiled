@@ -58,7 +58,7 @@ public partial class TestData
       new IntProperty { Name = "intprop", Value = 8 },
       new ObjectProperty { Name = "objectprop", Value = 5 },
       new StringProperty { Name = "stringprop", Value = "This is a string, hello world!" },
-      new ColorProperty { Name = "unsetcolorprop", Value = Optional<TiledColor>.Empty }
+      new ColorProperty { Name = "unsetcolorprop", Value = Optional.Empty }
     ]
   };
 }

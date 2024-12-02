@@ -54,12 +54,12 @@ public class Tile : HasPropertiesBase
   /// <summary>
   /// The image representing this tile. Only used for tilesets that composed of a collection of images.
   /// </summary>
-  public Optional<Image> Image { get; set; } = Optional<Image>.Empty;
+  public Optional<Image> Image { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Used when the tile contains e.g. collision information.
   /// </summary>
-  public Optional<ObjectLayer> ObjectLayer { get; set; } = Optional<ObjectLayer>.Empty;
+  public Optional<ObjectLayer> ObjectLayer { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The animation frames for this tile.
