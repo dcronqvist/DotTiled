@@ -59,30 +59,6 @@ public class OptionalTests
     Assert.Equal(expectedValue, optional.Value);
   }
 
-  [Fact]
-  public void ImplicitConversion_FromOptionalToValue_ShouldReturnValue_WhenHasValueIsTrue()
-  {
-    // Arrange
-    int expectedValue = 10;
-    var optional = new Optional<int>(expectedValue);
-
-    // Act
-    int value = optional;
-
-    // Assert
-    Assert.Equal(expectedValue, value);
-  }
-
-  [Fact]
-  public void ImplicitConversion_FromOptionalToValue_ShouldThrowException_WhenHasValueIsFalse()
-  {
-    // Arrange
-    var optional = new Optional<int>();
-
-    // Act & Assert
-    _ = Assert.Throws<InvalidOperationException>(() => { int value = optional; });
-  }
-
   // ToString Method Tests
 
   [Fact]
@@ -236,18 +212,6 @@ public class OptionalTests
     // Act & Assert
     _ = Assert.Throws<InvalidOperationException>(() => optional.Value);
   }
-
-  [Fact]
-  public void ImplicitConversion_WhenHasValueIsFalse_ShouldThrowInvalidOperationException()
-  {
-    // Arrange
-    var optional = new Optional<int>();
-
-    // Act & Assert
-    _ = Assert.Throws<InvalidOperationException>(() => { int value = optional; });
-  }
-
-  // Edge Cases
 
   [Fact]
   public void EmptyOptionalEquality_ShouldReturnTrue()

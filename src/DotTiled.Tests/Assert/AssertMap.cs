@@ -33,12 +33,6 @@ public static partial class DotTiledAssert
     string nameof,
     Action<T, T> assertEqual)
   {
-    if (expected is null)
-    {
-      Assert.Null(actual);
-      return;
-    }
-
     if (expected.HasValue)
     {
       Assert.True(actual.HasValue, $"Expected {nameof} to have a value");
@@ -51,12 +45,6 @@ public static partial class DotTiledAssert
 
   internal static void AssertEqual<T>(Optional<T> expected, Optional<T> actual, string nameof)
   {
-    if (expected is null)
-    {
-      Assert.Null(actual);
-      return;
-    }
-
     if (expected.HasValue)
     {
       Assert.True(actual.HasValue, $"Expected {nameof} to have a value");

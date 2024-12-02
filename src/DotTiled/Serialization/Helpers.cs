@@ -91,7 +91,7 @@ internal static partial class Helpers
     if (string.IsNullOrWhiteSpace(className))
       return null;
 
-    var customType = customTypeResolver(className) ?? throw new InvalidOperationException($"Could not resolve custom type '{className}'.");
+    var customType = customTypeResolver(className);
     if (!customType.HasValue)
       return null;
 

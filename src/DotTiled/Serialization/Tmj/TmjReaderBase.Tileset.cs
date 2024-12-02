@@ -7,8 +7,8 @@ public abstract partial class TmjReaderBase
 {
   internal Tileset ReadTileset(
     JsonElement element,
-    Optional<string> parentVersion = null,
-    Optional<string> parentTiledVersion = null)
+    Optional<string> parentVersion = default,
+    Optional<string> parentTiledVersion = default)
   {
     var backgroundColor = element.GetOptionalPropertyParseable<Color>("backgroundcolor");
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
@@ -63,7 +63,7 @@ public abstract partial class TmjReaderBase
 
     if (source.HasValue)
     {
-      var resolvedTileset = _externalTilesetResolver(source);
+      var resolvedTileset = _externalTilesetResolver(source.Value);
       resolvedTileset.FirstGID = firstGID;
       resolvedTileset.Source = source;
       return resolvedTileset;
@@ -71,34 +71,34 @@ public abstract partial class TmjReaderBase
 
     Optional<Image> imageModel = image.HasValue ? new Image
     {
-      Format = Helpers.ParseImageFormatFromSource(image),
+      Format = Helpers.ParseImageFormatFromSource(image.Value),
       Source = image,
       Height = imageHeight,
       Width = imageWidth,
       TransparentColor = transparentColor
-    } : Optional<Image>.Empty;
+    } : Optional.Empty;
 
     return new Tileset
     {
       Class = @class,
-      Columns = columns,
+      Columns = columns.Value,
       FillMode = fillMode,
       FirstGID = firstGID,
       Grid = grid,
       Image = imageModel,
-      Margin = margin,
-      Name = name,
+      Margin = margin.Value,
+      Name = name.Value,
       ObjectAlignment = objectAlignment,
       Properties = properties,
       Source = source,
-      Spacing = spacing,
-      TileCount = tileCount,
+      Spacing = spacing.Value,
+      TileCount = tileCount.Value,
       TiledVersion = tiledVersion,
-      TileHeight = tileHeight,
+      TileHeight = tileHeight.Value,
       TileOffset = tileOffset,
       RenderSize = tileRenderSize,
       Tiles = tiles,
-      TileWidth = tileWidth,
+      TileWidth = tileWidth.Value,
       Version = version,
       Wangsets = wangsets,
       Transformations = transformations
@@ -171,11 +171,11 @@ public abstract partial class TmjReaderBase
 
       Optional<Image> imageModel = image.HasValue ? new Image
       {
-        Format = Helpers.ParseImageFormatFromSource(image),
+        Format = Helpers.ParseImageFormatFromSource(image.Value),
         Source = image,
-        Height = imageHeight ?? 0,
-        Width = imageWidth ?? 0
-      } : Optional<Image>.Empty;
+        Height = imageHeight.GetValueOr(0),
+        Width = imageWidth.GetValueOr(0)
+      } : Optional.Empty;
 
       return new Tile
       {

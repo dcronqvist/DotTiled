@@ -35,8 +35,7 @@ public static partial class DotTiledAssert
     AssertEqual(expected.X, actual.X, nameof(TileLayer.X));
     AssertEqual(expected.Y, actual.Y, nameof(TileLayer.Y));
 
-    Assert.NotNull(actual.Data);
-    AssertData(expected.Data, actual.Data);
+    AssertOptionalsEqual(expected.Data, actual.Data, nameof(TileLayer.Data), AssertData);
   }
 
   private static void AssertLayer(ObjectLayer expected, ObjectLayer actual)
@@ -60,8 +59,7 @@ public static partial class DotTiledAssert
     AssertEqual(expected.X, actual.X, nameof(ImageLayer.X));
     AssertEqual(expected.Y, actual.Y, nameof(ImageLayer.Y));
 
-    Assert.NotNull(actual.Image);
-    AssertImage(expected.Image, actual.Image);
+    AssertOptionalsEqual(expected.Image, actual.Image, nameof(ImageLayer.Image), AssertImage);
   }
 
   private static void AssertLayer(Group expected, Group actual)

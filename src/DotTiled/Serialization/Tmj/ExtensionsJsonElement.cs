@@ -18,10 +18,10 @@ internal static class ExtensionsJsonElement
   internal static Optional<T> GetOptionalProperty<T>(this JsonElement element, string propertyName)
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return Optional<T>.Empty;
+      return Optional.Empty;
 
     if (property.ValueKind == JsonValueKind.Null)
-      return Optional<T>.Empty;
+      return Optional.Empty;
 
     return property.GetValueAs<T>();
   }
@@ -67,15 +67,15 @@ internal static class ExtensionsJsonElement
   internal static Optional<T> GetOptionalPropertyParseable<T>(this JsonElement element, string propertyName) where T : IParsable<T>
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return Optional<T>.Empty;
+      return Optional.Empty;
 
     return T.Parse(property.GetString()!, CultureInfo.InvariantCulture);
   }
 
-  internal static Optional<T> GetOptionalPropertyParseable<T>(this JsonElement element, string propertyName, Func<string, T> parser)
+  internal static Optional<T> GetOptionalPropertyParseable<T>(this JsonElement element, string propertyName, Func<string, Optional<T>> parser)
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return Optional<T>.Empty;
+      return Optional.Empty;
 
     return parser(property.GetString()!);
   }
@@ -91,7 +91,7 @@ internal static class ExtensionsJsonElement
   internal static Optional<T> GetOptionalPropertyCustom<T>(this JsonElement element, string propertyName, Func<JsonElement, T> parser)
   {
     if (!element.TryGetProperty(propertyName, out var property))
-      return Optional<T>.Empty;
+      return Optional.Empty;
 
     return parser(property);
   }

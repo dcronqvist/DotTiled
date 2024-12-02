@@ -32,8 +32,8 @@ public abstract partial class TmjReaderBase
       Y = y,
       Width = width,
       Height = height,
-      GlobalTileIDs = data.GlobalTileIDs,
-      FlippingFlags = data.FlippingFlags
+      GlobalTileIDs = data.GlobalTileIDs.Value,
+      FlippingFlags = data.FlippingFlags.Value
     };
   }
 

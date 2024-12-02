@@ -16,7 +16,7 @@ public class DefaultResourceCache : IResourceCache
     if (_templates.TryGetValue(path, out var template))
       return new Optional<Template>(template);
 
-    return Optional<Template>.Empty;
+    return Optional.Empty;
   }
 
   /// <inheritdoc/>
@@ -25,7 +25,7 @@ public class DefaultResourceCache : IResourceCache
     if (_tilesets.TryGetValue(path, out var tileset))
       return new Optional<Tileset>(tileset);
 
-    return Optional<Tileset>.Empty;
+    return Optional.Empty;
   }
 
   /// <inheritdoc/>

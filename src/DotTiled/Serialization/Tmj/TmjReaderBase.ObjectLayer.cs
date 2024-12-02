@@ -61,7 +61,7 @@ public abstract partial class TmjReaderBase
 
   internal DotTiled.Object ReadObject(JsonElement element)
   {
-    Optional<uint> idDefault = Optional<uint>.Empty;
+    Optional<uint> idDefault = Optional.Empty;
     string nameDefault = "";
     string typeDefault = "";
     float xDefault = 0f;
@@ -80,7 +80,7 @@ public abstract partial class TmjReaderBase
     var template = element.GetOptionalProperty<string>("template");
     if (template.HasValue)
     {
-      var resolvedTemplate = _externalTemplateResolver(template);
+      var resolvedTemplate = _externalTemplateResolver(template.Value);
       var templObj = resolvedTemplate.Object;
 
       idDefault = templObj.ID;
@@ -225,7 +225,7 @@ public abstract partial class TmjReaderBase
       text.Value.Visible = visible;
       text.Value.Template = template;
       text.Value.Properties = properties;
-      return text;
+      return text.Value;
     }
 
     return new RectangleObject

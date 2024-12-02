@@ -74,7 +74,7 @@ public abstract partial class TmxReaderBase
     var template = _reader.GetOptionalAttribute("template");
     DotTiled.Object obj = null;
     if (template.HasValue)
-      obj = _externalTemplateResolver(template).Object;
+      obj = _externalTemplateResolver(template.Value).Object;
 
     uint idDefault = obj?.ID.GetValueOr(0) ?? 0;
     string nameDefault = obj?.Name ?? "";
@@ -84,7 +84,7 @@ public abstract partial class TmxReaderBase
     float widthDefault = obj?.Width ?? 0f;
     float heightDefault = obj?.Height ?? 0f;
     float rotationDefault = obj?.Rotation ?? 0f;
-    Optional<uint> gidDefault = obj is TileObject tileObj ? tileObj.GID : Optional<uint>.Empty;
+    Optional<uint> gidDefault = obj is TileObject tileObj ? tileObj.GID : Optional.Empty;
     bool visibleDefault = obj?.Visible ?? true;
     List<IProperty> propertiesDefault = obj?.Properties ?? null;
 
@@ -242,15 +242,15 @@ public abstract partial class TmxReaderBase
   internal TextObject ReadTextObject()
   {
     // Attributes
-    var fontFamily = _reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
-    var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize") ?? 16;
-    var wrap = _reader.GetOptionalAttributeParseable<bool>("wrap") ?? false;
-    var color = _reader.GetOptionalAttributeClass<Color>("color") ?? Color.Parse("#000000", CultureInfo.InvariantCulture);
-    var bold = _reader.GetOptionalAttributeParseable<bool>("bold") ?? false;
-    var italic = _reader.GetOptionalAttributeParseable<bool>("italic") ?? false;
-    var underline = _reader.GetOptionalAttributeParseable<bool>("underline") ?? false;
-    var strikeout = _reader.GetOptionalAttributeParseable<bool>("strikeout") ?? false;
-    var kerning = _reader.GetOptionalAttributeParseable<bool>("kerning") ?? true;
+    var fontFamily = _reader.GetOptionalAttribute("fontfamily").GetValueOr("sans-serif");
+    var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize").GetValueOr(16);
+    var wrap = _reader.GetOptionalAttributeParseable<bool>("wrap").GetValueOr(false);
+    var color = _reader.GetOptionalAttributeClass<Color>("color").GetValueOr(Color.Parse("#000000", CultureInfo.InvariantCulture));
+    var bold = _reader.GetOptionalAttributeParseable<bool>("bold").GetValueOr(false);
+    var italic = _reader.GetOptionalAttributeParseable<bool>("italic").GetValueOr(false);
+    var underline = _reader.GetOptionalAttributeParseable<bool>("underline").GetValueOr(false);
+    var strikeout = _reader.GetOptionalAttributeParseable<bool>("strikeout").GetValueOr(false);
+    var kerning = _reader.GetOptionalAttributeParseable<bool>("kerning").GetValueOr(true);
     var hAlign = _reader.GetOptionalAttributeEnum<TextHorizontalAlignment>("halign", s => s switch
     {
       "left" => TextHorizontalAlignment.Left,
@@ -258,14 +258,14 @@ public abstract partial class TmxReaderBase
       "right" => TextHorizontalAlignment.Right,
       "justify" => TextHorizontalAlignment.Justify,
       _ => throw new InvalidOperationException($"Unknown horizontal alignment '{s}'")
-    }) ?? TextHorizontalAlignment.Left;
+    }).GetValueOr(TextHorizontalAlignment.Left);
     var vAlign = _reader.GetOptionalAttributeEnum<TextVerticalAlignment>("valign", s => s switch
     {
       "top" => TextVerticalAlignment.Top,
       "center" => TextVerticalAlignment.Center,
       "bottom" => TextVerticalAlignment.Bottom,
       _ => throw new InvalidOperationException($"Unknown vertical alignment '{s}'")
-    }) ?? TextVerticalAlignment.Top;
+    }).GetValueOr(TextVerticalAlignment.Top);
 
     // Elements
     var text = _reader.ReadElementContentAsString("text", "");

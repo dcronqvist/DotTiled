@@ -8,8 +8,8 @@ namespace DotTiled.Serialization.Tmx;
 public abstract partial class TmxReaderBase
 {
   internal Tileset ReadTileset(
-    Optional<string> parentVersion = null,
-    Optional<string> parentTiledVersion = null)
+    Optional<string> parentVersion = default,
+    Optional<string> parentTiledVersion = default)
   {
     var firstGID = _reader.GetOptionalAttributeParseable<uint>("firstgid");
     var source = _reader.GetOptionalAttribute("source");
@@ -18,7 +18,7 @@ public abstract partial class TmxReaderBase
     if (source.HasValue && firstGID.HasValue)
     {
       // Is external tileset
-      var externalTileset = _externalTilesetResolver(source);
+      var externalTileset = _externalTilesetResolver(source.Value);
       externalTileset.FirstGID = firstGID;
       externalTileset.Source = source;
 
@@ -136,7 +136,7 @@ public abstract partial class TmxReaderBase
     });
 
     if (!format.HasValue && source.HasValue)
-      format = Helpers.ParseImageFormatFromSource(source);
+      format = Helpers.ParseImageFormatFromSource(source.Value);
 
     return new Image
     {
@@ -225,11 +225,11 @@ public abstract partial class TmxReaderBase
       Probability = probability,
       X = x,
       Y = y,
-      Width = width.HasValue ? width : image?.Width ?? 0,
-      Height = height.HasValue ? height : image?.Height ?? 0,
+      Width = width.HasValue ? width.Value : image?.Width.GetValueOr(0) ?? 0,
+      Height = height.HasValue ? height.Value : image?.Height.GetValueOr(0) ?? 0,
       Properties = properties ?? [],
-      Image = image is null ? Optional<Image>.Empty : image,
-      ObjectLayer = objectLayer is null ? Optional<ObjectLayer>.Empty : objectLayer,
+      Image = image is null ? Optional.Empty : image,
+      ObjectLayer = objectLayer is null ? Optional.Empty : objectLayer,
       Animation = animation ?? []
     };
   }

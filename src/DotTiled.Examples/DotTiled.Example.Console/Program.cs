@@ -79,6 +79,6 @@ public class Program
     [
       new CustomClassDefinition() { Name = "a" },
     ];
-    return allDefinedTypes.FirstOrDefault(ctd => ctd.Name == name) is ICustomTypeDefinition ctd ? new Optional<ICustomTypeDefinition>(ctd) : Optional<ICustomTypeDefinition>.Empty;
+    return allDefinedTypes.FirstOrDefault(ctd => ctd.Name == name) is ICustomTypeDefinition ctd ? new Optional<ICustomTypeDefinition>(ctd) : Optional.Empty;
   }
 }

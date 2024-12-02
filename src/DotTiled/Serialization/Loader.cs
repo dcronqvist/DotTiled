@@ -119,6 +119,6 @@ public class Loader
     if (_customTypeDefinitions.TryGetValue(name, out var customTypeDefinition))
       return new Optional<ICustomTypeDefinition>(customTypeDefinition);
 
-    return Optional<ICustomTypeDefinition>.Empty;
+    return Optional.Empty;
   }
 }

@@ -64,10 +64,10 @@ public abstract partial class TmxReaderBase
   internal static uint[] ReadTileChildrenInWrapper(string wrapper, XmlReader reader) =>
     reader.ReadList(wrapper, "tile", (r) => r.GetOptionalAttributeParseable<uint>("gid").GetValueOr(0)).ToArray();
 
-  internal static uint[] ReadRawData(XmlReader reader, DataEncoding encoding, Optional<DataCompression> compression)
+  internal static uint[] ReadRawData(XmlReader reader, Optional<DataEncoding> encoding, Optional<DataCompression> compression)
   {
     var data = reader.ReadElementContentAsString();
-    if (encoding == DataEncoding.Csv)
+    if (encoding.Value == DataEncoding.Csv)
       return ParseCsvData(data);
 
     using var bytes = new MemoryStream(Convert.FromBase64String(data));
