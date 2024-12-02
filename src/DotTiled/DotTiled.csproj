@@ -18,7 +18,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Copyright>Copyright © 2024 dcronqvist</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -14,4 +14,4 @@ The representation model is designed to be compatible with the latest version of
 
 | Tiled version | Compatible DotTiled version(s) |
 |---------------|--------------------------------|
-| 1.11          | 0.1.0, 0.2.0, 0.2.1            |
+| 1.11          | 0.1.0, 0.2.0, 0.2.1, 0.3.0     |
