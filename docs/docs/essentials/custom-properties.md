@@ -177,6 +177,9 @@ For enum definitions, the <xref:System.FlagsAttribute> can be used to indicate t
 > [!NOTE]
 > Tiled supports enums which can store their values as either strings or integers, and depending on the storage type you have specified in Tiled, you must make sure to have the same storage type in your <xref:DotTiled.CustomEnumDefinition>. This can be done by setting the `StorageType` property to either `CustomEnumStorageType.String` or `CustomEnumStorageType.Int` when creating the definition, or by passing the storage type as an argument to the <xref:DotTiled.CustomEnumDefinition.FromEnum``1(DotTiled.CustomEnumStorageType)> method. To be consistent with Tiled, <xref:DotTiled.CustomEnumDefinition.FromEnum``1(DotTiled.CustomEnumStorageType)> will default to `CustomEnumStorageType.String` for the storage type parameter.
 
+> [!WARNING]
+> If you have a custom enum type in Tiled, but do not define it in DotTiled, you must be aware that the type of the parsed property will be either <xref:DotTiled.StringProperty> or <xref:IntProperty>. It is not possible to determine the correct way to parse the enum property without the custom enum definition, which is why you will instead be given a property of type `string` or `int` when accessing the property in DotTiled. This can lead to inconsistencies between the map in Tiled and the loaded map with DotTiled. It is therefore recommended to define your custom enum types in DotTiled if you want to access the properties as <xref:EnumProperty> instances.
+
 ## Mapping properties to C# classes or enums
 
 So far, we have only discussed how to define custom property types in DotTiled, and why they are needed. However, the most important part is how you can map properties inside your maps to their corresponding C# classes or enums. 

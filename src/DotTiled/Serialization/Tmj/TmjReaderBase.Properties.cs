@@ -75,11 +75,7 @@ public abstract partial class TmjReaderBase
       {
         Name = name,
         PropertyType = propertyType,
-        Value = ReadPropertiesInsideClass(valueElement, new CustomClassDefinition
-        {
-          Name = propertyType,
-          Members = []
-        })
+        Value = ReadPropertiesInsideClass(valueElement, null)
       };
     }
 
@@ -103,6 +99,31 @@ public abstract partial class TmjReaderBase
     CustomClassDefinition customClassDefinition)
   {
     List<IProperty> resultingProps = [];
+
+    if (customClassDefinition is null)
+    {
+      foreach (var prop in element.EnumerateObject())
+      {
+        var name = prop.Name;
+        var value = prop.Value;
+
+#pragma warning disable IDE0072 // Add missing cases
+        IProperty property = value.ValueKind switch
+        {
+          JsonValueKind.String => new StringProperty { Name = name, Value = value.GetString() },
+          JsonValueKind.Number => value.TryGetInt32(out var intValue) ? new IntProperty { Name = name, Value = intValue } : new FloatProperty { Name = name, Value = value.GetSingle() },
+          JsonValueKind.True => new BoolProperty { Name = name, Value = true },
+          JsonValueKind.False => new BoolProperty { Name = name, Value = false },
+          JsonValueKind.Object => new ClassProperty { Name = name, PropertyType = "", Value = ReadPropertiesInsideClass(value, null) },
+          _ => throw new JsonException("Invalid property type")
+        };
+#pragma warning restore IDE0072 // Add missing cases
+
+        resultingProps.Add(property);
+      }
+
+      return resultingProps;
+    }
 
     foreach (var prop in customClassDefinition.Members)
     {
@@ -156,7 +177,7 @@ public abstract partial class TmjReaderBase
     return resultingProps;
   }
 
-  internal EnumProperty ReadEnumProperty(JsonElement element)
+  internal IProperty ReadEnumProperty(JsonElement element)
   {
     var name = element.GetRequiredProperty<string>("name");
     var propertyType = element.GetRequiredProperty<string>("propertytype");
@@ -170,18 +191,15 @@ public abstract partial class TmjReaderBase
 
     if (!customTypeDef.HasValue)
     {
-      if (typeInJson == PropertyType.String)
+#pragma warning disable CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+#pragma warning disable IDE0072 // Add missing cases
+      return typeInJson switch
       {
-        var value = element.GetRequiredProperty<string>("value");
-        var values = value.Split(',').Select(v => v.Trim()).ToHashSet();
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values };
-      }
-      else
-      {
-        var value = element.GetRequiredProperty<int>("value");
-        var values = new HashSet<string> { value.ToString(CultureInfo.InvariantCulture) };
-        return new EnumProperty { Name = name, PropertyType = propertyType, Value = values };
-      }
+        PropertyType.String => new StringProperty { Name = name, Value = element.GetRequiredProperty<string>("value") },
+        PropertyType.Int => new IntProperty { Name = name, Value = element.GetRequiredProperty<int>("value") },
+      };
+#pragma warning restore IDE0072 // Add missing cases
+#pragma warning restore CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
     }
 
     if (customTypeDef.Value is not CustomEnumDefinition ced)
