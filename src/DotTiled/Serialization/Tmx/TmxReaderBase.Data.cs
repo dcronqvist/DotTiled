@@ -78,7 +78,7 @@ public abstract partial class TmxReaderBase
     {
       DataCompression.GZip => DecompressGZip(bytes),
       DataCompression.ZLib => DecompressZLib(bytes),
-      DataCompression.ZStd => throw new NotSupportedException("ZStd compression is not supported."),
+      DataCompression.ZStd => DecompressZStd(bytes),
       _ => throw new XmlException("Invalid compression")
     };
 
@@ -115,6 +115,12 @@ public abstract partial class TmxReaderBase
   internal static uint[] DecompressZLib(MemoryStream stream)
   {
     using var decompressedStream = new ZLibStream(stream, CompressionMode.Decompress);
+    return ReadMemoryStreamAsInt32Array(decompressedStream);
+  }
+
+  internal static uint[] DecompressZStd(MemoryStream stream)
+  {
+    using var decompressedStream = new ZstdSharp.DecompressionStream(stream);
     return ReadMemoryStreamAsInt32Array(decompressedStream);
   }
 }
