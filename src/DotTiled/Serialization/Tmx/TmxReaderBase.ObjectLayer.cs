@@ -244,13 +244,13 @@ public abstract partial class TmxReaderBase
     // Attributes
     var fontFamily = _reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
     var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize") ?? 16;
-    var wrap = _reader.GetOptionalAttributeParseable<bool>("wrap") ?? false;
+    var wrap = _reader.GetOptionalAttributeParseable<uint>("wrap").GetValueOr(0) == 1;
     var color = _reader.GetOptionalAttributeClass<Color>("color") ?? Color.Parse("#000000", CultureInfo.InvariantCulture);
-    var bold = _reader.GetOptionalAttributeParseable<bool>("bold") ?? false;
-    var italic = _reader.GetOptionalAttributeParseable<bool>("italic") ?? false;
-    var underline = _reader.GetOptionalAttributeParseable<bool>("underline") ?? false;
-    var strikeout = _reader.GetOptionalAttributeParseable<bool>("strikeout") ?? false;
-    var kerning = _reader.GetOptionalAttributeParseable<bool>("kerning") ?? true;
+    var bold = _reader.GetOptionalAttributeParseable<uint>("bold").GetValueOr(0) == 1;
+    var italic = _reader.GetOptionalAttributeParseable<uint>("italic").GetValueOr(0) == 1;
+    var underline = _reader.GetOptionalAttributeParseable<uint>("underline").GetValueOr(0) == 1;
+    var strikeout = _reader.GetOptionalAttributeParseable<uint>("strikeout").GetValueOr(0) == 1;
+    var kerning = _reader.GetOptionalAttributeParseable<uint>("kerning").GetValueOr(1) == 1;
     var hAlign = _reader.GetOptionalAttributeEnum<TextHorizontalAlignment>("halign", s => s switch
     {
       "left" => TextHorizontalAlignment.Left,
