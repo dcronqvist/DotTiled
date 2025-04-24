@@ -15,7 +15,7 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = new Color { R = 0, G = 0, B = 0, A = 0 },
+    BackgroundColor = new TiledColor { R = 0, G = 0, B = 0, A = 0 },
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 2,

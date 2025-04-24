@@ -125,7 +125,7 @@ public abstract partial class TmxReaderBase
       _ => throw new InvalidOperationException($"Unknown image format '{s}'")
     });
     var source = _reader.GetOptionalAttribute("source");
-    var transparentColor = _reader.GetOptionalAttributeClass<Color>("trans");
+    var transparentColor = _reader.GetOptionalAttributeClass<TiledColor>("trans");
     var width = _reader.GetOptionalAttributeParseable<int>("width");
     var height = _reader.GetOptionalAttributeParseable<int>("height");
 
@@ -277,7 +277,7 @@ public abstract partial class TmxReaderBase
     // Attributes
     var name = _reader.GetRequiredAttribute("name");
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
-    var color = _reader.GetRequiredAttributeParseable<Color>("color");
+    var color = _reader.GetRequiredAttributeParseable<TiledColor>("color");
     var tile = _reader.GetRequiredAttributeParseable<int>("tile");
     var probability = _reader.GetOptionalAttributeParseable<float>("probability").GetValueOr(0f);
 

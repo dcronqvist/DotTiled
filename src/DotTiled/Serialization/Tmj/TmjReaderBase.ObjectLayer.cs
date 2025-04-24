@@ -15,7 +15,7 @@ public abstract partial class TmjReaderBase
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
     var opacity = element.GetOptionalProperty<float>("opacity").GetValueOr(1.0f);
     var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
-    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
+    var tintColor = element.GetOptionalPropertyParseable<TiledColor>("tintcolor");
     var offsetX = element.GetOptionalProperty<float>("offsetx").GetValueOr(0.0f);
     var offsetY = element.GetOptionalProperty<float>("offsety").GetValueOr(0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
@@ -26,7 +26,7 @@ public abstract partial class TmjReaderBase
     var y = element.GetOptionalProperty<int>("y").GetValueOr(0);
     var width = element.GetOptionalProperty<int>("width").GetValueOr(0);
     var height = element.GetOptionalProperty<int>("height").GetValueOr(0);
-    var color = element.GetOptionalPropertyParseable<Color>("color");
+    var color = element.GetOptionalPropertyParseable<TiledColor>("color");
     var drawOrder = element.GetOptionalPropertyParseable<DrawOrder>("draworder", s => s switch
     {
       "topdown" => DrawOrder.TopDown,
@@ -255,7 +255,7 @@ public abstract partial class TmjReaderBase
   internal static TextObject ReadText(JsonElement element)
   {
     var bold = element.GetOptionalProperty<bool>("bold").GetValueOr(false);
-    var color = element.GetOptionalPropertyParseable<Color>("color").GetValueOr(Color.Parse("#00000000", CultureInfo.InvariantCulture));
+    var color = element.GetOptionalPropertyParseable<TiledColor>("color").GetValueOr(TiledColor.Parse("#00000000", CultureInfo.InvariantCulture));
     var fontfamily = element.GetOptionalProperty<string>("fontfamily").GetValueOr("sans-serif");
     var halign = element.GetOptionalPropertyParseable<TextHorizontalAlignment>("halign", s => s switch
     {

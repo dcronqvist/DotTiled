@@ -46,7 +46,7 @@ public class ObjectLayer : BaseLayer
   /// <summary>
   /// A color that is multiplied with any tile objects drawn by this layer.
   /// </summary>
-  public Optional<Color> Color { get; set; } = Optional<Color>.Empty;
+  public Optional<TiledColor> Color { get; set; } = Optional<TiledColor>.Empty;
 
   /// <summary>
   /// Whether the objects are drawn according to the order of appearance (<see cref="DrawOrder.Index"/>) or sorted by their Y coordinate (<see cref="DrawOrder.TopDown"/>).

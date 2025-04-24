@@ -72,7 +72,7 @@ public class TextObject : Object
   /// <summary>
   /// The color of the text.
   /// </summary>
-  public Color Color { get; set; } = Color.Parse("#000000", CultureInfo.InvariantCulture);
+  public TiledColor Color { get; set; } = TiledColor.Parse("#000000", CultureInfo.InvariantCulture);
 
   /// <summary>
   /// Whether the text is bold.

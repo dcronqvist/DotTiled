@@ -12,7 +12,7 @@ public abstract partial class TmjReaderBase
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
     var opacity = element.GetOptionalProperty<float>("opacity").GetValueOr(1.0f);
     var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
-    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
+    var tintColor = element.GetOptionalPropertyParseable<TiledColor>("tintcolor");
     var offsetX = element.GetOptionalProperty<float>("offsetx").GetValueOr(0.0f);
     var offsetY = element.GetOptionalProperty<float>("offsety").GetValueOr(0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
