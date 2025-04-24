@@ -5,12 +5,9 @@ Loading maps with DotTiled is very flexible and allows you as a developer to fre
 > [!TIP]
 > For a quick and easy way to load maps from the filesystem, please refer to the [quickstart guide](../quickstart.md).
 
-## File format caveats
+## File formats
 
 The <xref:DotTiled.Map> class is a representation of a Tiled map, mimicking the structure of a Tiled XML map file. Map files can either be in the [`.tmx`/XML](https://doc.mapeditor.org/en/stable/reference/tmx-map-format/) or [`.tmj`/json](https://doc.mapeditor.org/en/stable/reference/json-map-format/) format. DotTiled supports **both** formats fully.
-
-> [!WARNING]
-> Using the `.tmj` file format will result in <xref:DotTiled.ImageLayer.Image> (the source image for image layers) not having the same amount of information as for the `.tmx` format. This is due to the fact that the `.tmj` format does not include the full information that the `.tmx` format does. This is not a problem with DotTiled, but rather a limitation of the `.tmj` format.
 
 ## The process of loading a map
 
