@@ -12,6 +12,9 @@ Certain properties throughout the representation model are marked as *optional* 
 
 The representation model is designed to be compatible with the latest version of Tiled. This means that it may not be able to read files from older versions of Tiled, or files that use features that are not yet supported by the representation model. However, here is a table of which versions of Tiled are supported by which versions of DotTiled.
 
-| Tiled version | Compatible DotTiled version(s) |
-|---------------|--------------------------------|
-| 1.11          | 0.1.0, 0.2.0, 0.2.1, 0.3.0     |
+You should use one of the versions of DotTiled that is compatible with the version of Tiled you are using.
+
+| Tiled version  | Compatible DotTiled version(s) |
+|----------------|--------------------------------|
+| 1.11.1, 1.11.2 | 0.4.0                          |
+| 1.11           | 0.1.0, 0.2.0, 0.2.1, 0.3.0     |
