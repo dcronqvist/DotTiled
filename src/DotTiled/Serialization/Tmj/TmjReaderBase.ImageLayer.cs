@@ -22,8 +22,8 @@ public abstract partial class TmjReaderBase
     var repeatX = element.GetOptionalProperty<bool>("repeatx").GetValueOr(false);
     var repeatY = element.GetOptionalProperty<bool>("repeaty").GetValueOr(false);
     var transparentColor = element.GetOptionalPropertyParseable<Color>("transparentcolor");
-    var x = element.GetOptionalProperty<uint>("x").GetValueOr(0);
-    var y = element.GetOptionalProperty<uint>("y").GetValueOr(0);
+    var x = element.GetOptionalProperty<int>("x").GetValueOr(0);
+    var y = element.GetOptionalProperty<int>("y").GetValueOr(0);
 
     var imgModel = new Image
     {

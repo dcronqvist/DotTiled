@@ -49,10 +49,10 @@ public class Image
   /// <summary>
   /// The image width in pixels, used for tile index correction when the image changes.
   /// </summary>
-  public Optional<uint> Width { get; set; } = Optional<uint>.Empty;
+  public Optional<int> Width { get; set; } = Optional<int>.Empty;
 
   /// <summary>
   /// The image height in pixels, used for tile index correction when the image changes.
   /// </summary>
-  public Optional<uint> Height { get; set; } = Optional<uint>.Empty;
+  public Optional<int> Height { get; set; } = Optional<int>.Empty;
 }

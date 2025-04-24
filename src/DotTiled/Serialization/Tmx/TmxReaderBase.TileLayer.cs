@@ -10,10 +10,10 @@ public abstract partial class TmxReaderBase
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
     var name = _reader.GetOptionalAttribute("name").GetValueOr("");
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
-    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
-    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
-    var width = _reader.GetRequiredAttributeParseable<uint>("width");
-    var height = _reader.GetRequiredAttributeParseable<uint>("height");
+    var x = _reader.GetOptionalAttributeParseable<int>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<int>("y").GetValueOr(0);
+    var width = _reader.GetRequiredAttributeParseable<int>("width");
+    var height = _reader.GetRequiredAttributeParseable<int>("height");
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
     var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
@@ -59,8 +59,8 @@ public abstract partial class TmxReaderBase
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
     var name = _reader.GetOptionalAttribute("name").GetValueOr("");
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
-    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
-    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
+    var x = _reader.GetOptionalAttributeParseable<int>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<int>("y").GetValueOr(0);
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1f);
     var visible = _reader.GetOptionalAttributeParseable<bool>("visible").GetValueOr(true);
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");

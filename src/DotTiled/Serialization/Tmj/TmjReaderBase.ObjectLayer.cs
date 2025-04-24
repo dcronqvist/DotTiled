@@ -22,10 +22,10 @@ public abstract partial class TmjReaderBase
     var parallaxY = element.GetOptionalProperty<float>("parallaxy").GetValueOr(1.0f);
     var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
 
-    var x = element.GetOptionalProperty<uint>("x").GetValueOr(0);
-    var y = element.GetOptionalProperty<uint>("y").GetValueOr(0);
-    var width = element.GetOptionalProperty<uint>("width").GetValueOr(0);
-    var height = element.GetOptionalProperty<uint>("height").GetValueOr(0);
+    var x = element.GetOptionalProperty<int>("x").GetValueOr(0);
+    var y = element.GetOptionalProperty<int>("y").GetValueOr(0);
+    var width = element.GetOptionalProperty<int>("width").GetValueOr(0);
+    var height = element.GetOptionalProperty<int>("height").GetValueOr(0);
     var color = element.GetOptionalPropertyParseable<Color>("color");
     var drawOrder = element.GetOptionalPropertyParseable<DrawOrder>("draworder", s => s switch
     {

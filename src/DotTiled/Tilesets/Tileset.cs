@@ -128,32 +128,32 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// The width of the tiles in this tileset, which should be at least 1 (non-zero) except in the case of image collection tilesets (in which case it stores the maximum tile width).
   /// </summary>
-  public required uint TileWidth { get; set; }
+  public required int TileWidth { get; set; }
 
   /// <summary>
   /// The height of the tiles in this tileset, which should be at least 1 (non-zero) except in the case of image collection tilesets (in which case it stores the maximum tile height).
   /// </summary>
-  public required uint TileHeight { get; set; }
+  public required int TileHeight { get; set; }
 
   /// <summary>
   /// The spacing in pixels between the tiles in this tileset (applies to the tileset image). Irrelevant for image collection tilesets.
   /// </summary>
-  public uint Spacing { get; set; } = 0;
+  public int Spacing { get; set; } = 0;
 
   /// <summary>
   /// The margin around the tiles in this tileset (applies to the tileset image). Irrelevant for image collection tilesets.
   /// </summary>
-  public uint Margin { get; set; } = 0;
+  public int Margin { get; set; } = 0;
 
   /// <summary>
   /// The number of tiles in this tileset.
   /// </summary>
-  public required uint TileCount { get; set; }
+  public required int TileCount { get; set; }
 
   /// <summary>
   /// The number of tile columns in the tileset.
   /// </summary>
-  public required uint Columns { get; set; }
+  public required int Columns { get; set; }
 
   /// <summary>
   /// Controls the aligntment for tile objects.

@@ -13,5 +13,5 @@ public class Frame
   /// <summary>
   /// How long (in milliseconds) this frame should be displayed before advancing to the next frame.
   /// </summary>
-  public required uint Duration { get; set; }
+  public required int Duration { get; set; }
 }
