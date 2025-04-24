@@ -1,3 +1,5 @@
+using System;
+
 namespace DotTiled;
 
 /// <summary>
@@ -29,4 +31,26 @@ public class TileLayer : BaseLayer
   /// The tile layer data.
   /// </summary>
   public Optional<Data> Data { get; set; } = Optional<Data>.Empty;
+
+  /// <summary>
+  /// Helper method to retrieve the Global Tile ID at a given coordinate in the layer.
+  /// </summary>
+  /// <param name="x">The X coordinate in the layer</param>
+  /// <param name="y">The Y coordinate in the layer</param>
+  /// <returns>The Global Tile ID at the given coordinate.</returns>
+  /// <exception cref="InvalidOperationException">Thrown when either <see cref="Data"/> or <see cref="Data.GlobalTileIDs"/> are missing values.</exception>
+  /// <exception cref="ArgumentException">Thrown when the given coordinate is not within bounds of the layer.</exception>
+  public uint GetGlobalTileIDAtCoord(int x, int y)
+  {
+    if (!Data.HasValue)
+      throw new InvalidOperationException("Data is not set.");
+
+    if (x < 0 || x >= Width || y < 0 || y >= Height)
+      throw new ArgumentException("Coordinates are out of bounds.");
+
+    if (!Data.Value.GlobalTileIDs.HasValue)
+      throw new InvalidOperationException("GlobalTileIDs is not set.");
+
+    return Data.Value.GlobalTileIDs.Value[(y * Width) + x];
+  }
 }
