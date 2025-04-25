@@ -26,22 +26,22 @@ public class Tile : HasPropertiesBase
   /// <summary>
   /// The X position of the sub-rectangle representing this tile within the tileset image.
   /// </summary>
-  public uint X { get; set; } = 0;
+  public int X { get; set; } = 0;
 
   /// <summary>
   /// The Y position of the sub-rectangle representing this tile within the tileset image.
   /// </summary>
-  public uint Y { get; set; } = 0;
+  public int Y { get; set; } = 0;
 
   /// <summary>
   /// The width of the sub-rectangle representing this tile within the tileset image.
   /// </summary>
-  public required uint Width { get; set; }
+  public required int Width { get; set; }
 
   /// <summary>
   /// The height of the sub-rectangle representing this tile within the tileset image.
   /// </summary>
-  public required uint Height { get; set; }
+  public required int Height { get; set; }
 
   /// <summary>
   /// Tile properties.

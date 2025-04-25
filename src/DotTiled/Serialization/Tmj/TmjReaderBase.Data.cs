@@ -23,8 +23,8 @@ public abstract partial class TmjReaderBase
 
     var x = element.GetRequiredProperty<int>("x");
     var y = element.GetRequiredProperty<int>("y");
-    var width = element.GetRequiredProperty<uint>("width");
-    var height = element.GetRequiredProperty<uint>("height");
+    var width = element.GetRequiredProperty<int>("width");
+    var height = element.GetRequiredProperty<int>("height");
 
     return new Chunk
     {

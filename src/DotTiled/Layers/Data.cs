@@ -90,12 +90,12 @@ public class Chunk
   /// <summary>
   /// The width of the chunk in tiles.
   /// </summary>
-  public required uint Width { get; set; }
+  public required int Width { get; set; }
 
   /// <summary>
   /// The height of the chunk in tiles.
   /// </summary>
-  public required uint Height { get; set; }
+  public required int Height { get; set; }
 
   /// <summary>
   /// The parsed chunk data, as a list of tile GIDs.

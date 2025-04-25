@@ -181,8 +181,8 @@ public partial class TestData
             {
               Format = ImageFormat.Png,
               Source = "tileset.png",
-              Width = fileExt == "tmx" ? 256u : 0, // Currently, json format does not
-              Height = fileExt == "tmx" ? 96u : 0  // include image dimensions in image layer https://github.com/mapeditor/tiled/issues/4028
+              Width = fileExt == "tmx" ? 256 : 0, // Currently, json format does not
+              Height = fileExt == "tmx" ? 96 : 0  // include image dimensions in image layer https://github.com/mapeditor/tiled/issues/4028
             },
             RepeatX = true
           },

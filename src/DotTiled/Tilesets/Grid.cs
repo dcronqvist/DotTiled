@@ -29,10 +29,10 @@ public class Grid
   /// <summary>
   /// Width of a grid cell.
   /// </summary>
-  public required uint Width { get; set; }
+  public required int Width { get; set; }
 
   /// <summary>
   /// Height of a grid cell.
   /// </summary>
-  public required uint Height { get; set; }
+  public required int Height { get; set; }
 }

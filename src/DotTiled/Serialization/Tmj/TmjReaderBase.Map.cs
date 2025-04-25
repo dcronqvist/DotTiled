@@ -28,11 +28,11 @@ public abstract partial class TmjReaderBase
       _ => throw new JsonException($"Unknown render order '{s}'")
     }).GetValueOr(RenderOrder.RightDown);
     var compressionLevel = element.GetOptionalProperty<int>("compressionlevel").GetValueOr(-1);
-    var width = element.GetRequiredProperty<uint>("width");
-    var height = element.GetRequiredProperty<uint>("height");
-    var tileWidth = element.GetRequiredProperty<uint>("tilewidth");
-    var tileHeight = element.GetRequiredProperty<uint>("tileheight");
-    var hexSideLength = element.GetOptionalProperty<uint>("hexsidelength");
+    var width = element.GetRequiredProperty<int>("width");
+    var height = element.GetRequiredProperty<int>("height");
+    var tileWidth = element.GetRequiredProperty<int>("tilewidth");
+    var tileHeight = element.GetRequiredProperty<int>("tileheight");
+    var hexSideLength = element.GetOptionalProperty<int>("hexsidelength");
     var staggerAxis = element.GetOptionalPropertyParseable<StaggerAxis>("staggeraxis", s => s switch
     {
       "x" => StaggerAxis.X,

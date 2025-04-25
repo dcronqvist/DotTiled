@@ -14,10 +14,10 @@ public abstract partial class TmxReaderBase
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
     var name = _reader.GetOptionalAttribute("name").GetValueOr("");
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
-    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
-    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
-    var width = _reader.GetOptionalAttributeParseable<uint>("width").GetValueOr(0);
-    var height = _reader.GetOptionalAttributeParseable<uint>("height").GetValueOr(0);
+    var x = _reader.GetOptionalAttributeParseable<int>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<int>("y").GetValueOr(0);
+    var width = _reader.GetOptionalAttributeParseable<int>("width").GetValueOr(0);
+    var height = _reader.GetOptionalAttributeParseable<int>("height").GetValueOr(0);
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
     var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");

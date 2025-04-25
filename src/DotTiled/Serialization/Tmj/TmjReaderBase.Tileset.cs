@@ -12,7 +12,7 @@ public abstract partial class TmjReaderBase
   {
     var backgroundColor = element.GetOptionalPropertyParseable<Color>("backgroundcolor");
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
-    var columns = element.GetOptionalProperty<uint>("columns");
+    var columns = element.GetOptionalProperty<int>("columns");
     var fillMode = element.GetOptionalPropertyParseable<FillMode>("fillmode", s => s switch
     {
       "stretch" => FillMode.Stretch,
@@ -22,9 +22,9 @@ public abstract partial class TmjReaderBase
     var firstGID = element.GetOptionalProperty<uint>("firstgid");
     var grid = element.GetOptionalPropertyCustom<Grid>("grid", ReadGrid);
     var image = element.GetOptionalProperty<string>("image");
-    var imageHeight = element.GetOptionalProperty<uint>("imageheight");
-    var imageWidth = element.GetOptionalProperty<uint>("imagewidth");
-    var margin = element.GetOptionalProperty<uint>("margin");
+    var imageHeight = element.GetOptionalProperty<int>("imageheight");
+    var imageWidth = element.GetOptionalProperty<int>("imagewidth");
+    var margin = element.GetOptionalProperty<int>("margin");
     var name = element.GetOptionalProperty<string>("name");
     var objectAlignment = element.GetOptionalPropertyParseable<ObjectAlignment>("objectalignment", s => s switch
     {
@@ -42,10 +42,10 @@ public abstract partial class TmjReaderBase
     }).GetValueOr(ObjectAlignment.Unspecified);
     var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
     var source = element.GetOptionalProperty<string>("source");
-    var spacing = element.GetOptionalProperty<uint>("spacing");
-    var tileCount = element.GetOptionalProperty<uint>("tilecount");
+    var spacing = element.GetOptionalProperty<int>("spacing");
+    var tileCount = element.GetOptionalProperty<int>("tilecount");
     var tiledVersion = element.GetOptionalProperty<string>("tiledversion").GetValueOrOptional(parentTiledVersion);
-    var tileHeight = element.GetOptionalProperty<uint>("tileheight");
+    var tileHeight = element.GetOptionalProperty<int>("tileheight");
     var tileOffset = element.GetOptionalPropertyCustom<TileOffset>("tileoffset", ReadTileOffset);
     var tileRenderSize = element.GetOptionalPropertyParseable<TileRenderSize>("tilerendersize", s => s switch
     {
@@ -54,7 +54,7 @@ public abstract partial class TmjReaderBase
       _ => throw new JsonException($"Unknown tile render size '{s}'")
     }).GetValueOr(TileRenderSize.Tile);
     var tiles = element.GetOptionalPropertyCustom<List<Tile>>("tiles", ReadTiles).GetValueOr([]);
-    var tileWidth = element.GetOptionalProperty<uint>("tilewidth");
+    var tileWidth = element.GetOptionalProperty<int>("tilewidth");
     var transparentColor = element.GetOptionalPropertyParseable<Color>("transparentcolor");
     var type = element.GetOptionalProperty<string>("type");
     var version = element.GetOptionalProperty<string>("version").GetValueOrOptional(parentVersion);
@@ -129,8 +129,8 @@ public abstract partial class TmjReaderBase
       "isometric" => GridOrientation.Isometric,
       _ => throw new JsonException($"Unknown grid orientation '{s}'")
     }).GetValueOr(GridOrientation.Orthogonal);
-    var height = element.GetRequiredProperty<uint>("height");
-    var width = element.GetRequiredProperty<uint>("width");
+    var height = element.GetRequiredProperty<int>("height");
+    var width = element.GetRequiredProperty<int>("width");
 
     return new Grid
     {
@@ -158,12 +158,12 @@ public abstract partial class TmjReaderBase
       var animation = e.GetOptionalPropertyCustom<List<Frame>>("animation", e => e.GetValueAsList<Frame>(ReadFrame)).GetValueOr([]);
       var id = e.GetRequiredProperty<uint>("id");
       var image = e.GetOptionalProperty<string>("image");
-      var imageHeight = e.GetOptionalProperty<uint>("imageheight");
-      var imageWidth = e.GetOptionalProperty<uint>("imagewidth");
-      var x = e.GetOptionalProperty<uint>("x").GetValueOr(0);
-      var y = e.GetOptionalProperty<uint>("y").GetValueOr(0);
-      var width = e.GetOptionalProperty<uint>("width").GetValueOr(imageWidth.GetValueOr(0));
-      var height = e.GetOptionalProperty<uint>("height").GetValueOr(imageHeight.GetValueOr(0));
+      var imageHeight = e.GetOptionalProperty<int>("imageheight");
+      var imageWidth = e.GetOptionalProperty<int>("imagewidth");
+      var x = e.GetOptionalProperty<int>("x").GetValueOr(0);
+      var y = e.GetOptionalProperty<int>("y").GetValueOr(0);
+      var width = e.GetOptionalProperty<int>("width").GetValueOr(imageWidth.GetValueOr(0));
+      var height = e.GetOptionalProperty<int>("height").GetValueOr(imageHeight.GetValueOr(0));
       var objectGroup = e.GetOptionalPropertyCustom<ObjectLayer>("objectgroup", e => ReadObjectLayer(e));
       var probability = e.GetOptionalProperty<float>("probability").GetValueOr(0.0f);
       var type = e.GetOptionalProperty<string>("type").GetValueOr("");
@@ -195,7 +195,7 @@ public abstract partial class TmjReaderBase
 
   internal static Frame ReadFrame(JsonElement element)
   {
-    var duration = element.GetRequiredProperty<uint>("duration");
+    var duration = element.GetRequiredProperty<int>("duration");
     var tileID = element.GetRequiredProperty<uint>("tileid");
 
     return new Frame

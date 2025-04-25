@@ -126,27 +126,27 @@ public class Map : HasPropertiesBase
   /// <summary>
   /// The width of the map in tiles.
   /// </summary>
-  public required uint Width { get; set; }
+  public required int Width { get; set; }
 
   /// <summary>
   /// The height of the map in tiles.
   /// </summary>
-  public required uint Height { get; set; }
+  public required int Height { get; set; }
 
   /// <summary>
   /// The width of a tile.
   /// </summary>
-  public required uint TileWidth { get; set; }
+  public required int TileWidth { get; set; }
 
   /// <summary>
   /// The height of a tile.
   /// </summary>
-  public required uint TileHeight { get; set; }
+  public required int TileHeight { get; set; }
 
   /// <summary>
   /// Only for hexagonal maps. Determines the width or height (depending on the staggered axis) of the tile's edge, in pixels.
   /// </summary>
-  public Optional<uint> HexSideLength { get; set; } = Optional<uint>.Empty;
+  public Optional<int> HexSideLength { get; set; } = Optional<int>.Empty;
 
   /// <summary>
   /// For staggered and hexagonal maps, determines which axis (X or Y) is staggered.
