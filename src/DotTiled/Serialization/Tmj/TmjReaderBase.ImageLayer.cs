@@ -19,6 +19,8 @@ public abstract partial class TmjReaderBase
     var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
 
     var image = element.GetRequiredProperty<string>("image");
+    var imageWidth = element.GetOptionalProperty<int>("imagewidth").GetValueOr(0);
+    var imageHeight = element.GetOptionalProperty<int>("imageheight").GetValueOr(0);
     var repeatX = element.GetOptionalProperty<bool>("repeatx").GetValueOr(false);
     var repeatY = element.GetOptionalProperty<bool>("repeaty").GetValueOr(false);
     var transparentColor = element.GetOptionalPropertyParseable<TiledColor>("transparentcolor");
@@ -28,8 +30,8 @@ public abstract partial class TmjReaderBase
     var imgModel = new Image
     {
       Format = Helpers.ParseImageFormatFromSource(image),
-      Height = 0,
-      Width = 0,
+      Height = imageHeight,
+      Width = imageWidth,
       Source = image,
       TransparentColor = transparentColor
     };

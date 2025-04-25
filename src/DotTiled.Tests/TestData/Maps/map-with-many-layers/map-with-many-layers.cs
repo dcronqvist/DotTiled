@@ -19,7 +19,7 @@ public partial class TestData
     CompressionLevel = -1,
     BackgroundColor = new TiledColor { R = 0, G = 0, B = 0, A = 0 },
     Version = "1.10",
-    TiledVersion = "1.11.0",
+    TiledVersion = "1.11.2",
     NextLayerID = 8,
     NextObjectID = 7,
     Tilesets = [
@@ -172,8 +172,8 @@ public partial class TestData
             {
               Format = ImageFormat.Png,
               Source = "tileset.png",
-              Width = fileExt == "tmx" ? 256 : 0, // Currently, json format does not
-              Height = fileExt == "tmx" ? 96 : 0  // include image dimensions in image layer https://github.com/mapeditor/tiled/issues/4028
+              Width = 256,
+              Height = 96
             },
             RepeatX = true
           },
