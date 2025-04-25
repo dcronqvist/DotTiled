@@ -78,7 +78,7 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   /// <summary>
   /// The color of the custom class inside the Tiled editor.
   /// </summary>
-  public Color Color { get; set; }
+  public TiledColor Color { get; set; }
 
   /// <summary>
   /// Whether the custom class should be drawn with a fill color.
@@ -155,8 +155,8 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
     {
       case Type t when t == typeof(bool):
         return new BoolProperty { Name = propertyInfo.Name, Value = (bool)propertyInfo.GetValue(instance) };
-      case Type t when t == typeof(Color):
-        return new ColorProperty { Name = propertyInfo.Name, Value = (Color)propertyInfo.GetValue(instance) };
+      case Type t when t == typeof(TiledColor):
+        return new ColorProperty { Name = propertyInfo.Name, Value = (TiledColor)propertyInfo.GetValue(instance) };
       case Type t when t == typeof(float):
         return new FloatProperty { Name = propertyInfo.Name, Value = (float)propertyInfo.GetValue(instance) };
       case Type t when t == typeof(string):

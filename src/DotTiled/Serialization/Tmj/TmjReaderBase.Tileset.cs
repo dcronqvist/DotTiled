@@ -10,7 +10,7 @@ public abstract partial class TmjReaderBase
     Optional<string> parentVersion = null,
     Optional<string> parentTiledVersion = null)
   {
-    var backgroundColor = element.GetOptionalPropertyParseable<Color>("backgroundcolor");
+    var backgroundColor = element.GetOptionalPropertyParseable<TiledColor>("backgroundcolor");
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
     var columns = element.GetOptionalProperty<int>("columns");
     var fillMode = element.GetOptionalPropertyParseable<FillMode>("fillmode", s => s switch
@@ -55,8 +55,7 @@ public abstract partial class TmjReaderBase
     }).GetValueOr(TileRenderSize.Tile);
     var tiles = element.GetOptionalPropertyCustom<List<Tile>>("tiles", ReadTiles).GetValueOr([]);
     var tileWidth = element.GetOptionalProperty<int>("tilewidth");
-    var transparentColor = element.GetOptionalPropertyParseable<Color>("transparentcolor");
-    var type = element.GetOptionalProperty<string>("type");
+    var transparentColor = element.GetOptionalPropertyParseable<TiledColor>("transparentcolor");
     var version = element.GetOptionalProperty<string>("version").GetValueOrOptional(parentVersion);
     var transformations = element.GetOptionalPropertyCustom<Transformations>("transformations", ReadTransformations);
     var wangsets = element.GetOptionalPropertyCustom<List<Wangset>>("wangsets", el => el.GetValueAsList<Wangset>(e => ReadWangset(e))).GetValueOr([]);
@@ -229,7 +228,7 @@ public abstract partial class TmjReaderBase
   internal WangColor ReadWangColor(JsonElement element)
   {
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
-    var color = element.GetRequiredPropertyParseable<Color>("color");
+    var color = element.GetRequiredPropertyParseable<TiledColor>("color");
     var name = element.GetRequiredProperty<string>("name");
     var probability = element.GetOptionalProperty<float>("probability").GetValueOr(1.0f);
     var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));

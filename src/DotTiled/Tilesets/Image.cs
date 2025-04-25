@@ -44,7 +44,7 @@ public class Image
   /// <summary>
   /// Defines a specific color that is treated as transparent.
   /// </summary>
-  public Optional<Color> TransparentColor { get; set; } = Optional<Color>.Empty;
+  public Optional<TiledColor> TransparentColor { get; set; } = Optional<TiledColor>.Empty;
 
   /// <summary>
   /// The image width in pixels, used for tile index correction when the image changes.

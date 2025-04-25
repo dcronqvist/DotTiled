@@ -20,12 +20,12 @@ public abstract partial class TmxReaderBase
     var height = _reader.GetOptionalAttributeParseable<int>("height").GetValueOr(0);
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
     var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
-    var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
+    var tintColor = _reader.GetOptionalAttributeClass<TiledColor>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);
     var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
     var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1.0f);
-    var color = _reader.GetOptionalAttributeClass<Color>("color");
+    var color = _reader.GetOptionalAttributeClass<TiledColor>("color");
     var drawOrder = _reader.GetOptionalAttributeEnum<DrawOrder>("draworder", s => s switch
     {
       "topdown" => DrawOrder.TopDown,
@@ -245,7 +245,7 @@ public abstract partial class TmxReaderBase
     var fontFamily = _reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
     var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize") ?? 16;
     var wrap = _reader.GetOptionalAttributeParseable<bool>("wrap") ?? false;
-    var color = _reader.GetOptionalAttributeClass<Color>("color") ?? Color.Parse("#000000", CultureInfo.InvariantCulture);
+    var color = _reader.GetOptionalAttributeClass<TiledColor>("color") ?? TiledColor.Parse("#000000", CultureInfo.InvariantCulture);
     var bold = _reader.GetOptionalAttributeParseable<bool>("bold") ?? false;
     var italic = _reader.GetOptionalAttributeParseable<bool>("italic") ?? false;
     var underline = _reader.GetOptionalAttributeParseable<bool>("underline") ?? false;

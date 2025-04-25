@@ -11,7 +11,7 @@ public abstract partial class TmjReaderBase
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
     var opacity = element.GetOptionalProperty<float>("opacity").GetValueOr(1.0f);
     var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
-    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
+    var tintColor = element.GetOptionalPropertyParseable<TiledColor>("tintcolor");
     var offsetX = element.GetOptionalProperty<float>("offsetx").GetValueOr(0.0f);
     var offsetY = element.GetOptionalProperty<float>("offsety").GetValueOr(0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
@@ -21,7 +21,7 @@ public abstract partial class TmjReaderBase
     var image = element.GetRequiredProperty<string>("image");
     var repeatX = element.GetOptionalProperty<bool>("repeatx").GetValueOr(false);
     var repeatY = element.GetOptionalProperty<bool>("repeaty").GetValueOr(false);
-    var transparentColor = element.GetOptionalPropertyParseable<Color>("transparentcolor");
+    var transparentColor = element.GetOptionalPropertyParseable<TiledColor>("transparentcolor");
     var x = element.GetOptionalProperty<int>("x").GetValueOr(0);
     var y = element.GetOptionalProperty<int>("y").GetValueOr(0);
 

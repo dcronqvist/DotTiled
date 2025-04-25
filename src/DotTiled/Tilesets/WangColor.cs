@@ -20,7 +20,7 @@ public class WangColor : HasPropertiesBase
   /// <summary>
   /// The color of the Wang color.
   /// </summary>
-  public required Color Color { get; set; }
+  public required TiledColor Color { get; set; }
 
   /// <summary>
   /// The tile ID of the tile representing this color.

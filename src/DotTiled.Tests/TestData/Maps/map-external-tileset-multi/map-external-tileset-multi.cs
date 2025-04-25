@@ -17,7 +17,7 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = Color.Parse("#00000000", CultureInfo.InvariantCulture),
+    BackgroundColor = TiledColor.Parse("#00000000", CultureInfo.InvariantCulture),
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 2,
@@ -47,7 +47,7 @@ public partial class TestData
         },
         Properties = [
           new BoolProperty { Name = "tilesetbool", Value = true },
-          new ColorProperty { Name = "tilesetcolor", Value = Color.Parse("#ffff0000", CultureInfo.InvariantCulture) },
+          new ColorProperty { Name = "tilesetcolor", Value = TiledColor.Parse("#ffff0000", CultureInfo.InvariantCulture) },
           new FileProperty { Name = "tilesetfile", Value = "" },
           new FloatProperty { Name = "tilesetfloat", Value = 5.2f },
           new IntProperty { Name = "tilesetint", Value = 9 },

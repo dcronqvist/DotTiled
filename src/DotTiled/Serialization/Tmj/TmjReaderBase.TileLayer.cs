@@ -35,8 +35,8 @@ public abstract partial class TmjReaderBase
     var repeatY = element.GetOptionalProperty<bool>("repeaty").GetValueOr(false);
     var startX = element.GetOptionalProperty<int>("startx").GetValueOr(0);
     var startY = element.GetOptionalProperty<int>("starty").GetValueOr(0);
-    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
-    var transparentColor = element.GetOptionalPropertyParseable<Color>("transparentcolor");
+    var tintColor = element.GetOptionalPropertyParseable<TiledColor>("tintcolor");
+    var transparentColor = element.GetOptionalPropertyParseable<TiledColor>("transparentcolor");
     var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
     var width = element.GetRequiredProperty<int>("width");
     var x = element.GetRequiredProperty<int>("x");

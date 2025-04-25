@@ -80,7 +80,7 @@ public class HasPropertiesBaseTests
   private sealed class MapTo
   {
     public bool MapToBool { get; set; } = false;
-    public Color MapToColor { get; set; } = Color.Parse("#00000000", CultureInfo.InvariantCulture);
+    public TiledColor MapToColor { get; set; } = TiledColor.Parse("#00000000", CultureInfo.InvariantCulture);
     public float MapToFloat { get; set; } = 0.0f;
     public string MapToFile { get; set; } = "";
     public int MapToInt { get; set; } = 0;
@@ -130,7 +130,7 @@ public class HasPropertiesBaseTests
         PropertyType = "MapTo",
         Value = [
           new BoolProperty { Name = "MapToBool", Value = true },
-          new ColorProperty { Name = "MapToColor", Value = Color.Parse("#FF0000FF", CultureInfo.InvariantCulture) },
+          new ColorProperty { Name = "MapToColor", Value = TiledColor.Parse("#FF0000FF", CultureInfo.InvariantCulture) },
           new FloatProperty { Name = "MapToFloat", Value = 1.0f },
           new StringProperty { Name = "MapToFile", Value = "Test" },
           new IntProperty { Name = "MapToInt", Value = 1 },
@@ -146,7 +146,7 @@ public class HasPropertiesBaseTests
 
     // Assert
     Assert.True(mappedProperty.MapToBool);
-    Assert.Equal(Color.Parse("#FF0000FF", CultureInfo.InvariantCulture), mappedProperty.MapToColor);
+    Assert.Equal(TiledColor.Parse("#FF0000FF", CultureInfo.InvariantCulture), mappedProperty.MapToColor);
     Assert.Equal(1.0f, mappedProperty.MapToFloat);
     Assert.Equal("Test", mappedProperty.MapToFile);
     Assert.Equal(1, mappedProperty.MapToInt);
@@ -175,7 +175,7 @@ public class HasPropertiesBaseTests
             PropertyType = "MapTo",
             Value = [
               new BoolProperty { Name = "MapToBool", Value = true },
-              new ColorProperty { Name = "MapToColor", Value = Color.Parse("#FF0000FF", CultureInfo.InvariantCulture) },
+              new ColorProperty { Name = "MapToColor", Value = TiledColor.Parse("#FF0000FF", CultureInfo.InvariantCulture) },
               new FloatProperty { Name = "MapToFloat", Value = 1.0f },
               new StringProperty { Name = "MapToFile", Value = "Test" },
               new IntProperty { Name = "MapToInt", Value = 1 },
@@ -194,7 +194,7 @@ public class HasPropertiesBaseTests
     // Assert
     Assert.Equal("Test", mappedProperty.NestedMapToString);
     Assert.True(mappedProperty.MapToInNested.MapToBool);
-    Assert.Equal(Color.Parse("#FF0000FF", CultureInfo.InvariantCulture), mappedProperty.MapToInNested.MapToColor);
+    Assert.Equal(TiledColor.Parse("#FF0000FF", CultureInfo.InvariantCulture), mappedProperty.MapToInNested.MapToColor);
     Assert.Equal(1.0f, mappedProperty.MapToInNested.MapToFloat);
     Assert.Equal("Test", mappedProperty.MapToInNested.MapToFile);
     Assert.Equal(1, mappedProperty.MapToInNested.MapToInt);
@@ -276,7 +276,7 @@ public class HasPropertiesBaseTests
     // Arrange
     List<IProperty> props = [
       new BoolProperty { Name = "MapToBool", Value = true },
-      new ColorProperty { Name = "MapToColor", Value = Color.Parse("#FF0000FF", CultureInfo.InvariantCulture) },
+      new ColorProperty { Name = "MapToColor", Value = TiledColor.Parse("#FF0000FF", CultureInfo.InvariantCulture) },
       new FloatProperty { Name = "MapToFloat", Value = 1.0f },
       new StringProperty { Name = "MapToFile", Value = "Test" },
       new IntProperty { Name = "MapToInt", Value = 1 },
@@ -290,7 +290,7 @@ public class HasPropertiesBaseTests
 
     // Assert
     Assert.True(mappedProperty.MapToBool);
-    Assert.Equal(Color.Parse("#FF0000FF", CultureInfo.InvariantCulture), mappedProperty.MapToColor);
+    Assert.Equal(TiledColor.Parse("#FF0000FF", CultureInfo.InvariantCulture), mappedProperty.MapToColor);
     Assert.Equal(1.0f, mappedProperty.MapToFloat);
     Assert.Equal("Test", mappedProperty.MapToFile);
     Assert.Equal(1, mappedProperty.MapToInt);
