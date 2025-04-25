@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DotTiled.Examples", "DotTil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Example.Raylib", "DotTiled.Examples\DotTiled.Example.Raylib\DotTiled.Example.Raylib.csproj", "{53585FB8-6E94-46F0-87E2-9692874E1714}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTiled.Example.MonoGame", "DotTiled.Examples\DotTiled.Example.MonoGame\DotTiled.Example.MonoGame.csproj", "{F074756C-F84C-4F50-AE42-01017CD68AF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,10 +54,15 @@ Global
 		{53585FB8-6E94-46F0-87E2-9692874E1714}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53585FB8-6E94-46F0-87E2-9692874E1714}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53585FB8-6E94-46F0-87E2-9692874E1714}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F074756C-F84C-4F50-AE42-01017CD68AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F074756C-F84C-4F50-AE42-01017CD68AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F074756C-F84C-4F50-AE42-01017CD68AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F074756C-F84C-4F50-AE42-01017CD68AF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F9892295-6C2C-4ABD-9D6F-2AC81D2C6E67} = {8C54542E-3C2C-486C-9BEF-4C510391AFDA}
 		{7541A9B3-43A5-45A7-939E-6F542319D990} = {8C54542E-3C2C-486C-9BEF-4C510391AFDA}
 		{53585FB8-6E94-46F0-87E2-9692874E1714} = {F3D6E648-AF8F-4EC9-A810-8C348DBB9924}
+		{F074756C-F84C-4F50-AE42-01017CD68AF7} = {F3D6E648-AF8F-4EC9-A810-8C348DBB9924}
 	EndGlobalSection
 EndGlobal
