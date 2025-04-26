@@ -36,7 +36,7 @@ Benchmark details
 The following benchmark results were gathered using the `DotTiled.Benchmark` project which uses [BenchmarkDotNet](https://benchmarkdotnet.org/) to compare the performance of DotTiled with other similar libraries. The benchmark results are grouped by category and show the mean execution time, memory consumption metrics, and ratio to DotTiled.
 
 ```
-BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.5131/22H2/2022Update)
+BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.5737/22H2/2022Update)
 12th Gen Intel Core i7-12700K, 1 CPU, 20 logical and 12 physical cores
 .NET SDK 8.0.202
   [Host]     : .NET 8.0.3 (8.0.324.11423), X64 RyuJIT AVX2
@@ -44,12 +44,12 @@ BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.5131/22H2/2022Update)
 ```
 | Method      | Categories               | Mean     | Ratio | Gen0   | Gen1   | Allocated | Alloc Ratio |
 |------------ |------------------------- |---------:|------:|-------:|-------:|----------:|------------:|
-| DotTiled    | MapFromInMemoryTmjString | 4.602 μs |  1.00 | 0.5417 |      - |      7 KB |        1.00 |
-| TiledLib    | MapFromInMemoryTmjString | 6.385 μs |  1.39 | 0.7019 | 0.0153 |   9.01 KB |        1.29 |
+| DotTiled    | MapFromInMemoryTmjString | 4.410 μs |  1.00 | 0.4501 |      - |   5.81 KB |        1.00 |
+| TiledLib    | MapFromInMemoryTmjString | 6.170 μs |  1.40 | 0.7019 | 0.0305 |   9.01 KB |        1.55 |
 |             |                          |          |       |        |        |           |             |
-| DotTiled    | MapFromInMemoryTmxString | 3.216 μs |  1.00 | 1.3733 | 0.0610 |  17.68 KB |        1.00 |
-| TiledLib    | MapFromInMemoryTmxString | 5.721 μs |  1.78 | 1.8005 | 0.0916 |  23.32 KB |        1.32 |
-| TiledCSPlus | MapFromInMemoryTmxString | 6.696 μs |  2.11 | 2.5940 | 0.1831 |  33.23 KB |        1.88 |
+| DotTiled    | MapFromInMemoryTmxString | 3.092 μs |  1.00 | 1.2970 | 0.0610 |  16.73 KB |        1.00 |
+| TiledLib    | MapFromInMemoryTmxString | 5.392 μs |  1.75 | 1.8158 | 0.1068 |  23.32 KB |        1.39 |
+| TiledCSPlus | MapFromInMemoryTmxString | 6.479 μs |  2.10 | 2.5940 | 0.1831 |  33.16 KB |        1.98 |
 
 It is important to note that the above benchmark results come from loading a very small map with a single tile layer as I had to find a common denominator between the libraries so that they all could load the same map. The results aim to be indicative of the performance of the libraries, but should be taken with a grain of salt. Only the actively maintained libraries are included in the benchmark results. TiledCSPlus does not support the `.tmj` format, so it was not included for that benchmark category.
 
