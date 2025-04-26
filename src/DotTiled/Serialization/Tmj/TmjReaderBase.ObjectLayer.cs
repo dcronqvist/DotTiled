@@ -255,7 +255,7 @@ public abstract partial class TmjReaderBase
   internal static TextObject ReadText(JsonElement element)
   {
     var bold = element.GetOptionalProperty<bool>("bold").GetValueOr(false);
-    var color = element.GetOptionalPropertyParseable<TiledColor>("color").GetValueOr(TiledColor.Parse("#00000000", CultureInfo.InvariantCulture));
+    var color = element.GetOptionalPropertyParseable<TiledColor>("color").GetValueOr(TiledColor.Parse("#000000", CultureInfo.InvariantCulture));
     var fontfamily = element.GetOptionalProperty<string>("fontfamily").GetValueOr("sans-serif");
     var halign = element.GetOptionalPropertyParseable<TextHorizontalAlignment>("halign", s => s switch
     {

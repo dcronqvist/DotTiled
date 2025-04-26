@@ -21,7 +21,7 @@ public partial class TestData
     Version = "1.10",
     TiledVersion = "1.11.2",
     NextLayerID = 8,
-    NextObjectID = 7,
+    NextObjectID = 8,
     Tilesets = [
       new Tileset
       {
@@ -104,6 +104,25 @@ public partial class TestData
                 Y = 110.333f,
                 Width = 64,
                 Height = 146
+              },
+              new TextObject
+              {
+                ID = 7,
+                Name = "Text1",
+                Rotation = 0,
+                Text = "Hello World!",
+                Visible = true,
+                Width = 116.869f,
+                Height = 19f,
+                X = 52.5197f,
+                Y = 4.0107f,
+                PixelSize = 18,
+                Wrap = true,
+                Bold = true,
+                Italic = true,
+                Underline = true,
+                Strikeout = true,
+                Kerning = false
               }
             ]
           },

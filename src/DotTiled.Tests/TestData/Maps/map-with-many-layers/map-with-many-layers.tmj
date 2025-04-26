@@ -62,6 +62,29 @@
                          "width":64,
                          "x":-35,
                          "y":110.333
+                        },
+                    
+                        {
+                         "height":19,
+                         "id":7,
+                         "name":"Text1",
+                         "rotation":0,
+                         "text":
+                            {
+                             "bold":true,
+                             "italic":true,
+                             "kerning":false,
+                             "pixelsize":18,
+                             "strikeout":true,
+                             "text":"Hello World!",
+                             "underline":true,
+                             "wrap":true
+                            },
+                         "type":"",
+                         "visible":true,
+                         "width":116.869277732794,
+                         "x":52.5197,
+                         "y":4.0107
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -148,7 +171,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":7,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
