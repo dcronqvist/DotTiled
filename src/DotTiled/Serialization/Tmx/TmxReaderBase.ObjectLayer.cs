@@ -74,7 +74,7 @@ public abstract partial class TmxReaderBase
     var template = _reader.GetOptionalAttribute("template");
     DotTiled.Object obj = null;
     if (template.HasValue)
-      obj = _externalTemplateResolver(template).Object;
+      obj = _externalTemplateResolver(template.Value).Object;
 
     uint idDefault = obj?.ID.GetValueOr(0) ?? 0;
     string nameDefault = obj?.Name ?? "";
@@ -84,7 +84,7 @@ public abstract partial class TmxReaderBase
     float widthDefault = obj?.Width ?? 0f;
     float heightDefault = obj?.Height ?? 0f;
     float rotationDefault = obj?.Rotation ?? 0f;
-    Optional<uint> gidDefault = obj is TileObject tileObj ? tileObj.GID : Optional<uint>.Empty;
+    Optional<uint> gidDefault = obj is TileObject tileObj ? tileObj.GID : Optional.Empty;
     bool visibleDefault = obj?.Visible ?? true;
     List<IProperty> propertiesDefault = obj?.Properties ?? null;
 

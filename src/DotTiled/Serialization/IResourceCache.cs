@@ -16,7 +16,7 @@ public interface IResourceCache
   /// Retrieves a tileset from the cache with the given <paramref name="path"/>.
   /// </summary>
   /// <param name="path">The path to the tileset file.</param>
-  /// <returns>The tileset if it exists in the cache; otherwise, <see cref="Optional{Tileset}.Empty"/>.</returns>
+  /// <returns>The tileset if it exists in the cache; otherwise, <see cref="Optional.Empty"/>.</returns>
   Optional<Tileset> GetTileset(string path);
 
   /// <summary>
@@ -30,6 +30,6 @@ public interface IResourceCache
   /// Retrieves a template from the cache with the given <paramref name="path"/>.
   /// </summary>
   /// <param name="path">The path to the template file.</param>
-  /// <returns>The template if it exists in the cache; otherwise, <see cref="Optional{Template}.Empty"/>.</returns>
+  /// <returns>The template if it exists in the cache; otherwise, <see cref="Optional.Empty"/>.</returns>
   Optional<Template> GetTemplate(string path);
 }

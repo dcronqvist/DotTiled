@@ -49,7 +49,7 @@ public abstract partial class TmxReaderBase
       OffsetY = offsetY,
       ParallaxX = parallaxX,
       ParallaxY = parallaxY,
-      Data = data ?? Optional<Data>.Empty,
+      Data = data is null ? Optional.Empty : new Optional<Data>(data),
       Properties = properties ?? []
     };
   }

@@ -7,25 +7,35 @@ public abstract partial class TmjReaderBase
 {
   internal Tileset ReadTileset(
     JsonElement element,
-    Optional<string> parentVersion = null,
-    Optional<string> parentTiledVersion = null)
+    Optional<string> parentVersion = default,
+    Optional<string> parentTiledVersion = default)
   {
+    var source = element.GetOptionalProperty<string>("source");
+    var firstGID = element.GetOptionalProperty<uint>("firstgid");
+
+    if (source.HasValue)
+    {
+      var resolvedTileset = _externalTilesetResolver(source.Value);
+      resolvedTileset.FirstGID = firstGID;
+      resolvedTileset.Source = source;
+      return resolvedTileset;
+    }
+
     var backgroundColor = element.GetOptionalPropertyParseable<TiledColor>("backgroundcolor");
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
-    var columns = element.GetOptionalProperty<int>("columns");
+    var columns = element.GetRequiredProperty<int>("columns");
     var fillMode = element.GetOptionalPropertyParseable<FillMode>("fillmode", s => s switch
     {
       "stretch" => FillMode.Stretch,
       "preserve-aspect-fit" => FillMode.PreserveAspectFit,
       _ => throw new JsonException($"Unknown fill mode '{s}'")
     }).GetValueOr(FillMode.Stretch);
-    var firstGID = element.GetOptionalProperty<uint>("firstgid");
     var grid = element.GetOptionalPropertyCustom<Grid>("grid", ReadGrid);
     var image = element.GetOptionalProperty<string>("image");
     var imageHeight = element.GetOptionalProperty<int>("imageheight");
     var imageWidth = element.GetOptionalProperty<int>("imagewidth");
-    var margin = element.GetOptionalProperty<int>("margin");
-    var name = element.GetOptionalProperty<string>("name");
+    var margin = element.GetRequiredProperty<int>("margin");
+    var name = element.GetRequiredProperty<string>("name");
     var objectAlignment = element.GetOptionalPropertyParseable<ObjectAlignment>("objectalignment", s => s switch
     {
       "unspecified" => ObjectAlignment.Unspecified,
@@ -41,11 +51,10 @@ public abstract partial class TmjReaderBase
       _ => throw new JsonException($"Unknown object alignment '{s}'")
     }).GetValueOr(ObjectAlignment.Unspecified);
     var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
-    var source = element.GetOptionalProperty<string>("source");
-    var spacing = element.GetOptionalProperty<int>("spacing");
-    var tileCount = element.GetOptionalProperty<int>("tilecount");
+    var spacing = element.GetRequiredProperty<int>("spacing");
+    var tileCount = element.GetRequiredProperty<int>("tilecount");
     var tiledVersion = element.GetOptionalProperty<string>("tiledversion").GetValueOrOptional(parentTiledVersion);
-    var tileHeight = element.GetOptionalProperty<int>("tileheight");
+    var tileHeight = element.GetRequiredProperty<int>("tileheight");
     var tileOffset = element.GetOptionalPropertyCustom<TileOffset>("tileoffset", ReadTileOffset);
     var tileRenderSize = element.GetOptionalPropertyParseable<TileRenderSize>("tilerendersize", s => s switch
     {
@@ -54,28 +63,20 @@ public abstract partial class TmjReaderBase
       _ => throw new JsonException($"Unknown tile render size '{s}'")
     }).GetValueOr(TileRenderSize.Tile);
     var tiles = element.GetOptionalPropertyCustom<List<Tile>>("tiles", ReadTiles).GetValueOr([]);
-    var tileWidth = element.GetOptionalProperty<int>("tilewidth");
+    var tileWidth = element.GetRequiredProperty<int>("tilewidth");
     var transparentColor = element.GetOptionalPropertyParseable<TiledColor>("transparentcolor");
     var version = element.GetOptionalProperty<string>("version").GetValueOrOptional(parentVersion);
     var transformations = element.GetOptionalPropertyCustom<Transformations>("transformations", ReadTransformations);
     var wangsets = element.GetOptionalPropertyCustom<List<Wangset>>("wangsets", el => el.GetValueAsList<Wangset>(e => ReadWangset(e))).GetValueOr([]);
 
-    if (source.HasValue)
-    {
-      var resolvedTileset = _externalTilesetResolver(source);
-      resolvedTileset.FirstGID = firstGID;
-      resolvedTileset.Source = source;
-      return resolvedTileset;
-    }
-
     Optional<Image> imageModel = image.HasValue ? new Image
     {
-      Format = Helpers.ParseImageFormatFromSource(image),
+      Format = Helpers.ParseImageFormatFromSource(image.Value),
       Source = image,
       Height = imageHeight,
       Width = imageWidth,
       TransparentColor = transparentColor
-    } : Optional<Image>.Empty;
+    } : Optional.Empty;
 
     return new Tileset
     {
@@ -170,11 +171,11 @@ public abstract partial class TmjReaderBase
 
       Optional<Image> imageModel = image.HasValue ? new Image
       {
-        Format = Helpers.ParseImageFormatFromSource(image),
+        Format = Helpers.ParseImageFormatFromSource(image.Value),
         Source = image,
-        Height = imageHeight ?? 0,
-        Width = imageWidth ?? 0
-      } : Optional<Image>.Empty;
+        Height = imageHeight.GetValueOr(0),
+        Width = imageWidth.GetValueOr(0)
+      } : Optional.Empty;
 
       return new Tile
       {

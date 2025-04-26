@@ -131,17 +131,17 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// The Tiled version used to save the file in case it was loaded from an external tileset file.
   /// </summary>
-  public Optional<string> TiledVersion { get; set; } = Optional<string>.Empty;
+  public Optional<string> TiledVersion { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The first global tile ID of this tileset (this global ID maps to the first tile in this tileset).
   /// </summary>
-  public Optional<uint> FirstGID { get; set; } = Optional<uint>.Empty;
+  public Optional<uint> FirstGID { get; set; } = Optional.Empty;
 
   /// <summary>
   /// If this tileset is stored in an external TSX (Tile Set XML) file, this attribute refers to that file.
   /// </summary>
-  public Optional<string> Source { get; set; } = Optional<string>.Empty;
+  public Optional<string> Source { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The name of this tileset.
@@ -201,17 +201,17 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// If the tileset is based on a single image, which is cut into tiles based on the given attributes of the tileset, then this is that image.
   /// </summary>
-  public Optional<Image> Image { get; set; } = Optional<Image>.Empty;
+  public Optional<Image> Image { get; set; } = Optional.Empty;
 
   /// <summary>
   /// This is used to specify an offset in pixels, to be applied when drawing a tile from the related tileset. When not present, no offset is applied.
   /// </summary>
-  public Optional<TileOffset> TileOffset { get; set; } = Optional<TileOffset>.Empty;
+  public Optional<TileOffset> TileOffset { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Ths is only used in case of isometric orientation, and determines how tile overlays for terrain and collision information are rendered.
   /// </summary>
-  public Optional<Grid> Grid { get; set; } = Optional<Grid>.Empty;
+  public Optional<Grid> Grid { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Tileset properties.
@@ -231,7 +231,7 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// Used to describe which transformations can be applied to the tiles (e.g. to extend a Wang set by transforming existing tiles).
   /// </summary>
-  public Optional<Transformations> Transformations { get; set; } = Optional<Transformations>.Empty;
+  public Optional<Transformations> Transformations { get; set; } = Optional.Empty;
 
   /// <summary>
   /// If this tileset is based on a collection of images, then this list of tiles will contain the individual images that make up the tileset.
