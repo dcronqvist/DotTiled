@@ -242,15 +242,15 @@ public abstract partial class TmxReaderBase
   internal TextObject ReadTextObject()
   {
     // Attributes
-    var fontFamily = _reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
-    var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize") ?? 16;
-    var wrap = _reader.GetOptionalAttributeParseable<bool>("wrap") ?? false;
-    var color = _reader.GetOptionalAttributeClass<TiledColor>("color") ?? TiledColor.Parse("#000000", CultureInfo.InvariantCulture);
-    var bold = _reader.GetOptionalAttributeParseable<bool>("bold") ?? false;
-    var italic = _reader.GetOptionalAttributeParseable<bool>("italic") ?? false;
-    var underline = _reader.GetOptionalAttributeParseable<bool>("underline") ?? false;
-    var strikeout = _reader.GetOptionalAttributeParseable<bool>("strikeout") ?? false;
-    var kerning = _reader.GetOptionalAttributeParseable<bool>("kerning") ?? true;
+    var fontFamily = _reader.GetOptionalAttribute("fontfamily").GetValueOr("sans-serif");
+    var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize").GetValueOr(16);
+    var wrap = _reader.GetOptionalAttributeParseable<int>("wrap").GetValueOr(0) == 1;
+    var color = _reader.GetOptionalAttributeClass<TiledColor>("color").GetValueOr(TiledColor.Parse("#000000", CultureInfo.InvariantCulture));
+    var bold = _reader.GetOptionalAttributeParseable<int>("bold").GetValueOr(0) == 1;
+    var italic = _reader.GetOptionalAttributeParseable<int>("italic").GetValueOr(0) == 1;
+    var underline = _reader.GetOptionalAttributeParseable<int>("underline").GetValueOr(0) == 1;
+    var strikeout = _reader.GetOptionalAttributeParseable<int>("strikeout").GetValueOr(0) == 1;
+    var kerning = _reader.GetOptionalAttributeParseable<int>("kerning").GetValueOr(1) == 1;
     var hAlign = _reader.GetOptionalAttributeEnum<TextHorizontalAlignment>("halign", s => s switch
     {
       "left" => TextHorizontalAlignment.Left,
@@ -258,14 +258,14 @@ public abstract partial class TmxReaderBase
       "right" => TextHorizontalAlignment.Right,
       "justify" => TextHorizontalAlignment.Justify,
       _ => throw new InvalidOperationException($"Unknown horizontal alignment '{s}'")
-    }) ?? TextHorizontalAlignment.Left;
+    }).GetValueOr(TextHorizontalAlignment.Left);
     var vAlign = _reader.GetOptionalAttributeEnum<TextVerticalAlignment>("valign", s => s switch
     {
       "top" => TextVerticalAlignment.Top,
       "center" => TextVerticalAlignment.Center,
       "bottom" => TextVerticalAlignment.Bottom,
       _ => throw new InvalidOperationException($"Unknown vertical alignment '{s}'")
-    }) ?? TextVerticalAlignment.Top;
+    }).GetValueOr(TextVerticalAlignment.Top);
 
     // Elements
     var text = _reader.ReadElementContentAsString("text", "");
