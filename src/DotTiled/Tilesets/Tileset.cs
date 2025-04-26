@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotTiled;
 
@@ -88,6 +90,32 @@ public enum FillMode
   /// The tile's aspect ratio is preserved, and it is scaled to fit within the tile size.
   /// </summary>
   PreserveAspectFit
+}
+
+/// <summary>
+/// A helper class to specify where in a tileset image a tile is located.
+/// </summary>
+public class SourceRectangle
+{
+  /// <summary>
+  /// The X coordinate of the tile in the tileset image.
+  /// </summary>
+  public int X { get; set; } = 0;
+
+  /// <summary>
+  /// The Y coordinate of the tile in the tileset image.
+  /// </summary>
+  public int Y { get; set; } = 0;
+
+  /// <summary>
+  /// The width of the tile in the tileset image.
+  /// </summary>
+  public int Width { get; set; } = 0;
+
+  /// <summary>
+  /// The height of the tile in the tileset image.
+  /// </summary>
+  public int Height { get; set; } = 0;
 }
 
 /// <summary>
@@ -209,4 +237,42 @@ public class Tileset : HasPropertiesBase
   /// If this tileset is based on a collection of images, then this list of tiles will contain the individual images that make up the tileset.
   /// </summary>
   public List<Tile> Tiles { get; set; } = [];
+
+  /// <summary>
+  /// Returns the source rectangle for a tile in this tileset given its local tile ID.
+  /// </summary>
+  /// <param name="localTileID">The local tile ID of the tile.</param>
+  /// <returns>A source rectangle describing the tile's position in the tileset's </returns>
+  /// <exception cref="ArgumentOutOfRangeException">Thrown when the local tile ID is out of range.</exception>
+  public SourceRectangle GetSourceRectangleForLocalTileID(uint localTileID)
+  {
+    if (localTileID >= TileCount)
+      throw new ArgumentException("The local tile ID is out of range.", nameof(localTileID));
+
+    var tileInTiles = Tiles.FirstOrDefault(t => t.ID == localTileID);
+    if (tileInTiles != null)
+    {
+      return new SourceRectangle
+      {
+        X = tileInTiles.X,
+        Y = tileInTiles.Y,
+        Width = tileInTiles.Width,
+        Height = tileInTiles.Height
+      };
+    }
+
+    var column = (int)(localTileID % Columns);
+    var row = (int)(localTileID / Columns);
+
+    var x = Margin + ((TileWidth + Spacing) * column);
+    var y = Margin + ((TileHeight + Spacing) * row);
+
+    return new SourceRectangle
+    {
+      X = x,
+      Y = y,
+      Width = TileWidth,
+      Height = TileHeight
+    };
+  }
 }

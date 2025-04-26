@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -205,4 +206,31 @@ public class Map : HasPropertiesBase
   /// Hierarchical list of layers. <see cref="Group"/> is a layer type which can contain sub-layers to create a hierarchy.
   /// </summary>
   public List<BaseLayer> Layers { get; set; } = [];
+
+  /// <summary>
+  /// Resolves which tileset a global tile ID belongs to, and returns the corresponding local tile ID.
+  /// </summary>
+  /// <param name="globalTileID">The global tile ID to resolve.</param>
+  /// <param name="localTileID">The local tile ID within the tileset.</param>
+  /// <returns>The tileset that contains the tile with the specified global tile ID.</returns>
+  /// <exception cref="ArgumentException">Thrown when no tileset is found for the specified global tile ID.</exception>
+  public Tileset ResolveTilesetForGlobalTileID(uint globalTileID, out uint localTileID)
+  {
+    for (int i = Tilesets.Count - 1; i >= 0; i--)
+    {
+      var tileset = Tilesets[i];
+
+      if (globalTileID >= tileset.FirstGID.Value
+       && globalTileID < tileset.FirstGID.Value + tileset.TileCount)
+      {
+        localTileID = globalTileID - tileset.FirstGID.Value;
+        return tileset;
+      }
+    }
+
+    throw new ArgumentException(
+      $"No tileset found for global tile ID {globalTileID}.",
+      nameof(globalTileID)
+    );
+  }
 }

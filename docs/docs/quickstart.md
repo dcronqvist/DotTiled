@@ -67,3 +67,7 @@ var map = loader.LoadMap("path/to/map.tmx");
 var chest = map.GetProperty<CustomClassProperty>("chest").Value;
 var coinsToSpawn = chest.GetProperty<IntProperty>("coins").Value;
 ```
+
+## Examples
+
+See the [DotTiled.Examples](https://github.com/dcronqvist/DotTiled/tree/master/src/DotTiled.Examples) directory for more in-depth examples of how to use DotTiled. The [DotTiled.Example.Raylib](https://github.com/dcronqvist/DotTiled/tree/master/src/DotTiled.Examples/DotTiled.Example.Raylib) example is a good starting point for using DotTiled with Raylib or any similar library/framework. It demonstrates how to load and render a Tiled map, handle player movement, and perform collision detection.
