@@ -165,7 +165,17 @@ public abstract partial class TmxReaderBase
       return obj;
     }
 
-    return OverrideObject((dynamic)obj, (dynamic)foundObject);
+    return (obj, foundObject) switch
+    {
+      (TileObject tile, TileObject foundTile) => OverrideObject(tile, foundTile),
+      (RectangleObject rectangle, RectangleObject foundRectangle) => OverrideObject(rectangle, foundRectangle),
+      (PolygonObject polygon, PolygonObject foundPolygon) => OverrideObject(polygon, foundPolygon),
+      (PolylineObject polyline, PolylineObject foundPolyline) => OverrideObject(polyline, foundPolyline),
+      (EllipseObject ellipse, EllipseObject foundEllipse) => OverrideObject(ellipse, foundEllipse),
+      (TextObject text, TextObject foundText) => OverrideObject(text, foundText),
+      (PointObject point, PointObject foundPoint) => OverrideObject(point, foundPoint),
+      _ => obj
+    };
   }
 
   internal EllipseObject ReadEllipseObject()
