@@ -9,27 +9,38 @@ jobs:
     steps:
       - name: Checkout PR branch
         uses: actions/checkout@v3
-        
+
       - name: Get version from PR branch
         id: pr_version
         run: |
-          PR_VERSION=$(grep '<Version>' **/*.csproj | sed -E 's/.*<Version>(.*)<\/Version>.*/\1/')
+          PR_VERSION=$(find . -name '*.csproj' -exec grep '<Version>' {} \; | sed -E 's/.*<Version>(.*)<\/Version>.*/\1/')
           echo "PR_VERSION=$PR_VERSION" >> $GITHUB_ENV
 
-      - name: Checkout master branch
-        run: |
-          git fetch origin master
-          git checkout origin/master
+      - name: Checkout master branch to separate directory
+        uses: actions/checkout@v3
+        with:
+          ref: master
+          path: master_branch
 
       - name: Get version from master branch
         id: master_version
         run: |
-          MASTER_VERSION=$(grep '<Version>' **/*.csproj | sed -E 's/.*<Version>(.*)<\/Version>.*/\1/')
+          MASTER_VERSION=$(find master_branch -name '*.csproj' -exec grep '<Version>' {} \; | sed -E 's/.*<Version>(.*)<\/Version>.*/\1/')
           echo "MASTER_VERSION=$MASTER_VERSION" >> $GITHUB_ENV
+
+      - name: Debug $GITHUB_ENV
+        run: |
+          echo "PR_VERSION: $PR_VERSION"
+          echo "MASTER_VERSION: $MASTER_VERSION"
 
       - name: Compare versions
         run: |
-          if [ "$(printf '%s\n' "$PR_VERSION" "$MASTER_VERSION" | sort -V | head -n1)" = "$PR_VERSION" ] && [ "$PR_VERSION" != "$MASTER_VERSION" ]; then
+          if [ -z "$PR_VERSION" ] || [ -z "$MASTER_VERSION" ]; then
+            echo "One of the version variables is empty."
+            exit 1
+          fi
+
+          if [ "$(printf '%s\n' "$MASTER_VERSION" "$PR_VERSION" | sort -V | tail -n1)" != "$PR_VERSION" ] || [ "$PR_VERSION" = "$MASTER_VERSION" ]; then
             echo "Version in PR is not higher than master."
             exit 1
           else
