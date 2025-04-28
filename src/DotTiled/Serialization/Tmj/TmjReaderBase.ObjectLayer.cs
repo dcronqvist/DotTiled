@@ -76,12 +76,13 @@ public abstract partial class TmjReaderBase
     List<Vector2> polygonDefault = null;
     List<Vector2> polylineDefault = null;
     List<IProperty> propertiesDefault = [];
+    Optional<uint> gidDefault = Optional.Empty;
 
     var template = element.GetOptionalProperty<string>("template");
     if (template.HasValue)
     {
       var resolvedTemplate = _externalTemplateResolver(template.Value);
-      var templObj = resolvedTemplate.Object;
+      var templObj = resolvedTemplate.Object.Clone();
 
       idDefault = templObj.ID;
       nameDefault = templObj.Name;
@@ -97,10 +98,11 @@ public abstract partial class TmjReaderBase
       pointDefault = templObj is PointObject;
       polygonDefault = (templObj is PolygonObject polygonObj) ? polygonObj.Points : null;
       polylineDefault = (templObj is PolylineObject polylineObj) ? polylineObj.Points : null;
+      gidDefault = (templObj is TileObject tileObj) ? tileObj.GID : Optional.Empty;
     }
 
     var ellipse = element.GetOptionalProperty<bool>("ellipse").GetValueOr(ellipseDefault);
-    var gid = element.GetOptionalProperty<uint>("gid");
+    var gid = element.GetOptionalProperty<uint>("gid").GetValueOrOptional(gidDefault);
     var height = element.GetOptionalProperty<float>("height").GetValueOr(heightDefault);
     var id = element.GetOptionalProperty<uint>("id").GetValueOrOptional(idDefault);
     var name = element.GetOptionalProperty<string>("name").GetValueOr(nameDefault);
