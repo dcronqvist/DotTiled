@@ -64,4 +64,10 @@ public abstract class Object : HasPropertiesBase
 
   /// <inheritdoc/>
   public override IList<IProperty> GetProperties() => Properties;
+
+  /// <summary>
+  /// Creates a deep copy of the object.
+  /// </summary>
+  /// <returns></returns>
+  internal abstract Object Clone();
 }

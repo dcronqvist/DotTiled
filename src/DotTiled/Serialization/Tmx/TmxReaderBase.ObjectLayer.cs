@@ -74,7 +74,7 @@ public abstract partial class TmxReaderBase
     var template = _reader.GetOptionalAttribute("template");
     DotTiled.Object obj = null;
     if (template.HasValue)
-      obj = _externalTemplateResolver(template.Value).Object;
+      obj = _externalTemplateResolver(template.Value).Object.Clone();
 
     uint idDefault = obj?.ID.GetValueOr(0) ?? 0;
     string nameDefault = obj?.Name ?? "";
