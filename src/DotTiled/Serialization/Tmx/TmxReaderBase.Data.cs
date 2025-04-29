@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Xml;
 
@@ -76,8 +75,8 @@ public abstract partial class TmxReaderBase
 
     var decompressed = compression.Value switch
     {
-      DataCompression.GZip => DecompressGZip(bytes),
-      DataCompression.ZLib => DecompressZLib(bytes),
+      DataCompression.GZip => Helpers.DecompressGZip(bytes),
+      DataCompression.ZLib => Helpers.DecompressZLib(bytes),
       DataCompression.ZStd => throw new NotSupportedException("ZStd compression is not supported."),
       _ => throw new XmlException("Invalid compression")
     };
@@ -104,17 +103,5 @@ public abstract partial class TmxReaderBase
       finalValues.Add(value);
     }
     return finalValues.ToArray();
-  }
-
-  internal static uint[] DecompressGZip(MemoryStream stream)
-  {
-    using var decompressedStream = new GZipStream(stream, CompressionMode.Decompress);
-    return ReadMemoryStreamAsInt32Array(decompressedStream);
-  }
-
-  internal static uint[] DecompressZLib(MemoryStream stream)
-  {
-    using var decompressedStream = new ZLibStream(stream, CompressionMode.Decompress);
-    return ReadMemoryStreamAsInt32Array(decompressedStream);
   }
 }
