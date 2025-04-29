@@ -61,7 +61,7 @@ public abstract partial class TmjReaderBase
       {
         DataCompression.GZip => Helpers.DecompressGZip(stream),
         DataCompression.ZLib => Helpers.DecompressZLib(stream),
-        DataCompression.ZStd => throw new NotSupportedException("ZStd compression is not supported."),
+        DataCompression.ZStd => Helpers.DecompressZStd(stream),
         _ => throw new InvalidOperationException($"Unsupported compression '{compression}'.")
       };
 
