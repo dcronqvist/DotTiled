@@ -37,6 +37,7 @@ public static partial class TestData
     [GetMapPath("default-map-base64"), (string f) => DefaultMapBase64(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("default-map-base64-gzip"), (string f) => DefaultMapBase64GZip(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("default-map-base64-zlib"), (string f) => DefaultMapBase64ZLib(), Array.Empty<ICustomTypeDefinition>()],
+    [GetMapPath("default-map-base64-zstd"), (string f) => DefaultMapBase64ZStd(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-duplicate-object-id-bug"), (string f) => MapDuplicateObjectIdBug(f), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-common-props"), (string f) => MapWithCommonProps(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-with-custom-type-props"), (string f) => MapWithCustomTypeProps(), MapWithCustomTypePropsCustomTypeDefinitions()],
