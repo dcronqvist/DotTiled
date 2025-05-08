@@ -125,7 +125,7 @@ public abstract partial class TmxReaderBase
       _ => throw new InvalidOperationException($"Unknown image format '{s}'")
     });
     var source = _reader.GetOptionalAttribute("source");
-    var transparentColor = _reader.GetOptionalAttributeClass<TiledColor>("trans");
+    var transparentColor = _reader.GetOptionalAttributeParseable<TiledColor>("trans");
     var width = _reader.GetOptionalAttributeParseable<int>("width");
     var height = _reader.GetOptionalAttributeParseable<int>("height");
 

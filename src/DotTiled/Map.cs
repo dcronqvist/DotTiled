@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace DotTiled;
 
@@ -172,7 +171,7 @@ public class Map : HasPropertiesBase
   /// <summary>
   /// The background color of the map.
   /// </summary>
-  public TiledColor BackgroundColor { get; set; } = TiledColor.Parse("#00000000", CultureInfo.InvariantCulture);
+  public TiledColor BackgroundColor { get; set; } = TiledColor.Transparent;
 
   /// <summary>
   /// Stores the next available ID for new layers. This number is used to prevent reuse of the same ID after layers have been removed.
