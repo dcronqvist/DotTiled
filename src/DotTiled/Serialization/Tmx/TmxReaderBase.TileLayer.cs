@@ -16,7 +16,7 @@ public abstract partial class TmxReaderBase
     var height = _reader.GetRequiredAttributeParseable<int>("height");
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
     var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
-    var tintColor = _reader.GetOptionalAttributeClass<TiledColor>("tintcolor");
+    var tintColor = _reader.GetOptionalAttributeParseable<TiledColor>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);
     var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
@@ -63,7 +63,7 @@ public abstract partial class TmxReaderBase
     var y = _reader.GetOptionalAttributeParseable<int>("y").GetValueOr(0);
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1f);
     var visible = _reader.GetOptionalAttributeParseable<bool>("visible").GetValueOr(true);
-    var tintColor = _reader.GetOptionalAttributeClass<TiledColor>("tintcolor");
+    var tintColor = _reader.GetOptionalAttributeParseable<TiledColor>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);
     var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
@@ -110,7 +110,7 @@ public abstract partial class TmxReaderBase
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
     var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
-    var tintColor = _reader.GetOptionalAttributeClass<TiledColor>("tintcolor");
+    var tintColor = _reader.GetOptionalAttributeParseable<TiledColor>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0f);
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0f);
     var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1f);

@@ -45,7 +45,7 @@ public abstract partial class TmxReaderBase
         PropertyType.Int => new IntProperty { Name = name, Value = r.GetRequiredAttributeParseable<int>("value") },
         PropertyType.Float => new FloatProperty { Name = name, Value = r.GetRequiredAttributeParseable<float>("value") },
         PropertyType.Bool => new BoolProperty { Name = name, Value = r.GetRequiredAttributeParseable<bool>("value") },
-        PropertyType.Color => new ColorProperty { Name = name, Value = r.GetRequiredAttributeParseable<TiledColor>("value", s => s == "" ? default : TiledColor.Parse(s, CultureInfo.InvariantCulture)) },
+        PropertyType.Color => new ColorProperty { Name = name, Value = r.GetRequiredAttributeParseable<Optional<TiledColor>>("value", s => s == "" ? new Optional<TiledColor>() : TiledColor.Parse(s, CultureInfo.InvariantCulture)) },
         PropertyType.File => new FileProperty { Name = name, Value = r.GetRequiredAttribute("value") },
         PropertyType.Object => new ObjectProperty { Name = name, Value = r.GetRequiredAttributeParseable<uint>("value") },
         PropertyType.Class => throw new XmlException("Class property must have a property type"),

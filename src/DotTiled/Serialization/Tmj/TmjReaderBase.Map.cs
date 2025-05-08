@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.Json;
 
 namespace DotTiled.Serialization.Tmj;
@@ -47,7 +46,7 @@ public abstract partial class TmjReaderBase
     });
     var parallaxOriginX = element.GetOptionalProperty<float>("parallaxoriginx").GetValueOr(0f);
     var parallaxOriginY = element.GetOptionalProperty<float>("parallaxoriginy").GetValueOr(0f);
-    var backgroundColor = element.GetOptionalPropertyParseable<TiledColor>("backgroundcolor").GetValueOr(TiledColor.Parse("#00000000", CultureInfo.InvariantCulture));
+    var backgroundColor = element.GetOptionalPropertyParseable<TiledColor>("backgroundcolor").GetValueOr(TiledColor.Transparent);
     var nextLayerID = element.GetRequiredProperty<uint>("nextlayerid");
     var nextObjectID = element.GetRequiredProperty<uint>("nextobjectid");
     var infinite = element.GetOptionalProperty<bool>("infinite").GetValueOr(false);

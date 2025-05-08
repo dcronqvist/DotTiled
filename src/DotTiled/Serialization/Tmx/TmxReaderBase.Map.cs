@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace DotTiled.Serialization.Tmx;
@@ -51,7 +50,7 @@ public abstract partial class TmxReaderBase
     });
     var parallaxOriginX = _reader.GetOptionalAttributeParseable<float>("parallaxoriginx").GetValueOr(0.0f);
     var parallaxOriginY = _reader.GetOptionalAttributeParseable<float>("parallaxoriginy").GetValueOr(0.0f);
-    var backgroundColor = _reader.GetOptionalAttributeClass<TiledColor>("backgroundcolor").GetValueOr(TiledColor.Parse("#00000000", CultureInfo.InvariantCulture));
+    var backgroundColor = _reader.GetOptionalAttributeParseable<TiledColor>("backgroundcolor").GetValueOr(TiledColor.Transparent);
     var nextLayerID = _reader.GetRequiredAttributeParseable<uint>("nextlayerid");
     var nextObjectID = _reader.GetRequiredAttributeParseable<uint>("nextobjectid");
     var infinite = _reader.GetOptionalAttributeParseable<uint>("infinite").GetValueOr(0) == 1;
