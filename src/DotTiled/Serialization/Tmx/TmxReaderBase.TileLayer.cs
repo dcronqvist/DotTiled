@@ -62,7 +62,7 @@ public abstract partial class TmxReaderBase
     var x = _reader.GetOptionalAttributeParseable<int>("x").GetValueOr(0);
     var y = _reader.GetOptionalAttributeParseable<int>("y").GetValueOr(0);
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1f);
-    var visible = _reader.GetOptionalAttributeParseable<bool>("visible").GetValueOr(true);
+    var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
     var tintColor = _reader.GetOptionalAttributeClass<TiledColor>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);

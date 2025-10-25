@@ -117,6 +117,23 @@ public readonly struct Optional<T>
   /// <returns></returns>
   public Optional<T> GetValueOrOptional(Optional<T> defaultValue) => HasValue ? this : defaultValue;
 
+  /// <summary>
+  /// Transforms the value of the current <see cref="Optional{T}"/> object using the specified mapping function if it has a value; otherwise, returns an empty <see cref="Optional{TOut}"/> object.
+  /// </summary>
+  /// <typeparam name="TOut">The type of the value returned by the mapping function.</typeparam>
+  /// <param name="mapper">The mapping function to apply to the value.</param>
+  public Optional<TOut> Map<TOut>(Func<T, TOut> mapper)
+  {
+    if (HasValue)
+    {
+      return new Optional<TOut>(mapper(_value));
+    }
+    else
+    {
+      return Optional.Empty;
+    }
+  }
+
   /// <inheritdoc />
   public override bool Equals(object obj)
   {
