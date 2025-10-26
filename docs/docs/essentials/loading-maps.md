@@ -15,7 +15,7 @@ Loading a map with DotTiled is not a complex process, but one that at least dema
 
 ```mermaid
 flowchart LR
-    Z{{Loading a map 
+    Z{{Loading a map
     with DotTiled}} --> A
 
     subgraph Parsing map
@@ -23,21 +23,21 @@ flowchart LR
     end
 
     subgraph Parsing tileset
-    B -.->|References 
+    B -.->|References
           external tileset| C[(Read tileset)]
     C --> D(Parse tileset) --o|Store in map| B
     end
 
     subgraph Parsing template
-    B -.->|References external 
+    B -.->|References external
           template in object| E[(Read template)]
     E --> F(Parse template) --o|Use as template
                                 for object| B
     end
-    
-    F -.-> |References 
+
+    F -.-> |References
            external tileset| C
-    F -.-> |References 
+    F -.-> |References
             external template| E
 ```
 
@@ -83,7 +83,7 @@ While it is recommended to use the <xref:DotTiled.Serialization.Loader> class to
 are the three classes that you will use to read the map, tileset, and template, respectively. They are designed to be used in a way that you can provide your own resolver functions to load external resources.
 
 > [!IMPORTANT]
-> The resolving functions will get the source path of the external resource as a parameter, *in the exact way it is written in the map file*. You will have to perform your own path resolution to load the external resources.
+> The resolving functions will get the source path of the external resource as a parameter, _in the exact way it is written in the map file_. You will have to perform your own path resolution to load the external resources.
 
 ### `Func<string, Tileset>` - Tileset resolver
 
@@ -93,7 +93,7 @@ This function is used to resolve external tilesets by their source path. The fun
 Tileset ResolveTileset(string source)
 {
   using var tilesetFileReader = new StreamReader(source);
-  var tilesetString = tilesetReader.ReadToEnd();
+  var tilesetString = tilesetFileReader.ReadToEnd();
   using var tilesetReader = new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType);
   return tilesetReader.ReadTileset();
 }
@@ -132,7 +132,7 @@ Tileset ResolveTileset(string source)
 {
   string tilesetPath = Path.Combine(mapDirectory, source);
   using var tilesetFileReader = new StreamReader(tilesetPath);
-  var tilesetString = tilesetReader.ReadToEnd();
+  var tilesetString = tilesetFileReader.ReadToEnd();
   using var tilesetReader = new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType);
   return tilesetReader.ReadTileset();
 }
@@ -141,12 +141,12 @@ Template ResolveTemplate(string source)
 {
   string templatePath = Path.Combine(mapDirectory, source);
   using var templateFileReader = new StreamReader(templatePath);
-  var templateString = templateReader.ReadToEnd();
+  var templateString = templateFileReader.ReadToEnd();
   using var templateReader = new TemplateReader(templateString, ResolveTileset, ResolveTemplate, ResolveCustomType);
   return templateReader.ReadTemplate();
 }
 
-ICustomTypeDefinition ResolveCustomType(string name)
+Optional<ICustomTypeDefinition> ResolveCustomType(string name)
 {
   var allDefinedTypes = [ ... ];
   return allDefinedTypes.FirstOrDefault(type => type.Name == name);
