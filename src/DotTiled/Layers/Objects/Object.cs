@@ -58,6 +58,11 @@ public abstract class Object : HasPropertiesBase
   public Optional<string> Template { get; set; } = Optional.Empty;
 
   /// <summary>
+  /// If the object is created from a template and the template represents a tile object, this property will contain the tileset that the tile belongs to.
+  /// </summary>
+  public Optional<Tileset> TemplateTileset { get; set; } = Optional.Empty;
+
+  /// <summary>
   /// Object properties.
   /// </summary>
   public List<IProperty> Properties { get; set; } = [];
