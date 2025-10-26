@@ -78,11 +78,12 @@ public abstract partial class TmjReaderBase
     List<IProperty> propertiesDefault = [];
     Optional<uint> gidDefault = Optional.Empty;
 
-    var template = element.GetOptionalProperty<string>("template");
-    if (template.HasValue)
+    var templateSource = element.GetOptionalProperty<string>("template");
+    Template template = null;
+    if (templateSource.HasValue)
     {
-      var resolvedTemplate = _externalTemplateResolver(template.Value);
-      var templObj = resolvedTemplate.Object.Clone();
+      template = _externalTemplateResolver(templateSource.Value);
+      var templObj = template.Object.Clone();
 
       idDefault = templObj.ID;
       nameDefault = templObj.Name;
@@ -133,7 +134,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties,
         GID = clearedGIDs.Single(),
         FlippingFlags = flippingFlags.Single()
@@ -153,7 +155,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties
       };
     }
@@ -171,7 +174,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties
       };
     }
@@ -189,7 +193,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties,
         Points = polygon
       };
@@ -208,7 +213,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties,
         Points = polyline
       };
@@ -225,7 +231,8 @@ public abstract partial class TmjReaderBase
       text.Value.Height = height;
       text.Value.Rotation = rotation;
       text.Value.Visible = visible;
-      text.Value.Template = template;
+      text.Value.Template = templateSource;
+      text.Value.TemplateTileset = template?.Tileset ?? Optional.Empty;
       text.Value.Properties = properties;
       return text.Value;
     }
@@ -241,7 +248,8 @@ public abstract partial class TmjReaderBase
       Height = height,
       Rotation = rotation,
       Visible = visible,
-      Template = template,
+      Template = templateSource,
+      TemplateTileset = template?.Tileset ?? Optional.Empty,
       Properties = properties
     };
   }

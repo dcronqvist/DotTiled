@@ -71,10 +71,14 @@ public abstract partial class TmxReaderBase
   internal DotTiled.Object ReadObject()
   {
     // Attributes
-    var template = _reader.GetOptionalAttribute("template");
+    var templateSource = _reader.GetOptionalAttribute("template");
+    Template template = null;
     DotTiled.Object obj = null;
-    if (template.HasValue)
-      obj = _externalTemplateResolver(template.Value).Object.Clone();
+    if (templateSource.HasValue)
+    {
+      template = _externalTemplateResolver(templateSource.Value);
+      obj = template.Object.Clone();
+    }
 
     uint idDefault = obj?.ID.GetValueOr(0) ?? 0;
     string nameDefault = obj?.Name ?? "";
@@ -138,7 +142,8 @@ public abstract partial class TmxReaderBase
     foundObject.Rotation = rotation;
     foundObject.Visible = visible;
     foundObject.Properties = properties ?? [];
-    foundObject.Template = template;
+    foundObject.Template = templateSource;
+    foundObject.TemplateTileset = template?.Tileset ?? Optional.Empty;
 
     return OverrideObject(obj, foundObject);
   }
@@ -159,6 +164,7 @@ public abstract partial class TmxReaderBase
     obj.Visible = foundObject.Visible;
     obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties).ToList();
     obj.Template = foundObject.Template;
+    obj.TemplateTileset = foundObject.TemplateTileset;
 
     if (obj.GetType() != foundObject.GetType())
     {
