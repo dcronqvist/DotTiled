@@ -146,7 +146,7 @@ Template ResolveTemplate(string source)
   return templateReader.ReadTemplate();
 }
 
-ICustomTypeDefinition ResolveCustomType(string name)
+Optional<ICustomTypeDefinition> ResolveCustomType(string name)
 {
   var allDefinedTypes = [ ... ];
   return allDefinedTypes.FirstOrDefault(type => type.Name == name);
