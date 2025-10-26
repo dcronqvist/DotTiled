@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <tileset firstgid="1" source="objects.tsx"/>
+ <object gid="13" width="28" height="28">
+  <properties>
+   <property name="Health" type="class" propertytype="Health">
+    <properties>
+     <property name="Current" type="int" value="20"/>
+     <property name="Max" type="int" value="20"/>
+    </properties>
+   </property>
+  </properties>
+ </object>
+</template>

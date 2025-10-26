@@ -1,0 +1,14 @@
+{ "columns":10,
+ "image":"Spritesheets\/terrainTiles_default.png",
+ "imageheight":256,
+ "imagewidth":640,
+ "margin":0,
+ "name":"terrainTiles_default",
+ "spacing":0,
+ "tilecount":40,
+ "tiledversion":"1.11.2",
+ "tileheight":64,
+ "tilewidth":64,
+ "type":"tileset",
+ "version":"1.10"
+}

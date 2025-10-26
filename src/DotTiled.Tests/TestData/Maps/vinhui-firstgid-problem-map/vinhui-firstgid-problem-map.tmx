@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="64" infinite="1" nextlayerid="5" nextobjectid="81">
+ <editorsettings>
+  <export target="map.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="terrainTiles_default.tsx"/>
+ <tileset firstgid="41" source="objects.tsx"/>
+ <layer id="1" name="Base" width="30" height="20">
+  <data encoding="csv">
+   <chunk x="0" y="0" width="16" height="16">
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,14,3,3,3,3,7,3,3,3,3,3,3,3,15,1,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,2,1,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,4,3,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,2,1,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,2,1,
+1,2,1,1,1,1,4,3,3,3,3,3,3,3,5,1,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,2,1,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,2,1,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,2,1,
+1,2,1,1,1,1,2,1,1,1,1,1,1,1,4,3,
+1,4,3,3,3,3,6,3,3,15,1,1,1,1,2,1,
+1,2,1,1,1,1,1,1,1,2,1,1,1,1,2,1,
+1,2,1,1,1,1,1,1,1,2,1,1,1,1,2,1,
+1,16,3,3,3,3,3,3,3,6,3,3,3,3,17,1,
+11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11
+</chunk>
+   <chunk x="16" y="0" width="16" height="16">
+8,21,21,21,21,21,21,21,21,21,21,0,0,0,0,0,
+8,34,23,23,35,21,21,21,21,21,21,0,0,0,0,0,
+8,22,21,21,24,23,23,23,35,21,21,0,0,0,0,0,
+28,25,21,21,22,21,21,21,22,21,21,0,0,0,0,0,
+8,22,21,21,22,21,21,21,22,21,21,0,0,0,0,0,
+8,24,23,23,33,23,23,23,25,21,21,0,0,0,0,0,
+8,22,21,21,22,21,21,21,36,35,21,0,0,0,0,0,
+8,22,21,21,22,21,21,21,21,22,21,0,0,0,0,0,
+8,22,21,21,36,23,23,23,23,25,21,0,0,0,0,0,
+8,22,21,21,21,21,21,21,21,22,21,0,0,0,0,0,
+28,26,23,23,35,21,21,21,21,22,21,0,0,0,0,0,
+8,21,21,21,22,21,21,21,21,22,21,0,0,0,0,0,
+8,21,21,21,22,21,21,21,21,22,21,0,0,0,0,0,
+8,21,21,21,22,21,21,21,21,22,21,0,0,0,0,0,
+8,21,21,21,36,23,23,23,23,37,21,0,0,0,0,0,
+8,21,21,21,21,21,21,21,21,21,21,0,0,0,0,0
+</chunk>
+  </data>
+ </layer>
+ <objectgroup id="2" name="Trees">
+  <properties>
+   <property name="depth" type="float" value="0.2"/>
+  </properties>
+  <object id="1" gid="44" x="809.333" y="201.333" width="64" height="64"/>
+  <object id="2" gid="44" x="581.333" y="265.333" width="64" height="64"/>
+  <object id="3" gid="44" x="229.333" y="198.667" width="64" height="64"/>
+  <object id="4" gid="44" x="142.667" y="350.667" width="64" height="64"/>
+  <object id="5" gid="44" x="244" y="429.333" width="64" height="64"/>
+  <object id="6" gid="44" x="162.667" y="588" width="64" height="64"/>
+  <object id="7" gid="44" x="297.333" y="672" width="64" height="64"/>
+  <object id="8" gid="44" x="157.333" y="868" width="64" height="64"/>
+  <object id="9" gid="44" x="457.333" y="840" width="64" height="64"/>
+  <object id="10" gid="44" x="768" y="829.333" width="64" height="64"/>
+  <object id="11" gid="44" x="838.667" y="565.333" width="64" height="64"/>
+  <object id="12" gid="44" x="517.333" y="529.333" width="64" height="64"/>
+  <object id="13" gid="44" x="608" y="685.333" width="64" height="64"/>
+  <object id="14" gid="44" x="745.333" y="353.333" width="64" height="64"/>
+  <object id="15" gid="48" x="1113.33" y="925.333" width="64" height="64"/>
+  <object id="16" gid="48" x="1533.33" y="801.333" width="64" height="64"/>
+  <object id="17" gid="48" x="1158.67" y="564" width="64" height="64"/>
+  <object id="18" gid="48" x="1404" y="472" width="64" height="64"/>
+  <object id="19" gid="48" x="1404" y="238.667" width="64" height="64"/>
+  <object id="20" gid="48" x="1185.33" y="234.667" width="64" height="64"/>
+  <object id="21" gid="48" x="1564" y="93.3333" width="64" height="64"/>
+  <object id="22" gid="42" x="946" y="968.667" width="36" height="36"/>
+  <object id="23" gid="42" x="856.667" y="739.333" width="36" height="36"/>
+  <object id="24" gid="42" x="687.333" y="882" width="36" height="36"/>
+  <object id="25" gid="42" x="344.667" y="852.667" width="36" height="36"/>
+  <object id="26" gid="42" x="242" y="547.333" width="36" height="36"/>
+  <object id="27" gid="42" x="519.333" y="331.333" width="36" height="36"/>
+  <object id="28" gid="42" x="234" y="224.667" width="36" height="36"/>
+  <object id="29" gid="42" x="475.333" y="160.667" width="36" height="36"/>
+  <object id="30" gid="42" x="690" y="172.667" width="36" height="36"/>
+  <object id="31" gid="42" x="840.667" y="264.667" width="36" height="36"/>
+  <object id="32" gid="42" x="827.333" y="363.333" width="36" height="36"/>
+  <object id="33" gid="42" x="678" y="551.333" width="36" height="36"/>
+  <object id="34" gid="42" x="506" y="668.667" width="36" height="36"/>
+  <object id="35" gid="43" x="688" y="335.667" width="8" height="10"/>
+  <object id="36" gid="43" x="708" y="262.333" width="8" height="10"/>
+  <object id="37" gid="43" x="608" y="533" width="8" height="10"/>
+  <object id="38" gid="43" x="286.667" y="530.333" width="8" height="10"/>
+  <object id="39" gid="43" x="328" y="301" width="8" height="10"/>
+  <object id="40" gid="43" x="170.667" y="209" width="8" height="10"/>
+  <object id="41" gid="43" x="278.667" y="795.667" width="8" height="10"/>
+  <object id="42" gid="43" x="744" y="735.667" width="8" height="10"/>
+  <object id="43" gid="43" x="886.667" y="870.333" width="8" height="10"/>
+  <object id="44" gid="43" x="824" y="462.333" width="8" height="10"/>
+  <object id="45" gid="43" x="353.333" y="146.333" width="8" height="10"/>
+  <object id="46" gid="43" x="141.333" y="142.333" width="8" height="10"/>
+  <object id="47" gid="43" x="494.667" y="222.333" width="8" height="10"/>
+ </objectgroup>
+ <objectgroup id="3" name="SpawnPoints">
+  <object id="73" x="110" y="192">
+   <point/>
+  </object>
+  <object id="74" x="102" y="594">
+   <point/>
+  </object>
+  <object id="75" x="584" y="914">
+   <point/>
+  </object>
+  <object id="76" x="874" y="240">
+   <point/>
+  </object>
+  <object id="77" x="1346" y="210">
+   <properties>
+    <property name="Rotation" type="float" value="10"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="78" x="1596" y="586">
+   <point/>
+  </object>
+  <object id="79" x="1236" y="620">
+   <point/>
+  </object>
+  <object id="80" x="454" y="692">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="Crates">
+  <object id="62" template="DestroyableCrate.tx" x="552.667" y="155.333"/>
+  <object id="63" template="DestroyableCrate.tx" x="296" y="290"/>
+  <object id="64" template="DestroyableCrate.tx" x="153" y="53"/>
+  <object id="65" template="DestroyableCrate.tx" x="490" y="378"/>
+  <object id="67" template="DestroyableCrate.tx" x="845" y="641"/>
+  <object id="68" template="DestroyableCrate.tx" x="943" y="680"/>
+  <object id="69" template="DestroyableCrate.tx" x="146" y="922"/>
+  <object id="70" template="DestroyableCrate.tx" x="1626" y="536"/>
+  <object id="71" template="DestroyableCrate.tx" x="1248" y="135"/>
+  <object id="72" template="DestroyableCrate.tx" x="1163" y="637"/>
+ </objectgroup>
+</map>

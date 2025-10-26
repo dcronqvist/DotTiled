@@ -96,6 +96,31 @@ public partial class TestData
           {
             ID = 1,
             Template = ext == "tmx" ? "template.tx" : "template.tj",
+            TemplateTileset = new Tileset
+            {
+              FirstGID = 1,
+              Source = ext == "tmx" ? "tiles.tsx" : "tiles.tsj",
+              Version = "1.10",
+              TiledVersion = "1.11.2",
+              Name = "Tiles",
+              TileWidth = 16,
+              TileHeight = 16,
+              TileCount = 4,
+              Columns = 2,
+              Grid = new Grid
+              {
+                Orientation = GridOrientation.Orthogonal,
+                Width = 32,
+                Height = 32
+              },
+              Image = new Image
+              {
+                Source = "tiles.png",
+                Width = 32,
+                Height = 32,
+                Format = ImageFormat.Png
+              }
+            },
             X = 80,
             Y = 144,
 
@@ -107,6 +132,31 @@ public partial class TestData
           {
             ID = 2,
             Template = ext == "tmx" ? "template.tx" : "template.tj",
+            TemplateTileset = new Tileset
+            {
+              FirstGID = 1,
+              Source = ext == "tmx" ? "tiles.tsx" : "tiles.tsj",
+              Version = "1.10",
+              TiledVersion = "1.11.2",
+              Name = "Tiles",
+              TileWidth = 16,
+              TileHeight = 16,
+              TileCount = 4,
+              Columns = 2,
+              Grid = new Grid
+              {
+                Orientation = GridOrientation.Orthogonal,
+                Width = 32,
+                Height = 32
+              },
+              Image = new Image
+              {
+                Source = "tiles.png",
+                Width = 32,
+                Height = 32,
+                Format = ImageFormat.Png
+              }
+            },
             X = 48,
             Y = 144,
 
