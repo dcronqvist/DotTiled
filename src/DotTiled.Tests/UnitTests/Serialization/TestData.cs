@@ -51,6 +51,7 @@ public static partial class TestData
     [GetMapPath("map-with-deep-props"), (string f) => MapWithDeepProps(), MapWithDeepPropsCustomTypeDefinitions()],
     [GetMapPath("map-with-class"), (string f) => MapWithClass(), MapWithClassCustomTypeDefinitions()],
     [GetMapPath("map-with-class-and-props"), (string f) => MapWithClassAndProps(), MapWithClassAndPropsCustomTypeDefinitions()],
+    [GetMapPath("map-with-infinite-and-empty-chunks"), (string f) => MapWithInfiniteAndEmptyChunks(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-override-object-bug"), (string f) => MapOverrideObjectBug(f), MapOverrideObjectBugCustomTypeDefinitions()],
   ];
 }
