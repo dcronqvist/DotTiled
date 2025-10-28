@@ -10,7 +10,7 @@ public abstract class Object : HasPropertiesBase
   /// <summary>
   /// Unique ID of the objects. Each object that is placed on a map gets a unique ID. Even if an object was deleted, no object gets the same ID.
   /// </summary>
-  public Optional<uint> ID { get; set; } = Optional<uint>.Empty;
+  public Optional<uint> ID { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The name of the object. An arbitrary string.
@@ -55,7 +55,12 @@ public abstract class Object : HasPropertiesBase
   /// <summary>
   /// A reference to a template file.
   /// </summary>
-  public Optional<string> Template { get; set; } = Optional<string>.Empty;
+  public Optional<string> Template { get; set; } = Optional.Empty;
+
+  /// <summary>
+  /// If the object is created from a template and the template represents a tile object, this property will contain the tileset that the tile belongs to.
+  /// </summary>
+  public Optional<Tileset> TemplateTileset { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Object properties.
@@ -64,4 +69,10 @@ public abstract class Object : HasPropertiesBase
 
   /// <inheritdoc/>
   public override IList<IProperty> GetProperties() => Properties;
+
+  /// <summary>
+  /// Creates a deep copy of the object.
+  /// </summary>
+  /// <returns></returns>
+  internal abstract Object Clone();
 }

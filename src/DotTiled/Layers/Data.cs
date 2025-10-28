@@ -90,12 +90,12 @@ public class Chunk
   /// <summary>
   /// The width of the chunk in tiles.
   /// </summary>
-  public required uint Width { get; set; }
+  public required int Width { get; set; }
 
   /// <summary>
   /// The height of the chunk in tiles.
   /// </summary>
-  public required uint Height { get; set; }
+  public required int Height { get; set; }
 
   /// <summary>
   /// The parsed chunk data, as a list of tile GIDs.
@@ -118,27 +118,27 @@ public class Data
   /// <summary>
   /// The encoding used to encode the tile layer data.
   /// </summary>
-  public Optional<DataEncoding> Encoding { get; set; } = Optional<DataEncoding>.Empty;
+  public Optional<DataEncoding> Encoding { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The compression method used to compress the tile layer data.
   /// </summary>
-  public Optional<DataCompression> Compression { get; set; } = Optional<DataCompression>.Empty;
+  public Optional<DataCompression> Compression { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The parsed tile layer data, as a list of tile GIDs.
   /// To get an actual tile ID, you map it to a local tile ID using the correct tileset. Please refer to
   /// <see href="https://doc.mapeditor.org/en/stable/reference/global-tile-ids/#mapping-a-gid-to-a-local-tile-id">the documentation on how to do this</see>.
   /// </summary>
-  public Optional<uint[]> GlobalTileIDs { get; set; } = Optional<uint[]>.Empty;
+  public Optional<uint[]> GlobalTileIDs { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The parsed flipping flags for each tile in the layer. Appear in the same order as the tiles in the layer in <see cref="GlobalTileIDs"/>.
   /// </summary>
-  public Optional<FlippingFlags[]> FlippingFlags { get; set; } = Optional<FlippingFlags[]>.Empty;
+  public Optional<FlippingFlags[]> FlippingFlags { get; set; } = Optional.Empty;
 
   /// <summary>
   /// If the map is infinite, it will instead contain a list of chunks.
   /// </summary>
-  public Optional<Chunk[]> Chunks { get; set; } = Optional<Chunk[]>.Empty;
+  public Optional<Chunk[]> Chunks { get; set; } = Optional.Empty;
 }

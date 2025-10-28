@@ -19,12 +19,11 @@ public abstract partial class TmjReaderBase
 
   internal static Chunk ReadChunk(JsonElement element, Optional<DataCompression> compression, DataEncoding encoding)
   {
-    var data = ReadDataWithoutChunks(element, compression, encoding);
-
+    var data = element.GetRequiredPropertyCustom<Data>("data", e => ReadDataWithoutChunks(e, compression, encoding));
     var x = element.GetRequiredProperty<int>("x");
     var y = element.GetRequiredProperty<int>("y");
-    var width = element.GetRequiredProperty<uint>("width");
-    var height = element.GetRequiredProperty<uint>("height");
+    var width = element.GetRequiredProperty<int>("width");
+    var height = element.GetRequiredProperty<int>("height");
 
     return new Chunk
     {
@@ -32,8 +31,8 @@ public abstract partial class TmjReaderBase
       Y = y,
       Width = width,
       Height = height,
-      GlobalTileIDs = data.GlobalTileIDs,
-      FlippingFlags = data.FlippingFlags
+      GlobalTileIDs = data.GlobalTileIDs.Value,
+      FlippingFlags = data.FlippingFlags.Value
     };
   }
 

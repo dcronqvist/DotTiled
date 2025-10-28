@@ -17,7 +17,7 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = Color.Parse("#00000000", CultureInfo.InvariantCulture),
+    BackgroundColor = TiledColor.Parse("#00000000", CultureInfo.InvariantCulture),
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 2,
@@ -56,7 +56,7 @@ public partial class TestData
         PropertyType = "CustomClass",
         Value = [
           new BoolProperty { Name = "boolinclass", Value = true },
-          new ColorProperty { Name = "colorinclass", Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture) },
+          new ColorProperty { Name = "colorinclass", Value = TiledColor.Parse("#000000ff", CultureInfo.InvariantCulture) },
           new FileProperty { Name = "fileinclass", Value = "" },
           new FloatProperty { Name = "floatinclass", Value = 13.37f },
           new IntProperty { Name = "intinclass", Value = 0 },
@@ -106,7 +106,7 @@ public partial class TestData
         new ColorProperty
         {
           Name = "colorinclass",
-          Value = Color.Parse("#000000ff", CultureInfo.InvariantCulture)
+          Value = TiledColor.Parse("#000000ff", CultureInfo.InvariantCulture)
         },
         new FileProperty
         {

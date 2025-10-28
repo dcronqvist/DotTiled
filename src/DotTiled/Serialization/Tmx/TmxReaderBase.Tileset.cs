@@ -8,8 +8,8 @@ namespace DotTiled.Serialization.Tmx;
 public abstract partial class TmxReaderBase
 {
   internal Tileset ReadTileset(
-    Optional<string> parentVersion = null,
-    Optional<string> parentTiledVersion = null)
+    Optional<string> parentVersion = default,
+    Optional<string> parentTiledVersion = default)
   {
     var firstGID = _reader.GetOptionalAttributeParseable<uint>("firstgid");
     var source = _reader.GetOptionalAttribute("source");
@@ -18,7 +18,7 @@ public abstract partial class TmxReaderBase
     if (source.HasValue && firstGID.HasValue)
     {
       // Is external tileset
-      var externalTileset = _externalTilesetResolver(source);
+      var externalTileset = CloneTileset(_externalTilesetResolver(source.Value));
       externalTileset.FirstGID = firstGID;
       externalTileset.Source = source;
 
@@ -31,12 +31,12 @@ public abstract partial class TmxReaderBase
     var tiledVersion = _reader.GetOptionalAttribute("tiledversion").GetValueOrOptional(parentTiledVersion);
     var name = _reader.GetRequiredAttribute("name");
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
-    var tileWidth = _reader.GetRequiredAttributeParseable<uint>("tilewidth");
-    var tileHeight = _reader.GetRequiredAttributeParseable<uint>("tileheight");
-    var spacing = _reader.GetOptionalAttributeParseable<uint>("spacing").GetValueOr(0);
-    var margin = _reader.GetOptionalAttributeParseable<uint>("margin").GetValueOr(0);
-    var tileCount = _reader.GetRequiredAttributeParseable<uint>("tilecount");
-    var columns = _reader.GetRequiredAttributeParseable<uint>("columns");
+    var tileWidth = _reader.GetRequiredAttributeParseable<int>("tilewidth");
+    var tileHeight = _reader.GetRequiredAttributeParseable<int>("tileheight");
+    var spacing = _reader.GetOptionalAttributeParseable<int>("spacing").GetValueOr(0);
+    var margin = _reader.GetOptionalAttributeParseable<int>("margin").GetValueOr(0);
+    var tileCount = _reader.GetRequiredAttributeParseable<int>("tilecount");
+    var columns = _reader.GetRequiredAttributeParseable<int>("columns");
     var objectAlignment = _reader.GetOptionalAttributeEnum<ObjectAlignment>("objectalignment", s => s switch
     {
       "unspecified" => ObjectAlignment.Unspecified,
@@ -125,9 +125,9 @@ public abstract partial class TmxReaderBase
       _ => throw new InvalidOperationException($"Unknown image format '{s}'")
     });
     var source = _reader.GetOptionalAttribute("source");
-    var transparentColor = _reader.GetOptionalAttributeClass<Color>("trans");
-    var width = _reader.GetOptionalAttributeParseable<uint>("width");
-    var height = _reader.GetOptionalAttributeParseable<uint>("height");
+    var transparentColor = _reader.GetOptionalAttributeClass<TiledColor>("trans");
+    var width = _reader.GetOptionalAttributeParseable<int>("width");
+    var height = _reader.GetOptionalAttributeParseable<int>("height");
 
     _reader.ProcessChildren("image", (r, elementName) => elementName switch
     {
@@ -136,7 +136,7 @@ public abstract partial class TmxReaderBase
     });
 
     if (!format.HasValue && source.HasValue)
-      format = Helpers.ParseImageFormatFromSource(source);
+      format = Helpers.ParseImageFormatFromSource(source.Value);
 
     return new Image
     {
@@ -167,8 +167,8 @@ public abstract partial class TmxReaderBase
       "isometric" => GridOrientation.Isometric,
       _ => throw new InvalidOperationException($"Unknown orientation '{s}'")
     }).GetValueOr(GridOrientation.Orthogonal);
-    var width = _reader.GetRequiredAttributeParseable<uint>("width");
-    var height = _reader.GetRequiredAttributeParseable<uint>("height");
+    var width = _reader.GetRequiredAttributeParseable<int>("width");
+    var height = _reader.GetRequiredAttributeParseable<int>("height");
 
     _reader.ReadStartElement("grid");
     return new Grid { Orientation = orientation, Width = width, Height = height };
@@ -192,10 +192,10 @@ public abstract partial class TmxReaderBase
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
     var type = _reader.GetOptionalAttribute("type").GetValueOr("");
     var probability = _reader.GetOptionalAttributeParseable<float>("probability").GetValueOr(0f);
-    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
-    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
-    var width = _reader.GetOptionalAttributeParseable<uint>("width");
-    var height = _reader.GetOptionalAttributeParseable<uint>("height");
+    var x = _reader.GetOptionalAttributeParseable<int>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<int>("y").GetValueOr(0);
+    var width = _reader.GetOptionalAttributeParseable<int>("width");
+    var height = _reader.GetOptionalAttributeParseable<int>("height");
 
     // Elements
     var propertiesCounter = 0;
@@ -212,7 +212,7 @@ public abstract partial class TmxReaderBase
       "animation" => () => Helpers.SetAtMostOnce(ref animation, r.ReadList<Frame>("animation", "frame", (ar) =>
       {
         var tileID = ar.GetRequiredAttributeParseable<uint>("tileid");
-        var duration = ar.GetRequiredAttributeParseable<uint>("duration");
+        var duration = ar.GetRequiredAttributeParseable<int>("duration");
         return new Frame { TileID = tileID, Duration = duration };
       }), "Animation"),
       _ => r.Skip
@@ -225,11 +225,11 @@ public abstract partial class TmxReaderBase
       Probability = probability,
       X = x,
       Y = y,
-      Width = width.HasValue ? width : image?.Width ?? 0,
-      Height = height.HasValue ? height : image?.Height ?? 0,
+      Width = width.HasValue ? width.Value : image?.Width.GetValueOr(0) ?? 0,
+      Height = height.HasValue ? height.Value : image?.Height.GetValueOr(0) ?? 0,
       Properties = properties ?? [],
-      Image = image is null ? Optional<Image>.Empty : image,
-      ObjectLayer = objectLayer is null ? Optional<ObjectLayer>.Empty : objectLayer,
+      Image = image is null ? Optional.Empty : image,
+      ObjectLayer = objectLayer is null ? Optional.Empty : objectLayer,
       Animation = animation ?? []
     };
   }
@@ -277,7 +277,7 @@ public abstract partial class TmxReaderBase
     // Attributes
     var name = _reader.GetRequiredAttribute("name");
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
-    var color = _reader.GetRequiredAttributeParseable<Color>("color");
+    var color = _reader.GetRequiredAttributeParseable<TiledColor>("color");
     var tile = _reader.GetRequiredAttributeParseable<int>("tile");
     var probability = _reader.GetOptionalAttributeParseable<float>("probability").GetValueOr(0f);
 

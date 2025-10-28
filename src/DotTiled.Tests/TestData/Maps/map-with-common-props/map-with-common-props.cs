@@ -17,7 +17,7 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = Color.Parse("#00ff00", CultureInfo.InvariantCulture),
+    BackgroundColor = TiledColor.Parse("#00ff00", CultureInfo.InvariantCulture),
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 2,
@@ -52,13 +52,13 @@ public partial class TestData
     Properties =
     [
       new BoolProperty { Name = "boolprop", Value = true },
-      new ColorProperty { Name = "colorprop", Value = Color.Parse("#ff55ffff", CultureInfo.InvariantCulture) },
+      new ColorProperty { Name = "colorprop", Value = TiledColor.Parse("#ff55ffff", CultureInfo.InvariantCulture) },
       new FileProperty { Name = "fileprop", Value = "file.txt" },
       new FloatProperty { Name = "floatprop", Value = 4.2f },
       new IntProperty { Name = "intprop", Value = 8 },
       new ObjectProperty { Name = "objectprop", Value = 5 },
       new StringProperty { Name = "stringprop", Value = "This is a string, hello world!" },
-      new ColorProperty { Name = "unsetcolorprop", Value = Optional<Color>.Empty }
+      new ColorProperty { Name = "unsetcolorprop", Value = Optional.Empty }
     ]
   };
 }

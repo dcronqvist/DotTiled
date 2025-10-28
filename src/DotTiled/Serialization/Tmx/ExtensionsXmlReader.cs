@@ -74,7 +74,10 @@ internal static class ExtensionsXmlReader
     var list = new List<T>();
 
     if (reader.IsEmptyElement)
+    {
+      reader.ReadStartElement(wrapper);
       return list;
+    }
 
     reader.ReadStartElement(wrapper);
     while (reader.IsStartElement(elementName))

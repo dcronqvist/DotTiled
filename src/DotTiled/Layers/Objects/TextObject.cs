@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Linq;
 
 namespace DotTiled;
 
@@ -72,7 +73,7 @@ public class TextObject : Object
   /// <summary>
   /// The color of the text.
   /// </summary>
-  public Color Color { get; set; } = Color.Parse("#000000", CultureInfo.InvariantCulture);
+  public TiledColor Color { get; set; } = TiledColor.Parse("#000000", CultureInfo.InvariantCulture);
 
   /// <summary>
   /// Whether the text is bold.
@@ -113,4 +114,32 @@ public class TextObject : Object
   /// The text to be displayed.
   /// </summary>
   public string Text { get; set; } = "";
+
+  internal override Object Clone() => new TextObject
+  {
+    ID = ID,
+    Name = Name,
+    Type = Type,
+    X = X,
+    Y = Y,
+    Width = Width,
+    Height = Height,
+    Rotation = Rotation,
+    Visible = Visible,
+    Template = Template,
+    Properties = Properties.Select(p => p.Clone()).ToList(),
+
+    FontFamily = FontFamily,
+    PixelSize = PixelSize,
+    Wrap = Wrap,
+    Color = Color,
+    Bold = Bold,
+    Italic = Italic,
+    Underline = Underline,
+    Strikeout = Strikeout,
+    Kerning = Kerning,
+    HorizontalAlignment = HorizontalAlignment,
+    VerticalAlignment = VerticalAlignment,
+    Text = Text,
+  };
 }

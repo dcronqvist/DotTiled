@@ -17,7 +17,7 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = Color.Parse("#00000000", CultureInfo.InvariantCulture),
+    BackgroundColor = TiledColor.Parse("#00000000", CultureInfo.InvariantCulture),
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 2,

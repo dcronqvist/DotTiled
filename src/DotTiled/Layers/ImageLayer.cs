@@ -8,12 +8,12 @@ public class ImageLayer : BaseLayer
   /// <summary>
   /// The X position of the image layer in pixels.
   /// </summary>
-  public uint X { get; set; } = 0;
+  public int X { get; set; } = 0;
 
   /// <summary>
   /// The Y position of the image layer in pixels.
   /// </summary>
-  public Optional<uint> Y { get; set; } = 0;
+  public int Y { get; set; } = 0;
 
   /// <summary>
   /// Whether the image drawn by this layer is repeated along the X axis.

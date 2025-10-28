@@ -17,7 +17,7 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = new Color { R = 0, G = 0, B = 0, A = 0 },
+    BackgroundColor = new TiledColor { R = 0, G = 0, B = 0, A = 0 },
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 8,
@@ -181,8 +181,8 @@ public partial class TestData
             {
               Format = ImageFormat.Png,
               Source = "tileset.png",
-              Width = fileExt == "tmx" ? 256u : 0, // Currently, json format does not
-              Height = fileExt == "tmx" ? 96u : 0  // include image dimensions in image layer https://github.com/mapeditor/tiled/issues/4028
+              Width = fileExt == "tmx" ? 256 : 0, // Currently, json format does not
+              Height = fileExt == "tmx" ? 96 : 0  // include image dimensions in image layer https://github.com/mapeditor/tiled/issues/4028
             },
             RepeatX = true
           },

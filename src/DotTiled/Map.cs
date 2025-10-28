@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -100,7 +101,7 @@ public class Map : HasPropertiesBase
   /// <summary>
   /// The Tiled version used to save the file.
   /// </summary>
-  public Optional<string> TiledVersion { get; set; } = Optional<string>.Empty;
+  public Optional<string> TiledVersion { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The class of this map.
@@ -126,37 +127,37 @@ public class Map : HasPropertiesBase
   /// <summary>
   /// The width of the map in tiles.
   /// </summary>
-  public required uint Width { get; set; }
+  public required int Width { get; set; }
 
   /// <summary>
   /// The height of the map in tiles.
   /// </summary>
-  public required uint Height { get; set; }
+  public required int Height { get; set; }
 
   /// <summary>
   /// The width of a tile.
   /// </summary>
-  public required uint TileWidth { get; set; }
+  public required int TileWidth { get; set; }
 
   /// <summary>
   /// The height of a tile.
   /// </summary>
-  public required uint TileHeight { get; set; }
+  public required int TileHeight { get; set; }
 
   /// <summary>
   /// Only for hexagonal maps. Determines the width or height (depending on the staggered axis) of the tile's edge, in pixels.
   /// </summary>
-  public Optional<uint> HexSideLength { get; set; } = Optional<uint>.Empty;
+  public Optional<int> HexSideLength { get; set; } = Optional.Empty;
 
   /// <summary>
   /// For staggered and hexagonal maps, determines which axis (X or Y) is staggered.
   /// </summary>
-  public Optional<StaggerAxis> StaggerAxis { get; set; } = Optional<StaggerAxis>.Empty;
+  public Optional<StaggerAxis> StaggerAxis { get; set; } = Optional.Empty;
 
   /// <summary>
   /// For staggered and hexagonal maps, determines whether the "even" or "odd" indexes along the staggered axis are shifted.
   /// </summary>
-  public Optional<StaggerIndex> StaggerIndex { get; set; } = Optional<StaggerIndex>.Empty;
+  public Optional<StaggerIndex> StaggerIndex { get; set; } = Optional.Empty;
 
   /// <summary>
   /// X coordinate of the parallax origin in pixels.
@@ -171,7 +172,7 @@ public class Map : HasPropertiesBase
   /// <summary>
   /// The background color of the map.
   /// </summary>
-  public Color BackgroundColor { get; set; } = Color.Parse("#00000000", CultureInfo.InvariantCulture);
+  public TiledColor BackgroundColor { get; set; } = TiledColor.Parse("#00000000", CultureInfo.InvariantCulture);
 
   /// <summary>
   /// Stores the next available ID for new layers. This number is used to prevent reuse of the same ID after layers have been removed.
@@ -205,4 +206,31 @@ public class Map : HasPropertiesBase
   /// Hierarchical list of layers. <see cref="Group"/> is a layer type which can contain sub-layers to create a hierarchy.
   /// </summary>
   public List<BaseLayer> Layers { get; set; } = [];
+
+  /// <summary>
+  /// Resolves which tileset a global tile ID belongs to, and returns the corresponding local tile ID.
+  /// </summary>
+  /// <param name="globalTileID">The global tile ID to resolve.</param>
+  /// <param name="localTileID">The local tile ID within the tileset.</param>
+  /// <returns>The tileset that contains the tile with the specified global tile ID.</returns>
+  /// <exception cref="ArgumentException">Thrown when no tileset is found for the specified global tile ID.</exception>
+  public Tileset ResolveTilesetForGlobalTileID(uint globalTileID, out uint localTileID)
+  {
+    for (int i = Tilesets.Count - 1; i >= 0; i--)
+    {
+      var tileset = Tilesets[i];
+
+      if (globalTileID >= tileset.FirstGID.Value
+       && globalTileID < tileset.FirstGID.Value + tileset.TileCount)
+      {
+        localTileID = globalTileID - tileset.FirstGID.Value;
+        return tileset;
+      }
+    }
+
+    throw new ArgumentException(
+      $"No tileset found for global tile ID {globalTileID}.",
+      nameof(globalTileID)
+    );
+  }
 }

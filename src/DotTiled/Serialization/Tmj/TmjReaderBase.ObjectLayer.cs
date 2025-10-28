@@ -15,18 +15,18 @@ public abstract partial class TmjReaderBase
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
     var opacity = element.GetOptionalProperty<float>("opacity").GetValueOr(1.0f);
     var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
-    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
+    var tintColor = element.GetOptionalPropertyParseable<TiledColor>("tintcolor");
     var offsetX = element.GetOptionalProperty<float>("offsetx").GetValueOr(0.0f);
     var offsetY = element.GetOptionalProperty<float>("offsety").GetValueOr(0.0f);
     var parallaxX = element.GetOptionalProperty<float>("parallaxx").GetValueOr(1.0f);
     var parallaxY = element.GetOptionalProperty<float>("parallaxy").GetValueOr(1.0f);
     var properties = ResolveAndMergeProperties(@class, element.GetOptionalPropertyCustom("properties", ReadProperties).GetValueOr([]));
 
-    var x = element.GetOptionalProperty<uint>("x").GetValueOr(0);
-    var y = element.GetOptionalProperty<uint>("y").GetValueOr(0);
-    var width = element.GetOptionalProperty<uint>("width").GetValueOr(0);
-    var height = element.GetOptionalProperty<uint>("height").GetValueOr(0);
-    var color = element.GetOptionalPropertyParseable<Color>("color");
+    var x = element.GetOptionalProperty<int>("x").GetValueOr(0);
+    var y = element.GetOptionalProperty<int>("y").GetValueOr(0);
+    var width = element.GetOptionalProperty<int>("width").GetValueOr(0);
+    var height = element.GetOptionalProperty<int>("height").GetValueOr(0);
+    var color = element.GetOptionalPropertyParseable<TiledColor>("color");
     var drawOrder = element.GetOptionalPropertyParseable<DrawOrder>("draworder", s => s switch
     {
       "topdown" => DrawOrder.TopDown,
@@ -61,7 +61,7 @@ public abstract partial class TmjReaderBase
 
   internal DotTiled.Object ReadObject(JsonElement element)
   {
-    Optional<uint> idDefault = Optional<uint>.Empty;
+    Optional<uint> idDefault = Optional.Empty;
     string nameDefault = "";
     string typeDefault = "";
     float xDefault = 0f;
@@ -76,12 +76,14 @@ public abstract partial class TmjReaderBase
     List<Vector2> polygonDefault = null;
     List<Vector2> polylineDefault = null;
     List<IProperty> propertiesDefault = [];
+    Optional<uint> gidDefault = Optional.Empty;
 
-    var template = element.GetOptionalProperty<string>("template");
-    if (template.HasValue)
+    var templateSource = element.GetOptionalProperty<string>("template");
+    Template template = null;
+    if (templateSource.HasValue)
     {
-      var resolvedTemplate = _externalTemplateResolver(template);
-      var templObj = resolvedTemplate.Object;
+      template = _externalTemplateResolver(templateSource.Value);
+      var templObj = template.Object.Clone();
 
       idDefault = templObj.ID;
       nameDefault = templObj.Name;
@@ -97,10 +99,11 @@ public abstract partial class TmjReaderBase
       pointDefault = templObj is PointObject;
       polygonDefault = (templObj is PolygonObject polygonObj) ? polygonObj.Points : null;
       polylineDefault = (templObj is PolylineObject polylineObj) ? polylineObj.Points : null;
+      gidDefault = (templObj is TileObject tileObj) ? tileObj.GID : Optional.Empty;
     }
 
     var ellipse = element.GetOptionalProperty<bool>("ellipse").GetValueOr(ellipseDefault);
-    var gid = element.GetOptionalProperty<uint>("gid");
+    var gid = element.GetOptionalProperty<uint>("gid").GetValueOrOptional(gidDefault);
     var height = element.GetOptionalProperty<float>("height").GetValueOr(heightDefault);
     var id = element.GetOptionalProperty<uint>("id").GetValueOrOptional(idDefault);
     var name = element.GetOptionalProperty<string>("name").GetValueOr(nameDefault);
@@ -131,7 +134,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties,
         GID = clearedGIDs.Single(),
         FlippingFlags = flippingFlags.Single()
@@ -151,7 +155,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties
       };
     }
@@ -169,7 +174,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties
       };
     }
@@ -187,7 +193,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties,
         Points = polygon
       };
@@ -206,7 +213,8 @@ public abstract partial class TmjReaderBase
         Height = height,
         Rotation = rotation,
         Visible = visible,
-        Template = template,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
         Properties = properties,
         Points = polyline
       };
@@ -223,9 +231,10 @@ public abstract partial class TmjReaderBase
       text.Value.Height = height;
       text.Value.Rotation = rotation;
       text.Value.Visible = visible;
-      text.Value.Template = template;
+      text.Value.Template = templateSource;
+      text.Value.TemplateTileset = template?.Tileset ?? Optional.Empty;
       text.Value.Properties = properties;
-      return text;
+      return text.Value;
     }
 
     return new RectangleObject
@@ -239,7 +248,8 @@ public abstract partial class TmjReaderBase
       Height = height,
       Rotation = rotation,
       Visible = visible,
-      Template = template,
+      Template = templateSource,
+      TemplateTileset = template?.Tileset ?? Optional.Empty,
       Properties = properties
     };
   }
@@ -255,7 +265,7 @@ public abstract partial class TmjReaderBase
   internal static TextObject ReadText(JsonElement element)
   {
     var bold = element.GetOptionalProperty<bool>("bold").GetValueOr(false);
-    var color = element.GetOptionalPropertyParseable<Color>("color").GetValueOr(Color.Parse("#00000000", CultureInfo.InvariantCulture));
+    var color = element.GetOptionalPropertyParseable<TiledColor>("color").GetValueOr(TiledColor.Parse("#000000", CultureInfo.InvariantCulture));
     var fontfamily = element.GetOptionalProperty<string>("fontfamily").GetValueOr("sans-serif");
     var halign = element.GetOptionalPropertyParseable<TextHorizontalAlignment>("halign", s => s switch
     {

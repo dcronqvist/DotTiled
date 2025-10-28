@@ -17,7 +17,7 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = Color.Parse("#00000000", CultureInfo.InvariantCulture),
+    BackgroundColor = TiledColor.Parse("#00000000", CultureInfo.InvariantCulture),
     Version = "1.10",
     TiledVersion = "1.11.0",
     NextLayerID = 2,
@@ -63,21 +63,21 @@ public partial class TestData
               new WangColor
               {
                 Name = "Water",
-                Color = Color.Parse("#ff0000", CultureInfo.InvariantCulture),
+                Color = TiledColor.Parse("#ff0000", CultureInfo.InvariantCulture),
                 Tile = 0,
                 Probability = 1
               },
               new WangColor
               {
                 Name = "Grass",
-                Color = Color.Parse("#00ff00", CultureInfo.InvariantCulture),
+                Color = TiledColor.Parse("#00ff00", CultureInfo.InvariantCulture),
                 Tile = -1,
                 Probability = 1
               },
               new WangColor
               {
                 Name = "Stone",
-                Color = Color.Parse("#0000ff", CultureInfo.InvariantCulture),
+                Color = TiledColor.Parse("#0000ff", CultureInfo.InvariantCulture),
                 Tile = 29,
                 Probability = 1
               }

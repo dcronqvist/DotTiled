@@ -17,11 +17,11 @@ public partial class TestData
     ParallaxOriginY = 0,
     RenderOrder = RenderOrder.RightDown,
     CompressionLevel = -1,
-    BackgroundColor = new Color { R = 0, G = 0, B = 0, A = 0 },
+    BackgroundColor = new TiledColor { R = 0, G = 0, B = 0, A = 0 },
     Version = "1.10",
-    TiledVersion = "1.11.0",
+    TiledVersion = "1.11.2",
     NextLayerID = 8,
-    NextObjectID = 7,
+    NextObjectID = 8,
     Tilesets = [
       new Tileset
       {
@@ -104,6 +104,25 @@ public partial class TestData
                 Y = 110.333f,
                 Width = 64,
                 Height = 146
+              },
+              new TextObject
+              {
+                ID = 7,
+                Name = "Text1",
+                Rotation = 0,
+                Text = "Hello World!",
+                Visible = true,
+                Width = 116.869f,
+                Height = 19f,
+                X = 52.5197f,
+                Y = 4.0107f,
+                PixelSize = 18,
+                Wrap = true,
+                Bold = true,
+                Italic = true,
+                Underline = true,
+                Strikeout = true,
+                Kerning = false
               }
             ]
           },
@@ -172,8 +191,8 @@ public partial class TestData
             {
               Format = ImageFormat.Png,
               Source = "tileset.png",
-              Width = fileExt == "tmx" ? 256u : 0, // Currently, json format does not
-              Height = fileExt == "tmx" ? 96u : 0  // include image dimensions in image layer https://github.com/mapeditor/tiled/issues/4028
+              Width = 256,
+              Height = 96
             },
             RepeatX = true
           },

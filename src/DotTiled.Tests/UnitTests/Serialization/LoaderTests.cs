@@ -71,8 +71,8 @@ public class LoaderTests
     """);
 
     var resourceCache = Substitute.For<IResourceCache>();
-    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional<Tileset>.Empty);
-    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional<Template>.Empty);
+    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional.Empty);
+    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional.Empty);
 
     var customTypeDefinitions = Enumerable.Empty<ICustomTypeDefinition>();
     var loader = new Loader(resourceReader, resourceCache, customTypeDefinitions);
@@ -134,8 +134,8 @@ public class LoaderTests
     """);
 
     var resourceCache = Substitute.For<IResourceCache>();
-    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional<Tileset>.Empty);
-    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional<Template>.Empty);
+    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional.Empty);
+    resourceCache.GetTemplate(Arg.Any<string>()).Returns(Optional.Empty);
 
     var customTypeDefinitions = Enumerable.Empty<ICustomTypeDefinition>();
     var loader = new Loader(resourceReader, resourceCache, customTypeDefinitions);
@@ -219,7 +219,7 @@ public class LoaderTests
     """);
 
     var resourceCache = Substitute.For<IResourceCache>();
-    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional<Tileset>.Empty);
+    resourceCache.GetTileset(Arg.Any<string>()).Returns(Optional.Empty);
     resourceCache.GetTemplate("template.tx").Returns(new Optional<Template>(new Template
     {
       Object = new PolygonObject
@@ -314,5 +314,40 @@ public class LoaderTests
 
     // Assert
     DotTiledAssert.AssertProperties(customClassDefinition.Members, result.Properties);
+  }
+
+  public static IEnumerable<object[]> Maps => TestData.MapTests;
+
+  [Theory]
+  [MemberData(nameof(Maps))]
+  public void LoadMap_ValidFilesExternalTilesetsAndTemplatesWithCache_ReturnsMapThatEqualsExpected(
+    string testDataFile,
+    Func<string, Map> expectedMap,
+    IReadOnlyCollection<ICustomTypeDefinition> customTypeDefinitions)
+  {
+    // Arrange
+    string[] fileFormats = [".tmx", ".tmj"];
+
+    foreach (var fileFormat in fileFormats)
+    {
+      var testDataFileWithFormat = testDataFile + fileFormat;
+      var resourceReader = Substitute.For<IResourceReader>();
+      resourceReader.Read(Arg.Any<string>()).Returns(callInfo =>
+      {
+        var filePath = callInfo.Arg<string>();
+        return TestData.GetRawStringFor(filePath);
+      });
+
+      var loader = Loader.DefaultWith(
+        resourceReader: resourceReader,
+        customTypeDefinitions: customTypeDefinitions);
+
+      // Act
+      var map = loader.LoadMap(testDataFileWithFormat);
+
+      // Assert
+      Assert.NotNull(map);
+      DotTiledAssert.AssertMap(expectedMap(fileFormat[1..]), map);
+    }
   }
 }

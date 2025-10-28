@@ -26,27 +26,27 @@ public class ObjectLayer : BaseLayer
   /// <summary>
   /// The X coordinate of the object layer in tiles.
   /// </summary>
-  public uint X { get; set; } = 0;
+  public int X { get; set; } = 0;
 
   /// <summary>
   /// The Y coordinate of the object layer in tiles.
   /// </summary>
-  public uint Y { get; set; } = 0;
+  public int Y { get; set; } = 0;
 
   /// <summary>
   /// The width of the object layer in tiles. Meaningless.
   /// </summary>
-  public uint Width { get; set; } = 0;
+  public int Width { get; set; } = 0;
 
   /// <summary>
   /// The height of the object layer in tiles. Meaningless.
   /// </summary>
-  public uint Height { get; set; } = 0;
+  public int Height { get; set; } = 0;
 
   /// <summary>
   /// A color that is multiplied with any tile objects drawn by this layer.
   /// </summary>
-  public Optional<Color> Color { get; set; } = Optional<Color>.Empty;
+  public Optional<TiledColor> Color { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Whether the objects are drawn according to the order of appearance (<see cref="DrawOrder.Index"/>) or sorted by their Y coordinate (<see cref="DrawOrder.TopDown"/>).

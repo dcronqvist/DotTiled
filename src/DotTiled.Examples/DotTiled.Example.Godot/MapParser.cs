@@ -42,10 +42,10 @@ public partial class MapParser : Node2D
 
   private Tileset ResolveTileset(string source)
   {
-      string tilesetString = FileAccess.Open($"res://{source}", FileAccess.ModeFlags.Read).GetAsText();
-      using TilesetReader tilesetReader =
-        new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType);
-      return tilesetReader.ReadTileset();
+    string tilesetString = FileAccess.Open($"res://{source}", FileAccess.ModeFlags.Read).GetAsText();
+    using TilesetReader tilesetReader =
+      new TilesetReader(tilesetString, ResolveTileset, ResolveTemplate, ResolveCustomType);
+    return tilesetReader.ReadTileset();
   }
 
   private Template ResolveTemplate(string source)
@@ -62,6 +62,6 @@ public partial class MapParser : Node2D
       [
         new CustomClassDefinition() { Name = "a" },
       ];
-    return allDefinedTypes.FirstOrDefault(ctd => ctd.Name == name) is ICustomTypeDefinition ctd ? new Optional<ICustomTypeDefinition>(ctd) : Optional<ICustomTypeDefinition>.Empty;
+    return allDefinedTypes.FirstOrDefault(ctd => ctd.Name == name) is ICustomTypeDefinition ctd ? new Optional<ICustomTypeDefinition>(ctd) : Optional.Empty;
   }
 }

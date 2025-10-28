@@ -8,12 +8,12 @@ public interface IProperty
   /// <summary>
   /// The name of the property.
   /// </summary>
-  public string Name { get; set; }
+  string Name { get; set; }
 
   /// <summary>
   /// The type of the property.
   /// </summary>
-  public PropertyType Type { get; }
+  PropertyType Type { get; }
 
   /// <summary>
   /// Clones the property, only used for copying properties when performing overriding
@@ -32,5 +32,5 @@ public interface IProperty<T> : IProperty
   /// <summary>
   /// The value of the property.
   /// </summary>
-  public T Value { get; set; }
+  T Value { get; set; }
 }

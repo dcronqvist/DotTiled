@@ -3,7 +3,7 @@ namespace DotTiled;
 /// <summary>
 /// Represents a color property.
 /// </summary>
-public class ColorProperty : IProperty<Optional<Color>>
+public class ColorProperty : IProperty<Optional<TiledColor>>
 {
   /// <inheritdoc/>
   public required string Name { get; set; }
@@ -14,7 +14,7 @@ public class ColorProperty : IProperty<Optional<Color>>
   /// <summary>
   /// The color value of the property.
   /// </summary>
-  public required Optional<Color> Value { get; set; }
+  public required Optional<TiledColor> Value { get; set; }
 
   /// <inheritdoc/>
   public IProperty Clone() => new ColorProperty

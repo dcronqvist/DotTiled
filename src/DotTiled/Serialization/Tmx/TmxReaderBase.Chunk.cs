@@ -6,8 +6,8 @@ public abstract partial class TmxReaderBase
   {
     var x = _reader.GetRequiredAttributeParseable<int>("x");
     var y = _reader.GetRequiredAttributeParseable<int>("y");
-    var width = _reader.GetRequiredAttributeParseable<uint>("width");
-    var height = _reader.GetRequiredAttributeParseable<uint>("height");
+    var width = _reader.GetRequiredAttributeParseable<int>("width");
+    var height = _reader.GetRequiredAttributeParseable<int>("height");
 
     var usesTileChildrenInsteadOfRawData = !encoding.HasValue;
     if (usesTileChildrenInsteadOfRawData)

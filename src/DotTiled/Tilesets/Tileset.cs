@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotTiled;
 
@@ -91,6 +93,32 @@ public enum FillMode
 }
 
 /// <summary>
+/// A helper class to specify where in a tileset image a tile is located.
+/// </summary>
+public class SourceRectangle
+{
+  /// <summary>
+  /// The X coordinate of the tile in the tileset image.
+  /// </summary>
+  public int X { get; set; } = 0;
+
+  /// <summary>
+  /// The Y coordinate of the tile in the tileset image.
+  /// </summary>
+  public int Y { get; set; } = 0;
+
+  /// <summary>
+  /// The width of the tile in the tileset image.
+  /// </summary>
+  public int Width { get; set; } = 0;
+
+  /// <summary>
+  /// The height of the tile in the tileset image.
+  /// </summary>
+  public int Height { get; set; } = 0;
+}
+
+/// <summary>
 /// A tileset is a collection of tiles that can be used in a tile layer, or by tile objects.
 /// </summary>
 public class Tileset : HasPropertiesBase
@@ -103,17 +131,17 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// The Tiled version used to save the file in case it was loaded from an external tileset file.
   /// </summary>
-  public Optional<string> TiledVersion { get; set; } = Optional<string>.Empty;
+  public Optional<string> TiledVersion { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The first global tile ID of this tileset (this global ID maps to the first tile in this tileset).
   /// </summary>
-  public Optional<uint> FirstGID { get; set; } = Optional<uint>.Empty;
+  public Optional<uint> FirstGID { get; set; } = Optional.Empty;
 
   /// <summary>
   /// If this tileset is stored in an external TSX (Tile Set XML) file, this attribute refers to that file.
   /// </summary>
-  public Optional<string> Source { get; set; } = Optional<string>.Empty;
+  public Optional<string> Source { get; set; } = Optional.Empty;
 
   /// <summary>
   /// The name of this tileset.
@@ -128,32 +156,32 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// The width of the tiles in this tileset, which should be at least 1 (non-zero) except in the case of image collection tilesets (in which case it stores the maximum tile width).
   /// </summary>
-  public required uint TileWidth { get; set; }
+  public required int TileWidth { get; set; }
 
   /// <summary>
   /// The height of the tiles in this tileset, which should be at least 1 (non-zero) except in the case of image collection tilesets (in which case it stores the maximum tile height).
   /// </summary>
-  public required uint TileHeight { get; set; }
+  public required int TileHeight { get; set; }
 
   /// <summary>
   /// The spacing in pixels between the tiles in this tileset (applies to the tileset image). Irrelevant for image collection tilesets.
   /// </summary>
-  public uint Spacing { get; set; } = 0;
+  public int Spacing { get; set; } = 0;
 
   /// <summary>
   /// The margin around the tiles in this tileset (applies to the tileset image). Irrelevant for image collection tilesets.
   /// </summary>
-  public uint Margin { get; set; } = 0;
+  public int Margin { get; set; } = 0;
 
   /// <summary>
   /// The number of tiles in this tileset.
   /// </summary>
-  public required uint TileCount { get; set; }
+  public required int TileCount { get; set; }
 
   /// <summary>
   /// The number of tile columns in the tileset.
   /// </summary>
-  public required uint Columns { get; set; }
+  public required int Columns { get; set; }
 
   /// <summary>
   /// Controls the aligntment for tile objects.
@@ -173,17 +201,17 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// If the tileset is based on a single image, which is cut into tiles based on the given attributes of the tileset, then this is that image.
   /// </summary>
-  public Optional<Image> Image { get; set; } = Optional<Image>.Empty;
+  public Optional<Image> Image { get; set; } = Optional.Empty;
 
   /// <summary>
   /// This is used to specify an offset in pixels, to be applied when drawing a tile from the related tileset. When not present, no offset is applied.
   /// </summary>
-  public Optional<TileOffset> TileOffset { get; set; } = Optional<TileOffset>.Empty;
+  public Optional<TileOffset> TileOffset { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Ths is only used in case of isometric orientation, and determines how tile overlays for terrain and collision information are rendered.
   /// </summary>
-  public Optional<Grid> Grid { get; set; } = Optional<Grid>.Empty;
+  public Optional<Grid> Grid { get; set; } = Optional.Empty;
 
   /// <summary>
   /// Tileset properties.
@@ -203,10 +231,48 @@ public class Tileset : HasPropertiesBase
   /// <summary>
   /// Used to describe which transformations can be applied to the tiles (e.g. to extend a Wang set by transforming existing tiles).
   /// </summary>
-  public Optional<Transformations> Transformations { get; set; } = Optional<Transformations>.Empty;
+  public Optional<Transformations> Transformations { get; set; } = Optional.Empty;
 
   /// <summary>
   /// If this tileset is based on a collection of images, then this list of tiles will contain the individual images that make up the tileset.
   /// </summary>
   public List<Tile> Tiles { get; set; } = [];
+
+  /// <summary>
+  /// Returns the source rectangle for a tile in this tileset given its local tile ID.
+  /// </summary>
+  /// <param name="localTileID">The local tile ID of the tile.</param>
+  /// <returns>A source rectangle describing the tile's position in the tileset's </returns>
+  /// <exception cref="ArgumentOutOfRangeException">Thrown when the local tile ID is out of range.</exception>
+  public SourceRectangle GetSourceRectangleForLocalTileID(uint localTileID)
+  {
+    if (localTileID >= TileCount)
+      throw new ArgumentException("The local tile ID is out of range.", nameof(localTileID));
+
+    var tileInTiles = Tiles.FirstOrDefault(t => t.ID == localTileID);
+    if (tileInTiles != null)
+    {
+      return new SourceRectangle
+      {
+        X = tileInTiles.X,
+        Y = tileInTiles.Y,
+        Width = tileInTiles.Width,
+        Height = tileInTiles.Height
+      };
+    }
+
+    var column = (int)(localTileID % Columns);
+    var row = (int)(localTileID / Columns);
+
+    var x = Margin + ((TileWidth + Spacing) * column);
+    var y = Margin + ((TileHeight + Spacing) * row);
+
+    return new SourceRectangle
+    {
+      X = x,
+      Y = y,
+      Width = TileWidth,
+      Height = TileHeight
+    };
+  }
 }

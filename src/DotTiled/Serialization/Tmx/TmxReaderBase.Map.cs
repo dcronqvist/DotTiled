@@ -32,11 +32,11 @@ public abstract partial class TmxReaderBase
       _ => throw new InvalidOperationException($"Unknown render order '{s}'")
     }).GetValueOr(RenderOrder.RightDown);
     var compressionLevel = _reader.GetOptionalAttributeParseable<int>("compressionlevel").GetValueOr(-1);
-    var width = _reader.GetRequiredAttributeParseable<uint>("width");
-    var height = _reader.GetRequiredAttributeParseable<uint>("height");
-    var tileWidth = _reader.GetRequiredAttributeParseable<uint>("tilewidth");
-    var tileHeight = _reader.GetRequiredAttributeParseable<uint>("tileheight");
-    var hexSideLength = _reader.GetOptionalAttributeParseable<uint>("hexsidelength");
+    var width = _reader.GetRequiredAttributeParseable<int>("width");
+    var height = _reader.GetRequiredAttributeParseable<int>("height");
+    var tileWidth = _reader.GetRequiredAttributeParseable<int>("tilewidth");
+    var tileHeight = _reader.GetRequiredAttributeParseable<int>("tileheight");
+    var hexSideLength = _reader.GetOptionalAttributeParseable<int>("hexsidelength");
     var staggerAxis = _reader.GetOptionalAttributeEnum<StaggerAxis>("staggeraxis", s => s switch
     {
       "x" => StaggerAxis.X,
@@ -51,7 +51,7 @@ public abstract partial class TmxReaderBase
     });
     var parallaxOriginX = _reader.GetOptionalAttributeParseable<float>("parallaxoriginx").GetValueOr(0.0f);
     var parallaxOriginY = _reader.GetOptionalAttributeParseable<float>("parallaxoriginy").GetValueOr(0.0f);
-    var backgroundColor = _reader.GetOptionalAttributeClass<Color>("backgroundcolor").GetValueOr(Color.Parse("#00000000", CultureInfo.InvariantCulture));
+    var backgroundColor = _reader.GetOptionalAttributeClass<TiledColor>("backgroundcolor").GetValueOr(TiledColor.Parse("#00000000", CultureInfo.InvariantCulture));
     var nextLayerID = _reader.GetRequiredAttributeParseable<uint>("nextlayerid");
     var nextObjectID = _reader.GetRequiredAttributeParseable<uint>("nextobjectid");
     var infinite = _reader.GetOptionalAttributeParseable<uint>("infinite").GetValueOr(0) == 1;

@@ -3,61 +3,93 @@ using System;
 namespace DotTiled;
 
 /// <summary>
+/// Represents an empty value.
+/// </summary>
+public readonly struct OptionalEmpty;
+
+/// <summary>
+/// Represents an empty <see cref="Optional{T}"/> object.
+/// </summary>
+public static class Optional
+{
+  /// <summary>
+  /// Represents an empty <see cref="Optional{T}"/> object.
+  /// </summary>
+  public static readonly OptionalEmpty Empty = default;
+}
+
+/// <summary>
 /// Represents a value that may or may not be present.
 /// </summary>
 /// <typeparam name="T">The type of the optionally present value.</typeparam>
-public class Optional<T>
+public readonly struct Optional<T>
 {
+#pragma warning disable IDE0032 // Use auto property
+  private readonly bool _hasValue;
   private readonly T _value;
 
   /// <summary>
-  /// Gets a value indicating whether the current <see cref="Optional{T}"/> object has a value.
+  /// Returns <see langword="true"/> if the <see cref="Value"/> will return a meaningful value.
   /// </summary>
-  public bool HasValue { get; }
+  /// <returns></returns>
+  public bool HasValue => _hasValue;
+#pragma warning restore IDE0032 // Use auto property
 
   /// <summary>
-  /// Gets the value of the current <see cref="Optional{T}"/> object if it has been set; otherwise, throws an exception.
+  /// Constructs an <see cref="Optional{T}"/> with a meaningful value.
   /// </summary>
+  /// <param name="value"></param>
+  public Optional(T value)
+  {
+    _hasValue = true;
+    _value = value;
+  }
+
+  /// <summary>
+  /// Gets the value of the current object.  Not meaningful unless <see cref="HasValue"/> returns <see langword="true"/>.
+  /// </summary>
+  /// <remarks>
+  /// <para>Unlike <see cref="Nullable{T}.Value"/>, this property does not throw an exception when
+  /// <see cref="HasValue"/> is <see langword="false"/>.</para>
+  /// </remarks>
+  /// <returns>
+  /// <para>The value if <see cref="HasValue"/> is <see langword="true"/>; otherwise, the default value for type
+  /// <typeparamref name="T"/>.</para>
+  /// </returns>
   public T Value => HasValue ? _value : throw new InvalidOperationException("Value is not set");
 
   /// <summary>
-  /// Initializes a new instance of the <see cref="Optional{T}"/> class with the specified value.
+  /// Creates a new object initialized to a meaningful value.
   /// </summary>
-  /// <param name="value">The value to be set.</param>
-  public Optional(T value)
-  {
-    _value = value;
-    HasValue = true;
-  }
-
-  /// <summary>
-  /// Initializes a new instance of the <see cref="Optional{T}"/> class with no value.
-  /// </summary>
-  public Optional()
-  {
-    _value = default!;
-    HasValue = false;
-  }
-
-  /// <summary>
-  /// Implicitly converts a value to an <see cref="Optional{T}"/> object.
-  /// </summary>
-  /// <param name="value">The value to be converted.</param>
+  /// <param name="value"></param>
   public static implicit operator Optional<T>(T value)
   {
     if (value is null)
-      return new();
+    {
+      return default;
+    }
 
-    return new(value);
+    return new Optional<T>(value);
   }
 
   /// <summary>
-  /// Implicitly converts an <see cref="Optional{T}"/> object to a value.
+  /// Creates a new object initialized to an empty value.
   /// </summary>
-  /// <param name="optional">The <see cref="Optional{T}"/> object to be converted.</param>
-  public static implicit operator T(Optional<T> optional)
+  /// <param name="_"></param>
+  public static implicit operator Optional<T>(OptionalEmpty _)
   {
-    return optional.Value;
+    return default;
+  }
+
+  /// <summary>
+  /// Returns a string representation of this object.
+  /// </summary>
+  public override string ToString()
+  {
+    // Note: For nullable types, it's possible to have _hasValue true and _value null.
+    return _hasValue
+        ? _value?.ToString() ?? "null"
+        : "Empty";
   }
 
   /// <summary>
@@ -69,17 +101,6 @@ public class Optional<T>
   public static bool operator ==(Optional<T> left, Optional<T> right)
   {
     return left.Equals(right);
-  }
-
-  /// <summary>
-  /// Determines whether the specified <see cref="Optional{T}"/> objects are not equal.
-  /// </summary>
-  /// <param name="left"></param>
-  /// <param name="right"></param>
-  /// <returns></returns>
-  public static bool operator !=(Optional<T> left, Optional<T> right)
-  {
-    return !left.Equals(right);
   }
 
   /// <summary>
@@ -96,8 +117,22 @@ public class Optional<T>
   /// <returns></returns>
   public Optional<T> GetValueOrOptional(Optional<T> defaultValue) => HasValue ? this : defaultValue;
 
-  /// <inheritdoc />
-  public override string ToString() => HasValue ? _value.ToString() : "Empty";
+  /// <summary>
+  /// Transforms the value of the current <see cref="Optional{T}"/> object using the specified mapping function if it has a value; otherwise, returns an empty <see cref="Optional{TOut}"/> object.
+  /// </summary>
+  /// <typeparam name="TOut">The type of the value returned by the mapping function.</typeparam>
+  /// <param name="mapper">The mapping function to apply to the value.</param>
+  public Optional<TOut> Map<TOut>(Func<T, TOut> mapper)
+  {
+    if (HasValue)
+    {
+      return new Optional<TOut>(mapper(_value));
+    }
+    else
+    {
+      return Optional.Empty;
+    }
+  }
 
   /// <inheritdoc />
   public override bool Equals(object obj)
@@ -129,9 +164,13 @@ public class Optional<T>
   public override int GetHashCode() => HasValue ? _value!.GetHashCode() : 0;
 
   /// <summary>
-  /// Represents an empty <see cref="Optional{T}"/> object.
+  /// Determines whether the specified <see cref="Optional{T}"/> objects are not equal.
   /// </summary>
-#pragma warning disable CA1000 // Do not declare static members on generic types
-  public static Optional<T> Empty => new();
-#pragma warning restore CA1000 // Do not declare static members on generic types
+  /// <param name="left"></param>
+  /// <param name="right"></param>
+  /// <returns></returns>
+  public static bool operator !=(Optional<T> left, Optional<T> right)
+  {
+    return !left.Equals(right);
+  }
 }

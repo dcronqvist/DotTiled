@@ -16,13 +16,13 @@ public abstract partial class TmjReaderBase
     {
       "zlib" => DataCompression.ZLib,
       "gzip" => DataCompression.GZip,
-      "" => Optional<DataCompression>.Empty,
+      "" => Optional.Empty,
       _ => throw new JsonException($"Unsupported compression '{s}'.")
     });
     var chunks = element.GetOptionalPropertyCustom<Data>("chunks", e => ReadDataAsChunks(e, compression, encoding));
     var @class = element.GetOptionalProperty<string>("class").GetValueOr("");
     var data = element.GetOptionalPropertyCustom<Data>("data", e => ReadDataWithoutChunks(e, compression, encoding));
-    var height = element.GetRequiredProperty<uint>("height");
+    var height = element.GetRequiredProperty<int>("height");
     var id = element.GetRequiredProperty<uint>("id");
     var name = element.GetRequiredProperty<string>("name");
     var offsetX = element.GetOptionalProperty<float>("offsetx").GetValueOr(0.0f);
@@ -35,12 +35,12 @@ public abstract partial class TmjReaderBase
     var repeatY = element.GetOptionalProperty<bool>("repeaty").GetValueOr(false);
     var startX = element.GetOptionalProperty<int>("startx").GetValueOr(0);
     var startY = element.GetOptionalProperty<int>("starty").GetValueOr(0);
-    var tintColor = element.GetOptionalPropertyParseable<Color>("tintcolor");
-    var transparentColor = element.GetOptionalPropertyParseable<Color>("transparentcolor");
+    var tintColor = element.GetOptionalPropertyParseable<TiledColor>("tintcolor");
+    var transparentColor = element.GetOptionalPropertyParseable<TiledColor>("transparentcolor");
     var visible = element.GetOptionalProperty<bool>("visible").GetValueOr(true);
-    var width = element.GetRequiredProperty<uint>("width");
-    var x = element.GetRequiredProperty<uint>("x");
-    var y = element.GetRequiredProperty<uint>("y");
+    var width = element.GetRequiredProperty<int>("width");
+    var x = element.GetRequiredProperty<int>("x");
+    var y = element.GetRequiredProperty<int>("y");
 
     if (!data.HasValue && !chunks.HasValue)
       throw new JsonException("Tile layer does not contain data.");
@@ -62,7 +62,7 @@ public abstract partial class TmjReaderBase
       Y = y,
       Width = width,
       Height = height,
-      Data = data ?? chunks
+      Data = data.GetValueOrOptional(chunks)
     };
   }
 }

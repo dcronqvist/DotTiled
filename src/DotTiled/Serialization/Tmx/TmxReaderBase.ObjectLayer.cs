@@ -14,18 +14,18 @@ public abstract partial class TmxReaderBase
     var id = _reader.GetRequiredAttributeParseable<uint>("id");
     var name = _reader.GetOptionalAttribute("name").GetValueOr("");
     var @class = _reader.GetOptionalAttribute("class").GetValueOr("");
-    var x = _reader.GetOptionalAttributeParseable<uint>("x").GetValueOr(0);
-    var y = _reader.GetOptionalAttributeParseable<uint>("y").GetValueOr(0);
-    var width = _reader.GetOptionalAttributeParseable<uint>("width").GetValueOr(0);
-    var height = _reader.GetOptionalAttributeParseable<uint>("height").GetValueOr(0);
+    var x = _reader.GetOptionalAttributeParseable<int>("x").GetValueOr(0);
+    var y = _reader.GetOptionalAttributeParseable<int>("y").GetValueOr(0);
+    var width = _reader.GetOptionalAttributeParseable<int>("width").GetValueOr(0);
+    var height = _reader.GetOptionalAttributeParseable<int>("height").GetValueOr(0);
     var opacity = _reader.GetOptionalAttributeParseable<float>("opacity").GetValueOr(1.0f);
     var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(1) == 1;
-    var tintColor = _reader.GetOptionalAttributeClass<Color>("tintcolor");
+    var tintColor = _reader.GetOptionalAttributeClass<TiledColor>("tintcolor");
     var offsetX = _reader.GetOptionalAttributeParseable<float>("offsetx").GetValueOr(0.0f);
     var offsetY = _reader.GetOptionalAttributeParseable<float>("offsety").GetValueOr(0.0f);
     var parallaxX = _reader.GetOptionalAttributeParseable<float>("parallaxx").GetValueOr(1.0f);
     var parallaxY = _reader.GetOptionalAttributeParseable<float>("parallaxy").GetValueOr(1.0f);
-    var color = _reader.GetOptionalAttributeClass<Color>("color");
+    var color = _reader.GetOptionalAttributeClass<TiledColor>("color");
     var drawOrder = _reader.GetOptionalAttributeEnum<DrawOrder>("draworder", s => s switch
     {
       "topdown" => DrawOrder.TopDown,
@@ -71,10 +71,14 @@ public abstract partial class TmxReaderBase
   internal DotTiled.Object ReadObject()
   {
     // Attributes
-    var template = _reader.GetOptionalAttribute("template");
+    var templateSource = _reader.GetOptionalAttribute("template");
+    Template template = null;
     DotTiled.Object obj = null;
-    if (template.HasValue)
-      obj = _externalTemplateResolver(template).Object;
+    if (templateSource.HasValue)
+    {
+      template = _externalTemplateResolver(templateSource.Value);
+      obj = template.Object.Clone();
+    }
 
     uint idDefault = obj?.ID.GetValueOr(0) ?? 0;
     string nameDefault = obj?.Name ?? "";
@@ -84,7 +88,7 @@ public abstract partial class TmxReaderBase
     float widthDefault = obj?.Width ?? 0f;
     float heightDefault = obj?.Height ?? 0f;
     float rotationDefault = obj?.Rotation ?? 0f;
-    Optional<uint> gidDefault = obj is TileObject tileObj ? tileObj.GID : Optional<uint>.Empty;
+    Optional<uint> gidDefault = obj is TileObject tileObj ? tileObj.GID : Optional.Empty;
     bool visibleDefault = obj?.Visible ?? true;
     List<IProperty> propertiesDefault = obj?.Properties ?? null;
 
@@ -138,7 +142,8 @@ public abstract partial class TmxReaderBase
     foundObject.Rotation = rotation;
     foundObject.Visible = visible;
     foundObject.Properties = properties ?? [];
-    foundObject.Template = template;
+    foundObject.Template = templateSource;
+    foundObject.TemplateTileset = template?.Tileset ?? Optional.Empty;
 
     return OverrideObject(obj, foundObject);
   }
@@ -159,6 +164,7 @@ public abstract partial class TmxReaderBase
     obj.Visible = foundObject.Visible;
     obj.Properties = Helpers.MergeProperties(obj.Properties, foundObject.Properties).ToList();
     obj.Template = foundObject.Template;
+    obj.TemplateTileset = foundObject.TemplateTileset;
 
     if (obj.GetType() != foundObject.GetType())
     {
@@ -242,15 +248,15 @@ public abstract partial class TmxReaderBase
   internal TextObject ReadTextObject()
   {
     // Attributes
-    var fontFamily = _reader.GetOptionalAttribute("fontfamily") ?? "sans-serif";
-    var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize") ?? 16;
-    var wrap = _reader.GetOptionalAttributeParseable<bool>("wrap") ?? false;
-    var color = _reader.GetOptionalAttributeClass<Color>("color") ?? Color.Parse("#000000", CultureInfo.InvariantCulture);
-    var bold = _reader.GetOptionalAttributeParseable<bool>("bold") ?? false;
-    var italic = _reader.GetOptionalAttributeParseable<bool>("italic") ?? false;
-    var underline = _reader.GetOptionalAttributeParseable<bool>("underline") ?? false;
-    var strikeout = _reader.GetOptionalAttributeParseable<bool>("strikeout") ?? false;
-    var kerning = _reader.GetOptionalAttributeParseable<bool>("kerning") ?? true;
+    var fontFamily = _reader.GetOptionalAttribute("fontfamily").GetValueOr("sans-serif");
+    var pixelSize = _reader.GetOptionalAttributeParseable<int>("pixelsize").GetValueOr(16);
+    var wrap = _reader.GetOptionalAttributeParseable<int>("wrap").GetValueOr(0) == 1;
+    var color = _reader.GetOptionalAttributeClass<TiledColor>("color").GetValueOr(TiledColor.Parse("#000000", CultureInfo.InvariantCulture));
+    var bold = _reader.GetOptionalAttributeParseable<int>("bold").GetValueOr(0) == 1;
+    var italic = _reader.GetOptionalAttributeParseable<int>("italic").GetValueOr(0) == 1;
+    var underline = _reader.GetOptionalAttributeParseable<int>("underline").GetValueOr(0) == 1;
+    var strikeout = _reader.GetOptionalAttributeParseable<int>("strikeout").GetValueOr(0) == 1;
+    var kerning = _reader.GetOptionalAttributeParseable<int>("kerning").GetValueOr(1) == 1;
     var hAlign = _reader.GetOptionalAttributeEnum<TextHorizontalAlignment>("halign", s => s switch
     {
       "left" => TextHorizontalAlignment.Left,
@@ -258,14 +264,14 @@ public abstract partial class TmxReaderBase
       "right" => TextHorizontalAlignment.Right,
       "justify" => TextHorizontalAlignment.Justify,
       _ => throw new InvalidOperationException($"Unknown horizontal alignment '{s}'")
-    }) ?? TextHorizontalAlignment.Left;
+    }).GetValueOr(TextHorizontalAlignment.Left);
     var vAlign = _reader.GetOptionalAttributeEnum<TextVerticalAlignment>("valign", s => s switch
     {
       "top" => TextVerticalAlignment.Top,
       "center" => TextVerticalAlignment.Center,
       "bottom" => TextVerticalAlignment.Bottom,
       _ => throw new InvalidOperationException($"Unknown vertical alignment '{s}'")
-    }) ?? TextVerticalAlignment.Top;
+    }).GetValueOr(TextVerticalAlignment.Top);
 
     // Elements
     var text = _reader.ReadElementContentAsString("text", "");

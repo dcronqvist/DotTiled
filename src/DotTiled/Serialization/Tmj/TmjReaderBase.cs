@@ -78,4 +78,33 @@ public abstract partial class TmjReaderBase : IDisposable
     Dispose(disposing: true);
     GC.SuppressFinalize(this);
   }
+
+  private static Tileset CloneTileset(Tileset tileset)
+  {
+    return new Tileset
+    {
+      Version = tileset.Version,
+      TiledVersion = tileset.TiledVersion,
+      FirstGID = tileset.FirstGID,
+      Source = tileset.Source,
+      Name = tileset.Name,
+      Class = tileset.Class,
+      TileWidth = tileset.TileWidth,
+      TileHeight = tileset.TileHeight,
+      Spacing = tileset.Spacing,
+      Margin = tileset.Margin,
+      TileCount = tileset.TileCount,
+      Columns = tileset.Columns,
+      ObjectAlignment = tileset.ObjectAlignment,
+      RenderSize = tileset.RenderSize,
+      FillMode = tileset.FillMode,
+      Image = tileset.Image,
+      TileOffset = tileset.TileOffset,
+      Grid = tileset.Grid,
+      Properties = tileset.Properties.ToList(),
+      Wangsets = tileset.Wangsets.ToList(),
+      Transformations = tileset.Transformations,
+      Tiles = tileset.Tiles.ToList()
+    };
+  }
 }

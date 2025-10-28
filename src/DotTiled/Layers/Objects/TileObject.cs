@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace DotTiled;
 
 /// <summary>
@@ -14,4 +16,21 @@ public class TileObject : Object
   /// The flipping flags for the tile.
   /// </summary>
   public FlippingFlags FlippingFlags { get; set; }
+
+  internal override Object Clone() => new TileObject
+  {
+    ID = ID,
+    Name = Name,
+    Type = Type,
+    X = X,
+    Y = Y,
+    Width = Width,
+    Height = Height,
+    Rotation = Rotation,
+    Visible = Visible,
+    Template = Template,
+    Properties = Properties.Select(p => p.Clone()).ToList(),
+    GID = GID,
+    FlippingFlags = FlippingFlags,
+  };
 }
