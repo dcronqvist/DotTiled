@@ -16,6 +16,7 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Rotation, actual.Rotation, nameof(DotTiled.Object.Rotation));
     AssertEqual(expected.Visible, actual.Visible, nameof(DotTiled.Object.Visible));
     AssertEqual(expected.Template, actual.Template, nameof(DotTiled.Object.Template));
+    AssertOptionalsEqual(expected.TemplateTileset, actual.TemplateTileset, nameof(DotTiled.Object.TemplateTileset), AssertTileset);
 #pragma warning restore IDE0002
 
     AssertProperties(expected.Properties, actual.Properties);
