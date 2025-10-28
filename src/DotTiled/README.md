@@ -15,8 +15,8 @@ Other similar libraries exist, and you may want to consider them for your projec
 |**Comparison**|**DotTiled**|[TiledLib](https://github.com/Ragath/TiledLib.Net)|[TiledCSPlus](https://github.com/nolemretaWxd/TiledCSPlus)|[TiledSharp](https://github.com/marshallward/TiledSharp)|[TiledCS](https://github.com/TheBoneJarmer/TiledCS)|[TiledNet](https://github.com/napen123/Tiled.Net)|
 |---------------------------------|:-----------------------:|:--------:|:-----------:|:----------:|:-------:|:------:|
 | Actively maintained             |            ✅          |     ✅   |     ❌      |      ❌   |    ❌  |   ❌   |
-| Benchmark (time)*               |           1.00          |   1.78   |     2.11    |      -     |    -    |    -   |
-| Benchmark (memory)*             |           1.00          |   1.32   |     1.88    |      -     |    -    |    -   |
+| Benchmark (time)*               |           1.00          |   1.70   |     2.01    |      -     |    -    |    -   |
+| Benchmark (memory)*             |           1.00          |   1.39   |     1.99    |      -     |    -    |    -   |
 | .NET Targets                    | `net8.0` | `net8.0` |`netstandard2.1`|`netstandard2.0`|`netstandard2.0`|`net45`|
 | Docs                            |Usage, API,<br>XML Docs|Usage|Usage, API,<br>XML Docs|Usage, API|Usage, XML Docs|Usage, XML Docs|
 | License                         |           MIT           |   MIT    |     MIT     | Apache-2.0 |   MIT   | BSD 3-Clause |
