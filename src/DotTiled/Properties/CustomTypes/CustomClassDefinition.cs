@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -104,6 +105,8 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   /// <param name="type">The type of the class to create a custom class definition from.</param>
   /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
   /// <exception cref="ArgumentException">Thrown when the specified type is not a class.</exception>
+  [RequiresUnreferencedCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
+  [RequiresDynamicCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
   public static CustomClassDefinition FromClass(Type type)
   {
     ArgumentNullException.ThrowIfNull(type, nameof(type));
@@ -127,6 +130,8 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   /// </summary>
   /// <typeparam name="T">The type of the class to create a custom class definition from.</typeparam>
   /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
+  [RequiresUnreferencedCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
+  [RequiresDynamicCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
   public static CustomClassDefinition FromClass<T>() where T : class, new() => FromClass(() => new T());
 
   /// <summary>
@@ -135,6 +140,8 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
   /// <typeparam name="T">The type of the class to create a custom class definition from.</typeparam>
   /// <param name="factory">The factory function that creates an instance of the class.</param>
   /// <returns>A new <see cref="CustomClassDefinition"/> instance.</returns>
+  [RequiresUnreferencedCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
+  [RequiresDynamicCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
   public static CustomClassDefinition FromClass<T>(Func<T> factory) where T : class
   {
     var instance = factory();
@@ -149,6 +156,8 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
     };
   }
 
+  [RequiresUnreferencedCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
+  [RequiresDynamicCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
   private static IProperty ConvertPropertyInfoToIProperty(object instance, PropertyInfo propertyInfo)
   {
     switch (propertyInfo.PropertyType)
@@ -183,6 +192,8 @@ public class CustomClassDefinition : HasPropertiesBase, ICustomTypeDefinition
     throw new NotSupportedException($"Type '{propertyInfo.PropertyType.Name}' is not supported in custom classes.");
   }
 
+  [RequiresUnreferencedCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
+  [RequiresDynamicCode("Use manually defined class properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#class-properties")]
   private static List<IProperty> GetNestedProperties(Type type, object instance)
   {
     var defaultInstance = Activator.CreateInstance(type);
