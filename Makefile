@@ -1,7 +1,8 @@
 test:
 	dotnet build src/DotTiled.sln
 	dotnet test src/DotTiled.sln
-	dotnet run --project src/DotTiled.Examples/DotTiled.Example.Console/DotTiled.Example.Console.csproj -- src/DotTiled.Examples/DotTiled.Example.Console
+	dotnet run --project src/DotTiled.Examples/DotTiled.Example.Console/DotTiled.Example.Console.csproj -- src/DotTiled.Examples/DotTiled.Example.Console/tilemap.tmx
+	dotnet run --project src/DotTiled.Examples/DotTiled.Example.Console/DotTiled.Example.Console.csproj -- src/DotTiled.Tests/TestData/Maps/map-nested-dir-template/A/A.tmx
 
 docs-serve: docs/index.md
 	docfx docs/docfx.json --serve

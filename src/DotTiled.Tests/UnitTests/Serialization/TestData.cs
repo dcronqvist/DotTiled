@@ -66,6 +66,7 @@ public static partial class TestData
     [GetMapPath("map-with-class-and-props"), (string f) => MapWithClassAndProps(), MapWithClassAndPropsCustomTypeDefinitions()],
     [GetMapPath("map-with-infinite-and-empty-chunks"), (string f) => MapWithInfiniteAndEmptyChunks(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-override-object-bug"), (string f) => MapOverrideObjectBug(f), MapOverrideObjectBugCustomTypeDefinitions()],
-    [GetMapPath("vinhui-firstgid-problem-map"), (string f) => VinhuiFirstgidProblemMap(f), VinhuiFirstgidProblemMapCustomTypeDefinitions()]
+    [GetMapPath("vinhui-firstgid-problem-map"), (string f) => VinhuiFirstgidProblemMap(f), VinhuiFirstgidProblemMapCustomTypeDefinitions()],
+    ["TestData/Maps/map_nested_dir_template/A/A", (string f) => MapNestedDirTemplate(f), Array.Empty<ICustomTypeDefinition>()]
   ];
 }

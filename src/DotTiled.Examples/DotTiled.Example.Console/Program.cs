@@ -13,14 +13,13 @@ public class Program
 
   // QUICK START
   // Automatic and easy way to load tilemaps.
-  private static void Quick(string basePath)
+  private static void Quick(string mapPath)
   {
-    var tilemapPath = Path.Combine(basePath, "tilemap.tmx");
-
     var loader = Loader.Default();
-    var map = loader.LoadMap(tilemapPath);
+    var map = loader.LoadMap(mapPath);
 
     // You can do stuff with it like...
+    Console.WriteLine($"Map {mapPath} loaded! TiledVersion: {map.TiledVersion}");
     Console.WriteLine($"Tile width and height: {map.TileWidth}x{map.TileHeight}");
     TileLayer layer0 = (TileLayer)map.Layers[0]; // Get a layer
     Console.WriteLine($"Tile in layer 0 at 0, 0: {layer0.Data.Value.GlobalTileIDs.Value[0]}");
