@@ -16,5 +16,5 @@ You should use one of the versions of DotTiled that is compatible with the versi
 
 | Tiled version  | Compatible DotTiled version(s) |
 | -------------- | ------------------------------ |
-| 1.11.1, 1.11.2 | 0.4.0, 1.0.0                   |
+| 1.11.1, 1.11.2 | 0.4.0, 1.0.0, 1.0.1            |
 | 1.11           | 0.1.0, 0.2.0, 0.2.1, 0.3.0     |

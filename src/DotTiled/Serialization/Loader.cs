@@ -82,35 +82,43 @@ public class Loader
     string basePath,
     Func<string, Optional<T>> cacheResolver,
     Action<string, T> cacheInsert,
-    Func<string, T> resolveFromContent)
+    Func<string, string, T> resolveFromContent)
   {
     return source =>
     {
-      var resourcePath = Path.Combine(basePath, source);
+      var resourcePath = NormalizePath(Path.Combine(NormalizePathSeparators(basePath), NormalizePathSeparators(source)));
       var cachedResource = cacheResolver(resourcePath);
       if (cachedResource.HasValue)
         return cachedResource.Value;
 
-      string tilesetContent = _resourceReader.Read(resourcePath);
-      var resource = resolveFromContent(tilesetContent);
+      string resourceContent = _resourceReader.Read(resourcePath);
+      var resource = resolveFromContent(resourceContent, resourcePath);
       cacheInsert(resourcePath, resource);
       return resource;
     };
   }
 
+  private static string NormalizePath(string path) =>
+    Path.GetFullPath(path).Replace(Environment.CurrentDirectory + Path.DirectorySeparatorChar, "");
+
+  private static string NormalizePathSeparators(string path) =>
+    path.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
+
   private Func<string, Tileset> GetTilesetResolver(string basePath) =>
     GetResolverFunc<Tileset>(basePath, _resourceCache.GetTileset, _resourceCache.InsertTileset,
-      tilesetContent =>
+      (tilesetContent, resourcePath) =>
       {
-        using var tilesetReader = new TilesetReader(tilesetContent, GetTilesetResolver(basePath), GetTemplateResolver(basePath), CustomTypeResolver);
+        var newBasePath = Path.GetDirectoryName(resourcePath);
+        using var tilesetReader = new TilesetReader(tilesetContent, GetTilesetResolver(newBasePath), GetTemplateResolver(newBasePath), CustomTypeResolver);
         return tilesetReader.ReadTileset();
       });
 
   private Func<string, Template> GetTemplateResolver(string basePath) =>
     GetResolverFunc<Template>(basePath, _resourceCache.GetTemplate, _resourceCache.InsertTemplate,
-      templateContent =>
+      (templateContent, resourcePath) =>
       {
-        using var templateReader = new TemplateReader(templateContent, GetTilesetResolver(basePath), GetTemplateResolver(basePath), CustomTypeResolver);
+        var newBasePath = Path.GetDirectoryName(resourcePath);
+        using var templateReader = new TemplateReader(templateContent, GetTilesetResolver(newBasePath), GetTemplateResolver(newBasePath), CustomTypeResolver);
         return templateReader.ReadTemplate();
       });
 
