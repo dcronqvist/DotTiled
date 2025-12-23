@@ -46,6 +46,12 @@ internal static partial class Helpers
     return ReadMemoryStreamAsInt32Array(decompressedStream);
   }
 
+  internal static uint[] DecompressZStd(MemoryStream stream)
+  {
+    using var decompressedStream = new ZstdSharp.DecompressionStream(stream);
+    return ReadMemoryStreamAsInt32Array(decompressedStream);
+  }
+
   internal static uint[] ReadBytesAsInt32Array(byte[] bytes)
   {
     var intArray = new uint[bytes.Length / 4];

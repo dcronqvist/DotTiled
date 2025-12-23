@@ -16,6 +16,7 @@ public abstract partial class TmjReaderBase
     {
       "zlib" => DataCompression.ZLib,
       "gzip" => DataCompression.GZip,
+      "zstd" => DataCompression.ZStd,
       "" => Optional.Empty,
       _ => throw new JsonException($"Unsupported compression '{s}'.")
     });

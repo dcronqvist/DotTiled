@@ -77,7 +77,7 @@ public abstract partial class TmxReaderBase
     {
       DataCompression.GZip => Helpers.DecompressGZip(bytes),
       DataCompression.ZLib => Helpers.DecompressZLib(bytes),
-      DataCompression.ZStd => throw new NotSupportedException("ZStd compression is not supported."),
+      DataCompression.ZStd => Helpers.DecompressZStd(bytes),
       _ => throw new XmlException("Invalid compression")
     };
 
