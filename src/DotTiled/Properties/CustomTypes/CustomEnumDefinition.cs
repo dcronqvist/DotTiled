@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DotTiled;
@@ -53,6 +54,8 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// <typeparam name="T"></typeparam>
   /// <param name="storageType">The storage type of the custom enum. Defaults to <see cref="CustomEnumStorageType.String"/> to be consistent with Tiled.</param>
   /// <returns></returns>
+  [RequiresUnreferencedCode("Use manually defined enum properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#enum-properties")]
+  [RequiresDynamicCode("Use manually defined enum properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#enum-properties")]
   public static CustomEnumDefinition FromEnum<T>(CustomEnumStorageType storageType = CustomEnumStorageType.String) where T : Enum
   {
     var type = typeof(T);
@@ -73,6 +76,8 @@ public class CustomEnumDefinition : ICustomTypeDefinition
   /// <param name="type">The enum type to create a custom enum definition from.</param>
   /// <param name="storageType">The storage type of the custom enum. Defaults to <see cref="CustomEnumStorageType.String"/> to be consistent with Tiled.</param>
   /// <returns></returns>
+  [RequiresUnreferencedCode("Use manually defined enum properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#enum-properties")]
+  [RequiresDynamicCode("Use manually defined enum properties.", Url = "https://dcronqvist.github.io/DotTiled/docs/essentials/custom-properties.html#enum-properties")]
   public static CustomEnumDefinition FromEnum(Type type, CustomEnumStorageType storageType = CustomEnumStorageType.String)
   {
     if (!type.IsEnum)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DotTiled;
@@ -36,6 +37,7 @@ public interface IHasProperties
   /// </summary>
   /// <typeparam name="T"></typeparam>
   /// <returns></returns>
+  [RequiresUnreferencedCode("Use 'MapPropertiesTo' with a custom mapper instead.")]
   T MapPropertiesTo<T>() where T : new();
 
   /// <summary>
@@ -44,7 +46,16 @@ public interface IHasProperties
   /// <typeparam name="T"></typeparam>
   /// <param name="initializer"></param>
   /// <returns></returns>
+  [RequiresUnreferencedCode("Use 'MapPropertiesTo' with a custom mapper instead.")]
   T MapPropertiesTo<T>(Func<T> initializer);
+
+  /// <summary>
+  /// Maps all properties in this object to a new instance of the specified type using the provided mapper.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  /// <param name="mapper"></param>
+  /// <returns></returns>
+  T MapPropertiesTo<T>(Func<IList<IProperty>, T> mapper);
 }
 
 /// <summary>
@@ -85,11 +96,17 @@ public abstract class HasPropertiesBase : IHasProperties
   }
 
   /// <inheritdoc/>
+  [RequiresUnreferencedCode("Use 'MapPropertiesTo' with a custom mapper instead.")]
   public T MapPropertiesTo<T>() where T : new() => CreateMappedInstance<T>(GetProperties());
 
   /// <inheritdoc/>
+  [RequiresUnreferencedCode("Use 'MapPropertiesTo' with a custom mapper instead.")]
   public T MapPropertiesTo<T>(Func<T> initializer) => CreateMappedInstance(GetProperties(), initializer);
 
+  /// <inheritdoc/>
+  public T MapPropertiesTo<T>(Func<IList<IProperty>, T> mapper) => mapper(GetProperties());
+
+  [RequiresUnreferencedCode("Use 'MapPropertiesTo' with a custom mapper instead.")]
   private static object CreatedMappedInstance(object instance, IList<IProperty> properties)
   {
     var type = instance.GetType();
@@ -141,8 +158,10 @@ public abstract class HasPropertiesBase : IHasProperties
     return instance;
   }
 
+  [RequiresUnreferencedCode("Use 'MapPropertiesTo' with a custom mapper instead.")]
   private static T CreateMappedInstance<T>(IList<IProperty> properties) where T : new() =>
     (T)CreatedMappedInstance(Activator.CreateInstance<T>() ?? throw new InvalidOperationException($"Failed to create instance of '{typeof(T).Name}'."), properties);
 
+  [RequiresUnreferencedCode("Use 'MapPropertiesTo' with a custom mapper instead.")]
   private static T CreateMappedInstance<T>(IList<IProperty> properties, Func<T> initializer) => (T)CreatedMappedInstance(initializer(), properties);
 }
