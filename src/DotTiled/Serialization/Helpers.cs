@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 
 namespace DotTiled.Serialization;
 
@@ -24,14 +21,13 @@ internal static partial class Helpers
 
   internal static uint[] ReadMemoryStreamAsInt32Array(Stream stream)
   {
-    var finalValues = new List<uint>();
-    var int32Bytes = new byte[4];
-    while (stream.Read(int32Bytes, 0, 4) == 4)
-    {
-      var value = BitConverter.ToUInt32(int32Bytes, 0);
-      finalValues.Add(value);
-    }
-    return [.. finalValues];
+    using var ms = new MemoryStream();
+    stream.CopyTo(ms);
+
+    var intsLength = (int)ms.Length / 4;
+    var result = new uint[intsLength];
+    Buffer.BlockCopy(ms.GetBuffer(), 0, result, 0, intsLength * 4);
+    return result;
   }
 
   internal static uint[] DecompressGZip(MemoryStream stream)
@@ -48,13 +44,10 @@ internal static partial class Helpers
 
   internal static uint[] ReadBytesAsInt32Array(byte[] bytes)
   {
-    var intArray = new uint[bytes.Length / 4];
-    for (var i = 0; i < intArray.Length; i++)
-    {
-      intArray[i] = BitConverter.ToUInt32(bytes, i * 4);
-    }
-
-    return intArray;
+    var intsLength = bytes.Length / 4;
+    var result = new uint[intsLength];
+    Buffer.BlockCopy(bytes, 0, result, 0, intsLength * 4);
+    return result;
   }
 
   internal static (uint[] GlobalTileIDs, FlippingFlags[] FlippingFlags) ReadAndClearFlippingFlagsFromGIDs(uint[] globalTileIDs)
