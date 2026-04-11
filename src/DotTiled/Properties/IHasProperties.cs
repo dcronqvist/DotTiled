@@ -131,7 +131,7 @@ public abstract class HasPropertiesBase : IHasProperties
         case EnumProperty enumProp:
           var enumPropInClass = type.GetProperty(prop.Name);
           var enumType = enumPropInClass?.PropertyType;
-          enumPropInClass?.SetValue(instance, Enum.Parse(enumType!, string.Join(", ", enumProp.Value)));
+          enumPropInClass?.SetValue(instance, Enum.Parse(enumType, string.Join(", ", enumProp.Value)));
           break;
         default:
           throw new ArgumentOutOfRangeException($"Unknown property type {prop.GetType().Name}");

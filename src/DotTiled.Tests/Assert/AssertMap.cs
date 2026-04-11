@@ -66,7 +66,7 @@ public static partial class DotTiledAssert
     if (typeof(T) == typeof(float))
     {
       var expectedFloat = (float)(object)expected;
-      var actualFloat = (float)(object)actual!;
+      var actualFloat = (float)(object)actual;
 
       var expecRounded = MathF.Round(expectedFloat, 3);
       var actRounded = MathF.Round(actualFloat, 3);
@@ -78,7 +78,7 @@ public static partial class DotTiledAssert
     if (expected is Vector2)
     {
       var expectedVector = (Vector2)(object)expected;
-      var actualVector = (Vector2)(object)actual!;
+      var actualVector = (Vector2)(object)actual;
 
       AssertEqual(expectedVector.X, actualVector.X, $"{nameof}.X");
       AssertEqual(expectedVector.Y, actualVector.Y, $"{nameof}.Y");
@@ -89,7 +89,7 @@ public static partial class DotTiledAssert
     if (typeof(T).IsArray)
     {
       var expectedArray = (Array)(object)expected;
-      var actualArray = (Array)(object)actual!;
+      var actualArray = (Array)(object)actual;
 
       Assert.NotNull(actualArray);
       AssertEqual(expectedArray.Length, actualArray.Length, $"{nameof}.Length");
@@ -103,7 +103,7 @@ public static partial class DotTiledAssert
     if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
     {
       var expectedList = (IList)(object)expected;
-      var actualList = (IList)(object)actual!;
+      var actualList = (IList)(object)actual;
 
       Assert.NotNull(actualList);
       AssertEqual(expectedList.Count, actualList.Count, $"{nameof}.Count");
