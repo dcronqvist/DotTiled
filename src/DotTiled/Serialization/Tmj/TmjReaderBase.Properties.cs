@@ -44,7 +44,7 @@ public abstract partial class TmjReaderBase
         _ => throw new JsonException("Invalid property type")
       };
 
-      return property!;
+      return property;
     });
 
   internal IProperty ReadPropertyWithCustomType(JsonElement element)

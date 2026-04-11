@@ -92,7 +92,7 @@ public partial class TestData
             Y = 112.056f,
             Width = 32,
             Height = 32,
-            FlippingFlags = FlippingFlags.FlippedHorizontally | FlippingFlags.FlippedVertically
+            FlippingFlags = FlippingFlags.FlippedVertically
           }
         ]
       }

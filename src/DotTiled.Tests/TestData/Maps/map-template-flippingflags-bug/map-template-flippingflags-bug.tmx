@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="6">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="5" height="5">
+  <data encoding="csv">
+1,1,1,1,1,
+1,1,1,1,1,
+1,1,1,1,1,
+1,1,1,1,1,
+1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="1" template="template.tx" x="16" y="32"/>
+  <object id="2" template="template.tx" gid="1073741829" x="64" y="32"/>
+  <object id="3" template="template.tx" gid="3221225477" x="112" y="32"/>
+  <object id="4" template="template.tx" gid="2147483653" x="16" y="80"/>
+  <object id="5" template="template.tx" gid="5" x="64" y="80"/>
+ </objectgroup>
+</map>

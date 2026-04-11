@@ -161,7 +161,7 @@ public readonly struct Optional<T>
   }
 
   /// <inheritdoc />
-  public override int GetHashCode() => HasValue ? _value!.GetHashCode() : 0;
+  public override int GetHashCode() => HasValue ? _value.GetHashCode() : 0;
 
   /// <summary>
   /// Determines whether the specified <see cref="Optional{T}"/> objects are not equal.

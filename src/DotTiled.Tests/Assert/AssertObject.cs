@@ -53,5 +53,9 @@ public static partial class DotTiledAssert
     AssertEqual(expected.Text, actual.Text, nameof(TextObject.Text));
   }
 
-  private static void AssertObject(TileObject expected, TileObject actual) => AssertEqual(expected.GID, actual.GID, nameof(TileObject.GID));
+  private static void AssertObject(TileObject expected, TileObject actual)
+  {
+    AssertEqual(expected.GID, actual.GID, nameof(TileObject.GID));
+    AssertEqual(expected.FlippingFlags, actual.FlippingFlags, nameof(TileObject.FlippingFlags));
+  }
 }

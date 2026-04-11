@@ -67,6 +67,7 @@ public static partial class TestData
     [GetMapPath("map-with-infinite-and-empty-chunks"), (string f) => MapWithInfiniteAndEmptyChunks(), Array.Empty<ICustomTypeDefinition>()],
     [GetMapPath("map-override-object-bug"), (string f) => MapOverrideObjectBug(f), MapOverrideObjectBugCustomTypeDefinitions()],
     [GetMapPath("vinhui-firstgid-problem-map"), (string f) => VinhuiFirstgidProblemMap(f), VinhuiFirstgidProblemMapCustomTypeDefinitions()],
+    [GetMapPath("map-template-flippingflags-bug"), (string f) => MapTemplateFlippingFlagsBug(f), Array.Empty<ICustomTypeDefinition>()],
     ["TestData/Maps/map_nested_dir_template/A/A", (string f) => MapNestedDirTemplate(f), Array.Empty<ICustomTypeDefinition>()]
   ];
 }

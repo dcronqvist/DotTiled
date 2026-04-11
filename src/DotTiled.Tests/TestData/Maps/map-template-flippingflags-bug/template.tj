@@ -1,0 +1,26 @@
+{ "object":
+    {
+     "gid":2147483653,
+     "height":32,
+     "id":0,
+     "name":"",
+     "properties":[
+            {
+             "name":"template_prop",
+             "type":"string",
+             "value":"from_template"
+            }],
+     "rotation":0,
+     "type":"",
+     "visible":true,
+     "width":32,
+     "x":0,
+     "y":0
+    },
+ "tileset":
+    {
+     "firstgid":1,
+     "source":"tileset.tsj"
+    },
+ "type":"template"
+}

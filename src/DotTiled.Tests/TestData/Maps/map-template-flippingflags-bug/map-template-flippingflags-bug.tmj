@@ -1,0 +1,81 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1],
+         "height":5,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "id":1,
+                 "template":"template.tj",
+                 "x":16,
+                 "y":32
+                }, 
+                {
+                 "gid":1073741829,
+                 "id":2,
+                 "template":"template.tj",
+                 "x":64,
+                 "y":32
+                }, 
+                {
+                 "gid":3221225477,
+                 "id":3,
+                 "template":"template.tj",
+                 "x":112,
+                 "y":32
+                }, 
+                {
+                 "gid":2147483653,
+                 "id":4,
+                 "template":"template.tj",
+                 "x":16,
+                 "y":80
+                }, 
+                {
+                 "gid":5,
+                 "id":5,
+                 "template":"template.tj",
+                 "x":64,
+                 "y":80
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":3,
+ "nextobjectid":6,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"tileset.tsj"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":5
+}
