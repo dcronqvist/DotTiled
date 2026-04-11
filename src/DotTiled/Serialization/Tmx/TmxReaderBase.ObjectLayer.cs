@@ -101,6 +101,7 @@ public abstract partial class TmxReaderBase
     var height = _reader.GetOptionalAttributeParseable<float>("height").GetValueOr(heightDefault);
     var rotation = _reader.GetOptionalAttributeParseable<float>("rotation").GetValueOr(rotationDefault);
     var gid = _reader.GetOptionalAttributeParseable<uint>("gid").GetValueOrOptional(gidDefault);
+    var gidFromDefault = gid == gidDefault && !_reader.GetOptionalAttribute("gid").HasValue;
     var visible = _reader.GetOptionalAttributeParseable<uint>("visible").GetValueOr(visibleDefault ? 1u : 0u) == 1;
 
     // Elements
@@ -121,10 +122,14 @@ public abstract partial class TmxReaderBase
 
     if (foundObject is null)
     {
-      if (gid.HasValue)
+      if (gid.HasValue && !gidFromDefault)
       {
         var (clearedGIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs([gid.Value]);
         foundObject = new TileObject { ID = id, GID = clearedGIDs.Single(), FlippingFlags = flippingFlags.Single() };
+      }
+      else if (gid.HasValue && gidFromDefault && obj is TileObject tileObj3)
+      {
+        foundObject = new TileObject { ID = id, GID = tileObj3.GID, FlippingFlags = tileObj3.FlippingFlags };
       }
       else
       {
@@ -313,6 +318,7 @@ public abstract partial class TmxReaderBase
   internal static TileObject OverrideObject(TileObject obj, TileObject foundObject)
   {
     obj.GID = foundObject.GID;
+    obj.FlippingFlags = foundObject.FlippingFlags;
     return obj;
   }
 

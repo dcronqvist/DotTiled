@@ -104,6 +104,7 @@ public abstract partial class TmjReaderBase
 
     var ellipse = element.GetOptionalProperty<bool>("ellipse").GetValueOr(ellipseDefault);
     var gid = element.GetOptionalProperty<uint>("gid").GetValueOrOptional(gidDefault);
+    var gidFromDefault = gid == gidDefault && !element.GetOptionalProperty<uint>("gid").HasValue;
     var height = element.GetOptionalProperty<float>("height").GetValueOr(heightDefault);
     var id = element.GetOptionalProperty<uint>("id").GetValueOrOptional(idDefault);
     var name = element.GetOptionalProperty<string>("name").GetValueOr(nameDefault);
@@ -119,7 +120,7 @@ public abstract partial class TmjReaderBase
     var x = element.GetOptionalProperty<float>("x").GetValueOr(xDefault);
     var y = element.GetOptionalProperty<float>("y").GetValueOr(yDefault);
 
-    if (gid.HasValue)
+    if (gid.HasValue && !gidFromDefault)
     {
       var (clearedGIDs, flippingFlags) = Helpers.ReadAndClearFlippingFlagsFromGIDs([gid.Value]);
 
@@ -139,6 +140,26 @@ public abstract partial class TmjReaderBase
         Properties = properties,
         GID = clearedGIDs.Single(),
         FlippingFlags = flippingFlags.Single()
+      };
+    }
+    else if (gid.HasValue && gidFromDefault && template.Object is TileObject tileObj3)
+    {
+      return new TileObject
+      {
+        ID = id,
+        Name = name,
+        Type = type,
+        X = x,
+        Y = y,
+        Width = width,
+        Height = height,
+        Rotation = rotation,
+        Visible = visible,
+        Template = templateSource,
+        TemplateTileset = template?.Tileset ?? Optional.Empty,
+        Properties = properties,
+        GID = tileObj3.GID,
+        FlippingFlags = tileObj3.FlippingFlags
       };
     }
 
