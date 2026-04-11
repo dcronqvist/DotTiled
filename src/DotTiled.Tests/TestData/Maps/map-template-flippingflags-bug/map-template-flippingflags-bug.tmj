@@ -30,7 +30,7 @@
                  "y":32
                 }, 
                 {
-                 "gid":1610612741,
+                 "gid":1073741829,
                  "id":2,
                  "template":"template.tj",
                  "x":64,
@@ -44,14 +44,14 @@
                  "y":32
                 }, 
                 {
-                 "gid":2684354565,
+                 "gid":2147483653,
                  "id":4,
                  "template":"template.tj",
                  "x":16,
                  "y":80
                 }, 
                 {
-                 "gid":1073741829,
+                 "gid":5,
                  "id":5,
                  "template":"template.tj",
                  "x":64,

@@ -67,7 +67,7 @@ public partial class TestData
         ID = 2,
         Name = "Object Layer 1",
         Objects = [
-          // Object 1: Uses template as-is (gid=5 with FlippingFlags.HorizontalFlip | FlippingFlags.VerticalFlip | FlippingFlags.DiagonalFlip)
+          // Object 1: Uses template as-is (gid=5 with FlippingFlags.HorizontalFlip only)
           new TileObject
           {
             ID = 1,
@@ -95,13 +95,13 @@ public partial class TestData
             Y = 32,
             Width = 32,
             Height = 32,
-            GID = 5,
-            FlippingFlags = FlippingFlags.FlippedHorizontally | FlippingFlags.FlippedVertically | FlippingFlags.FlippedDiagonally,
+            GID = 5, // Comes from template when cleared of flags
+            FlippingFlags = FlippingFlags.FlippedHorizontally, // Comes from template
             Properties = [
               new StringProperty { Name = "template_prop", Value = "from_template" }
             ]
           },
-          // Object 2: Overrides with gid=1610612741 (HorizontalFlip only)
+          // Object 2: Overrides with gid=1073741829 (VerticalFlip only)
           new TileObject
           {
             ID = 2,
@@ -130,12 +130,12 @@ public partial class TestData
             Width = 32,
             Height = 32,
             GID = 5,
-            FlippingFlags = FlippingFlags.FlippedHorizontally, // This should be overridden, not the template's flags
+            FlippingFlags = FlippingFlags.FlippedVertically, // Has been overriden with GID 1073741829 (VerticalFlip only), not the template's flags
             Properties = [
               new StringProperty { Name = "template_prop", Value = "from_template" }
             ]
           },
-          // Object 3: Overrides with gid=3221225477 (VerticalFlip only)
+          // Object 3: Overrides with gid=3221225477 (HorizontalFlip | VerticalFlip)
           new TileObject
           {
             ID = 3,
@@ -164,12 +164,12 @@ public partial class TestData
             Width = 32,
             Height = 32,
             GID = 5,
-            FlippingFlags = FlippingFlags.FlippedVertically, // This should be overridden, not the template's flags
+            FlippingFlags = FlippingFlags.FlippedHorizontally | FlippingFlags.FlippedVertically, // This should be overridden, not the template's flags
             Properties = [
               new StringProperty { Name = "template_prop", Value = "from_template" }
             ]
           },
-          // Object 4: Overrides with gid=2684354565 (DiagonalFlip only)
+          // Object 4: Overrides with gid=2147483653 (Override with horizontal flip only)
           new TileObject
           {
             ID = 4,
@@ -198,12 +198,12 @@ public partial class TestData
             Width = 32,
             Height = 32,
             GID = 5,
-            FlippingFlags = FlippingFlags.FlippedDiagonally, // This should be overridden, not the template's flags
+            FlippingFlags = FlippingFlags.FlippedHorizontally, // This should be overridden, not the template's flags
             Properties = [
               new StringProperty { Name = "template_prop", Value = "from_template" }
             ]
           },
-          // Object 5: Overrides with gid=1073741829 (None)
+          // Object 5: Overrides with gid=5 (No flipping flags at all)
           new TileObject
           {
             ID = 5,

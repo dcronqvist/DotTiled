@@ -12,9 +12,9 @@
  </layer>
  <objectgroup id="2" name="Object Layer 1">
   <object id="1" template="template.tx" x="16" y="32"/>
-  <object id="2" template="template.tx" gid="1610612741" x="64" y="32"/>
+  <object id="2" template="template.tx" gid="1073741829" x="64" y="32"/>
   <object id="3" template="template.tx" gid="3221225477" x="112" y="32"/>
-  <object id="4" template="template.tx" gid="2684354565" x="16" y="80"/>
-  <object id="5" template="template.tx" gid="1073741829" x="64" y="80"/>
+  <object id="4" template="template.tx" gid="2147483653" x="16" y="80"/>
+  <object id="5" template="template.tx" gid="5" x="64" y="80"/>
  </objectgroup>
 </map>
