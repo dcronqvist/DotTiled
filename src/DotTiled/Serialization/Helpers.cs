@@ -82,7 +82,8 @@ internal static partial class Helpers
       ".jpg" => ImageFormat.Jpg,
       ".jpeg" => ImageFormat.Jpg,
       ".bmp" => ImageFormat.Bmp,
-      _ => throw new NotSupportedException($"Unsupported image format '{extension}'")
+      ".ase" => ImageFormat.Ase,
+      _ => ImageFormat.Unknown
     };
   }
 
