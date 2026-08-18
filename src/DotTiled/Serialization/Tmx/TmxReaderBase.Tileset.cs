@@ -122,7 +122,8 @@ public abstract partial class TmxReaderBase
       "jpg" => ImageFormat.Jpg,
       "bmp" => ImageFormat.Bmp,
       "gif" => ImageFormat.Gif,
-      _ => throw new InvalidOperationException($"Unknown image format '{s}'")
+      "ase" => ImageFormat.Ase,
+      _ => ImageFormat.Unknown
     });
     var source = _reader.GetOptionalAttribute("source");
     var transparentColor = _reader.GetOptionalAttributeClass<TiledColor>("trans");

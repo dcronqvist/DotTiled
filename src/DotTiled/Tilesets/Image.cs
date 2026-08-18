@@ -23,7 +23,17 @@ public enum ImageFormat
   /// <summary>
   /// Windows Bitmap.
   /// </summary>
-  Bmp
+  Bmp,
+
+  /// <summary>
+  /// Aseprite Image Format.
+  /// </summary>
+  Ase,
+
+  /// <summary>
+  /// Unknown Format.
+  /// </summary>
+  Unknown
 }
 
 /// <summary>
