@@ -9,10 +9,10 @@ dotnet add package DotTiled
 Use the `DotTiled` namespace (if you want).
 
 ```csharp
-using DotTiled;
+using DotTiled.Serialization;
 ```
 
-Or fully qualify all `DotTiled` types e.g. `DotTiled.Loader`.
+Or fully qualify all `DotTiled` types e.g. `DotTiled.Serialization.Loader`.
 
 ## Loading a map from the file system
 
